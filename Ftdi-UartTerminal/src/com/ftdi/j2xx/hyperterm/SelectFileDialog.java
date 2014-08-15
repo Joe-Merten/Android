@@ -16,12 +16,12 @@ import android.os.Message;
 
 // The dialog to select File/Directory
 public class SelectFileDialog extends Dialog {
-	static final int MSG_SELECT_FOLDER_NOT_FILE = 7;
-	
-	Handler j2xxhyper_handler;
-	private int iActionCode;
+    static final int MSG_SELECT_FOLDER_NOT_FILE = 7;
+
+    Handler j2xxhyper_handler;
+    private int iActionCode;
     private static final String PARENT_DIR = "..";
-    private final String TAG = "file";    
+    private final String TAG = "file";
     private String[] fileList;
     private File currentPath;
     private File chosenFolder;
@@ -36,10 +36,10 @@ public class SelectFileDialog extends Dialog {
     private ListenerList<DirectorySelectedListener> dirListenerList = new ListenerList<SelectFileDialog.DirectorySelectedListener>();
     private final Activity activity;
     private boolean selectDirectoryOption;
-    private String fileEndsWith;    
+    private String fileEndsWith;
 
     public SelectFileDialog(Activity activity, Handler handler, File path) {
-    	super(activity);
+        super(activity);
         this.activity = activity;
         j2xxhyper_handler = handler;
         if (!path.exists()) path = android.os.Environment.getExternalStorageDirectory();
@@ -56,10 +56,10 @@ public class SelectFileDialog extends Dialog {
                 public void onClick(DialogInterface dialog, int which) {
                     DLog.e(TAG,"onClick:"+ currentPath.getPath());
                     fireDirectorySelectedEvent(currentPath);
-                    
+
                     chosenFolder = currentPath;
                     Message msg = j2xxhyper_handler.obtainMessage(iActionCode);
-    				j2xxhyper_handler.sendMessage(msg);
+                    j2xxhyper_handler.sendMessage(msg);
 
                 }
             });
@@ -75,19 +75,19 @@ public class SelectFileDialog extends Dialog {
                     dialog.cancel();
                     dialog.dismiss();
                     showDialog();
-                } 
+                }
                 else
                 {
-                	if (selectDirectoryOption)
-                	{
+                    if (selectDirectoryOption)
+                    {
                         Message msg = j2xxhyper_handler.obtainMessage(MSG_SELECT_FOLDER_NOT_FILE);
-        				j2xxhyper_handler.sendMessage(msg);
-                	}
-                	else
-                	{
-                		fireFileSelectedEvent(chosenFile);
-                	}
-	            }
+                        j2xxhyper_handler.sendMessage(msg);
+                    }
+                    else
+                    {
+                        fireFileSelectedEvent(chosenFile);
+                    }
+                }
             }
         });
 
@@ -123,28 +123,28 @@ public class SelectFileDialog extends Dialog {
     private void fireFileSelectedEvent(final File file) {
         fileListenerList.fireEvent(new FireHandler<SelectFileDialog.FileSelectedListener>() {
             public void fireEvent(FileSelectedListener listener) {
-            	DLog.e(TAG,"fileListenerList fireEvent...");
+                DLog.e(TAG,"fileListenerList fireEvent...");
                 listener.fileSelected(file);
-                
-				Message msg = j2xxhyper_handler.obtainMessage(iActionCode);
-				j2xxhyper_handler.sendMessage(msg);
+
+                Message msg = j2xxhyper_handler.obtainMessage(iActionCode);
+                j2xxhyper_handler.sendMessage(msg);
             }
         });
     }
 
     private void fireDirectorySelectedEvent(final File directory) {
         dirListenerList.fireEvent(new FireHandler<SelectFileDialog.DirectorySelectedListener>() {
-        	
-        	
+
+
             public void fireEvent(DirectorySelectedListener listener) {
-            	DLog.e(TAG,"fireEvent...");
-            	
+                DLog.e(TAG,"fireEvent...");
+
                 listener.directorySelected(directory);
-                
+
                 DLog.e(TAG,"iActionCode:" + iActionCode);
                 DLog.e(TAG,"directory:" + directory.toString());
                 Message msg = j2xxhyper_handler.obtainMessage(iActionCode);
-				j2xxhyper_handler.sendMessage(msg);
+                j2xxhyper_handler.sendMessage(msg);
             }
         });
     }
@@ -181,41 +181,41 @@ public class SelectFileDialog extends Dialog {
     public void setFileEndsWith(String fileEndsWith) {
         this.fileEndsWith = fileEndsWith != null ? fileEndsWith.toLowerCase() : fileEndsWith;
     }
-    
+
     public void setActionCode(int actionCode)
     {
-    	this.iActionCode = actionCode;    	
+        this.iActionCode = actionCode;
     }
-    
+
     public File getChosenFolder() {
         return chosenFolder;
     }
  }
 
-class ListenerList<L> 
+class ListenerList<L>
 {
-	private List<L> listenerList = new ArrayList<L>();
-	
-	public interface FireHandler<L> {
-	    void fireEvent(L listener);
-	}
-	
-	public void add(L listener) {
-	    listenerList.add(listener);
-	}
-	
-	public void fireEvent(FireHandler<L> fireHandler) {
-	    List<L> copy = new ArrayList<L>(listenerList);
-	    for (L l : copy) {
-	        fireHandler.fireEvent(l);
-	    }
-	}
-	
-	public void remove(L listener) {
-	    listenerList.remove(listener);
-	}
-	
-	public List<L> getListenerList() {
-	    return listenerList;
-	}
+    private List<L> listenerList = new ArrayList<L>();
+
+    public interface FireHandler<L> {
+        void fireEvent(L listener);
+    }
+
+    public void add(L listener) {
+        listenerList.add(listener);
+    }
+
+    public void fireEvent(FireHandler<L> fireHandler) {
+        List<L> copy = new ArrayList<L>(listenerList);
+        for (L l : copy) {
+            fireHandler.fireEvent(l);
+        }
+    }
+
+    public void remove(L listener) {
+        listenerList.remove(listener);
+    }
+
+    public List<L> getListenerList() {
+        return listenerList;
+    }
 }
