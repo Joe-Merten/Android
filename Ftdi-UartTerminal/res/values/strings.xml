@@ -13,9 +13,12 @@
         <item>57600</item>
         <item>115200</item>
         <item>230400</item>
+        <item>250000</item>
         <item>460800</item>
+        <item>500000</item>
         <item>921600</item>
-    </string-array>
+        <item>1000000</item>
+        </string-array>
 
     <string-array name="baud_rate_2">
         <item>300</item>

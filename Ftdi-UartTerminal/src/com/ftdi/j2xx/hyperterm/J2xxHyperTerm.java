@@ -1937,11 +1937,20 @@ public class J2xxHyperTerm extends Activity
         case 230400:
             baudSpinner.setSelection(9);
             break;
-        case 460800:
+        case 250000:
             baudSpinner.setSelection(10);
             break;
-        case 921600:
+        case 460800:
             baudSpinner.setSelection(11);
+            break;
+        case 500000:
+            baudSpinner.setSelection(12);
+            break;
+        case 921600:
+            baudSpinner.setSelection(13);
+            break;
+        case 1000000:
+            baudSpinner.setSelection(14);
             break;
         default:
             baudSpinner.setSelection(4);
