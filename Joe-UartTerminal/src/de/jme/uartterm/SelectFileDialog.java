@@ -1,11 +1,11 @@
-package com.ftdi.j2xx.hyperterm;
+package de.jme.uartterm;
 
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ftdi.j2xx.hyperterm.ListenerList.FireHandler;
+import de.jme.uartterm.ListenerList.FireHandler;
 
 import android.app.Activity;
 import android.app.AlertDialog;

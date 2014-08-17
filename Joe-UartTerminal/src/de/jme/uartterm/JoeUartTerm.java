@@ -1,4 +1,4 @@
-package com.ftdi.j2xx.hyperterm;
+package de.jme.uartterm;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -9,7 +9,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import com.ftdi.j2xx.hyperterm.R;
+import de.jme.uartterm.R;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -51,7 +51,7 @@ import android.util.Log;
 import com.ftdi.j2xx.D2xxManager;
 import com.ftdi.j2xx.FT_Device;
 
-public class J2xxHyperTerm extends Activity {
+public class JoeUartTerm extends Activity {
     // j2xx
     public static D2xxManager ftD2xx = null;
     FT_Device ftDev;
