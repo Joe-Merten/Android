@@ -75,16 +75,11 @@ public class SelectFileDialog extends Dialog {
                     dialog.cancel();
                     dialog.dismiss();
                     showDialog();
-                }
-                else
-                {
-                    if (selectDirectoryOption)
-                    {
+                } else {
+                    if (selectDirectoryOption) {
                         Message msg = j2xxhyper_handler.obtainMessage(MSG_SELECT_FOLDER_NOT_FILE);
                         j2xxhyper_handler.sendMessage(msg);
-                    }
-                    else
-                    {
+                    } else {
                         fireFileSelectedEvent(chosenFile);
                     }
                 }
@@ -134,13 +129,9 @@ public class SelectFileDialog extends Dialog {
 
     private void fireDirectorySelectedEvent(final File directory) {
         dirListenerList.fireEvent(new FireHandler<SelectFileDialog.DirectorySelectedListener>() {
-
-
             public void fireEvent(DirectorySelectedListener listener) {
                 DLog.e(TAG,"fireEvent...");
-
                 listener.directorySelected(directory);
-
                 DLog.e(TAG,"iActionCode:" + iActionCode);
                 DLog.e(TAG,"directory:" + directory.toString());
                 Message msg = j2xxhyper_handler.obtainMessage(iActionCode);
@@ -166,9 +157,8 @@ public class SelectFileDialog extends Dialog {
                 }
             };
             String[] fileList1 = path.list(filter);
-            for (String file : fileList1) {
+            for (String file : fileList1)
                 r.add(file);
-            }
         }
         fileList = (String[]) r.toArray(new String[]{});
     }
@@ -182,8 +172,7 @@ public class SelectFileDialog extends Dialog {
         this.fileEndsWith = fileEndsWith != null ? fileEndsWith.toLowerCase() : fileEndsWith;
     }
 
-    public void setActionCode(int actionCode)
-    {
+    public void setActionCode(int actionCode) {
         this.iActionCode = actionCode;
     }
 
@@ -192,8 +181,7 @@ public class SelectFileDialog extends Dialog {
     }
  }
 
-class ListenerList<L>
-{
+class ListenerList<L> {
     private List<L> listenerList = new ArrayList<L>();
 
     public interface FireHandler<L> {
@@ -206,9 +194,8 @@ class ListenerList<L>
 
     public void fireEvent(FireHandler<L> fireHandler) {
         List<L> copy = new ArrayList<L>(listenerList);
-        for (L l : copy) {
+        for (L l : copy)
             fireHandler.fireEvent(l);
-        }
     }
 
     public void remove(L listener) {

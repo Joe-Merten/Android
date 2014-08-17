@@ -51,8 +51,7 @@ import android.util.Log;
 import com.ftdi.j2xx.D2xxManager;
 import com.ftdi.j2xx.FT_Device;
 
-public class J2xxHyperTerm extends Activity
-{
+public class J2xxHyperTerm extends Activity {
     // j2xx
     public static D2xxManager ftD2xx = null;
     FT_Device ftDev;
@@ -60,7 +59,7 @@ public class J2xxHyperTerm extends Activity
     int currentPortIndex = -1;
     int portIndex = -1;
 
-    enum DeviceStatus{
+    enum DeviceStatus {
         DEV_NOT_CONNECT,
         DEV_NOT_CONFIG,
         DEV_CONFIG
@@ -118,11 +117,11 @@ public class J2xxHyperTerm extends Activity
     final int MSG_SPECIAL_INFO = 98;
     final int MSG_UNHANDLED_CASE = 99;
 
-    final byte XON = 0x11;    /* Resume transmission */
-    final byte XOFF = 0x13;    /* Pause transmission */
+    final byte XON  = 0x11;    // Resume transmission
+    final byte XOFF = 0x13;    // Pause transmission
 
     // strings of file transfer protocols
-    final String[] protocolItems = {"ASCII","XModem-CheckSum","XModem-CRC","XModem-1KCRC","YModem","ZModem"};
+    final String[] protocolItems = {"ASCII", "XModem-CheckSum", "XModem-CRC", "XModem-1KCRC", "YModem", "ZModem"};
     String currentProtocol;
 
     final int MODE_GENERAL_UART = 0;
@@ -142,19 +141,19 @@ public class J2xxHyperTerm extends Activity
     int tempTransferMode = MODE_GENERAL_UART;
 
     // X, Y, Z modem - UART MODE: Asynchronous, 8 data bits, no parity, one stop bit
-    // X modem + //
+    // X modem +
     final int PACTET_SIZE_XMODEM_CHECKSUM = 132; // SOH,pkt,~ptk,128data,checksum
     final int PACTET_SIZE_XMODEM_CRC = 133;      // SOH,pkt,~ptk,128data,CRC-H,CRC-L
     final int PACTET_SIZE_XMODEM_1K_CRC = 1029;  // STX,pkt,~ptk,1024data,CRC-H,CRC-L
 
-    final byte SOH = 1;    /* Start Of Header */
-    final byte STX = 2;    /* Start Of Header 1K */
-    final byte EOT = 4;    /* End Of Transmission */
-    final byte ACK = 6;    /* ACKnowlege */
-    final byte NAK = 0x15; /* Negative AcKnowlege */
-    final byte CAN = 0x18; /* Cancel */
-    final byte CHAR_C = 0x43; /* Character 'C' */
-    final byte CHAR_G = 0x47; /* Character 'G' */
+    final byte SOH    =    1;  // Start Of Header
+    final byte STX    =    2;  // Start Of Header 1K
+    final byte EOT    =    4;  // End Of Transmission
+    final byte ACK    =    6;  // ACKnowlege
+    final byte NAK    = 0x15;  // Negative AcKnowlege
+    final byte CAN    = 0x18;  // Cancel
+    final byte CHAR_C = 0x43;  // Character 'C'
+    final byte CHAR_G = 0x47;  // Character 'G'
 
     final int DATA_SIZE_128 = 128;
     final int DATA_SIZE_256 = 256;
@@ -180,9 +179,9 @@ public class J2xxHyperTerm extends Activity
 
     boolean bUartModeTaskSet = true;
     boolean bReadDataProcess = true;
-    // X modem -//
+    // X modem -
 
-    // Y modem +//
+    // Y modem +
     final int Y_MODEM_WAIT_ASK_SEND_FILE = 0;
     final int Y_MODEM_SEND_FILE_INFO_PACKET = 1;
     final int Y_MODEM_SEND_FILE_INFO_PACKET_WAIT_ACK = 2;
@@ -204,14 +203,14 @@ public class J2xxHyperTerm extends Activity
     String modemFileName;
     String modemFileSize;
     int modemRemainData = 0;
-    // Y modem -//
+    // Y modem -
 
-    // Z modem +//
+    // Z modem +
     final int ZCRC_HEAD_SIZE = 4;
 
     final byte ZPAD = 0x2A; // '*' 052 Padding character begins frames
     final byte ZDLE = 0x18;
-    final byte ZDLEE = ZDLE^0100;   /* Escaped ZDLE as transmitted */
+    final byte ZDLEE = ZDLE^0100;   // Escaped ZDLE as transmitted
 
     final byte ZBIN = 0x41;     // 'A' Binary frame indicator (CRC-16)
     final byte ZHEX = 0x42;     // 'B' HEX frame indicator
@@ -220,29 +219,29 @@ public class J2xxHyperTerm extends Activity
     final byte LF = 0x0A;
     final byte CR = 0x0D;
 
-    final int ZRQINIT = 0;   /* Request receive init */
-    final int ZRINIT = 1;   /* Receive init */
-    final int ZSINIT = 2;    /* Send init sequence (optional) */
-    final int ZACK = 3;      /* ACK to above */
-    final int ZFILE = 4;     /* File name from sender */
-    final int ZSKIP = 5;     /* To sender: skip this file */
-    final int ZNAK = 6;      /* Last packet was garbled */
-    final int ZABORT = 7;    /* Abort batch transfers */
-    final int ZFIN = 8;      /* Finish session */
-    final int ZRPOS = 9;     /* Resume data trans at this position */
-    final int ZDATA = 10;    /* Data packet(s) follow */
+    final int ZRQINIT = 0;   // Request receive init
+    final int ZRINIT = 1;    // Receive init
+    final int ZSINIT = 2;    // Send init sequence (optional)
+    final int ZACK = 3;      // ACK to above
+    final int ZFILE = 4;     // File name from sender
+    final int ZSKIP = 5;     // To sender: skip this file
+    final int ZNAK = 6;      // Last packet was garbled
+    final int ZABORT = 7;    // Abort batch transfers
+    final int ZFIN = 8;      // Finish session
+    final int ZRPOS = 9;     // Resume data trans at this position
+    final int ZDATA = 10;    // Data packet(s) follow
     final int ZDATA_HEADER = 21;
     final int ZFIN_ACK = 22;
 
-    final int ZEOF = 11;     /* End of file */
-    final int ZFERR = 12;    /* Fatal Read or Write error Detected */
-    final int ZCRC = 13;     /* Request for file CRC and response */
-    final int ZCHALLENGE = 14;   /* Receiver's Challenge */
-    final int ZCOMPL = 15;   /* Request is complete */
-    final int ZCAN = 16;     /* Other end canned session with CAN*5 */
-    final int ZFREECNT = 17; /* Request for free bytes on filesystem */
-    final int ZCOMMAND = 18; /* Command from sending program */
-    final int ZSTDERR = 19;  /* Output to standard error, data follows */
+    final int ZEOF = 11;       // End of file
+    final int ZFERR = 12;      // Fatal Read or Write error Detected
+    final int ZCRC = 13;       // Request for file CRC and response
+    final int ZCHALLENGE = 14; // Receiver's Challenge
+    final int ZCOMPL = 15;     // Request is complete
+    final int ZCAN = 16;       // Other end canned session with CAN*5
+    final int ZFREECNT = 17;   // Request for free bytes on filesystem
+    final int ZCOMMAND = 18;   // Command from sending program
+    final int ZSTDERR = 19;    // Output to standard error, data follows
     final int ZOO = 20;
 
     final int ZCRCE = 0x68; // no data
@@ -253,14 +252,14 @@ public class J2xxHyperTerm extends Activity
     final int ZDLE_END_SIZE_5 = 5; // zdle ZCRC? zdle crc1 crc2 || zdle ZCRC? crc1 zdle crc2
     final int ZDLE_END_SIZE_6 = 6; // zdle ZCRC? zdle crc1 zdle crc2
 
-    final int ZF0 = 3;   /* First flags byte */
+    final int ZF0 = 3;   // First flags byte
     final int ZF1 = 2;
     final int ZF2 = 1;
     final int ZF3 = 0;
-    final int ZP0 = 0;   /* Low order 8 bits of position */
+    final int ZP0 = 0;   // Low order 8 bits of position
     final int ZP1 = 1;
     final int ZP2 = 2;
-    final int ZP3 = 3;   /* High order 8 bits of file position */
+    final int ZP3 = 3;   // High order 8 bits of file position
 
     int zmodemState = 0;
 
@@ -291,7 +290,7 @@ public class J2xxHyperTerm extends Activity
     final int ZMS_23 = 23; // 0x0A
     final int ZMS_24 = 24; // 0x11
     int zmStartState = 0;
-    // Z modem -//
+    // Z modem -
 
     // general data count
     int totalReceiveDataBytes = 0;
@@ -348,28 +347,28 @@ public class J2xxHyperTerm extends Activity
     final int TEXT_MAX_LINE = 1000;
 
     // variables
-    final int UI_READ_BUFFER_SIZE = 10240; // Notes: 115K:1440B/100ms, 230k:2880B/100ms
+    final int UI_READ_BUFFER_SIZE = 20480; // Notes: 115K → 1440Byte/100ms; 230k → 2880BByte/100ms; 1M → 10000Byte/100ms
     byte[] writeBuffer;
     byte[] readBuffer;
     char[] readBufferToChar;
     int actualNumBytes;
 
-    int baudRate; /* baud rate */
-    byte stopBit; /* 1:1stop bits, 2:2 stop bits */
-    byte dataBit; /* 8:8bit, 7: 7bit */
-    byte parity; /* 0: none, 1: odd, 2: even, 3: mark, 4: space */
-    byte flowControl; /* 0:none, 1: CTS/RTS, 2:DTR/DSR, 3:XOFF/XON */
+    int baudRate;     // baud rate
+    byte stopBit;     // 1 = 1 stop bits; 2 = 2 stop bits
+    byte dataBit;     // 8 = 8 bit; 7 = 7bit
+    byte parity;      // 0 = none; 1 = odd; 2 = even; 3 = mark; 4 = space
+    byte flowControl; // 0 = none; 1 = CTS/RTS; 2 = DTR/DSR; 3 = XOFF/XON
     public Context global_context;
     boolean uart_configured = false;
 
     String uartSettings  = "";
 
-    //public static final int maxReadLength = 256;
+    // public static final int maxReadLength = 256;
     byte[] usbdata;
     char[] readDataToText;
     public int iavailable = 0;
 
-    // file access//
+    // file access
     FileInputStream inputstream;
     FileOutputStream outputstream;
 
@@ -389,7 +388,7 @@ public class J2xxHyperTerm extends Activity
 
     // data buffer
     byte[] writeDataBuffer;
-    byte[] readDataBuffer; /* circular buffer */
+    byte[] readDataBuffer; // circular buffer
 
     int iTotalBytes;
     int iReadIndex;
@@ -399,15 +398,13 @@ public class J2xxHyperTerm extends Activity
     boolean bReadTheadEnable = false;
 
 
-    /** Called when the activity is first created. */
-    @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-        try
-        {
+    // Called when the activity is first created.
+    @Override public void onCreate(Bundle savedInstanceState) {
+        try {
             ftD2xx = D2xxManager.getInstance(this);
+        } catch (D2xxManager.D2xxException e) {
+            Log.e("FTDI_HT", "getInstance fail!!");
         }
-        catch (D2xxManager.D2xxException e) {Log.e("FTDI_HT","getInstance fail!!");}
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
@@ -423,20 +420,18 @@ public class J2xxHyperTerm extends Activity
         // file explore settings:
         fileDialog = new SelectFileDialog(this, handler, mPath);
         fileDialog.setCanceledOnTouchOutside(false);
-        fileDialog.addFileListener(new SelectFileDialog.FileSelectedListener()
-        {
-            public void fileSelected(File file)
-            {
+        fileDialog.addFileListener(new SelectFileDialog.FileSelectedListener() {
+            public void fileSelected(File file) {
                 Log.d(getClass().getName(), "selected file " + file.toString());
                 fGetFile = file;
             }
         });
 
         // init UI objects
-        mMenuSetting = ((RelativeLayout) findViewById(R.id.menuSettings));
+        mMenuSetting = (RelativeLayout) findViewById(R.id.menuSettings);
         mMenuSetting.setVisibility(View.GONE);
 
-        mMenuKey = ((RelativeLayout) findViewById(R.id.menuSpecialKey));
+        mMenuKey = (RelativeLayout) findViewById(R.id.menuSpecialKey);
         mMenuKey.setVisibility(View.GONE);
 
         uartInfo = (TextView) findViewById(R.id.UartInfo);
@@ -455,7 +450,7 @@ public class J2xxHyperTerm extends Activity
         ctrlCButton = (Button) findViewById(R.id.keyCtrlC);
         escButton = (Button) findViewById(R.id.keyESC);
 
-        /* allocate buffer */
+        // allocate buffer
         writeBuffer = new byte[512];
         readBuffer = new byte[UI_READ_BUFFER_SIZE];
         readBufferToChar = new char[UI_READ_BUFFER_SIZE];
@@ -466,53 +461,47 @@ public class J2xxHyperTerm extends Activity
         handlerThread = new HandlerThread(handler);
         handlerThread.start();
 
-        /* setup the baud rate list*/
+        // setup the baud rate list
         baudSpinner = (Spinner) findViewById(R.id.baudRateValue);
-        baudAdapter = ArrayAdapter.createFromResource(this,
-                R.array.baud_rate_1,R.layout.my_spinner_textview);
+        baudAdapter = ArrayAdapter.createFromResource(this, R.array.baud_rate_1,R.layout.my_spinner_textview);
         baudAdapter.setDropDownViewResource(R.layout.my_spinner_textview);
         baudSpinner.setAdapter(baudAdapter);
         baudSpinner.setSelection(4);
         baudRate = 9600;
 
-        /* stop bits */
+        // stop bits
         stopSpinner = (Spinner) findViewById(R.id.stopBitValue);
-        ArrayAdapter<CharSequence> stopAdapter = ArrayAdapter.createFromResource(this,
-                R.array.stop_bits,R.layout.my_spinner_textview);
+        ArrayAdapter<CharSequence> stopAdapter = ArrayAdapter.createFromResource(this, R.array.stop_bits, R.layout.my_spinner_textview);
         stopAdapter.setDropDownViewResource(R.layout.my_spinner_textview);
         stopSpinner.setAdapter(stopAdapter);
         stopBit = 1;
 
-        /* data bits */
+        // data bits
         dataSpinner = (Spinner) findViewById(R.id.dataBitValue);
-        ArrayAdapter<CharSequence> dataAdapter = ArrayAdapter.createFromResource(this,
-                R.array.data_bits,R.layout.my_spinner_textview);
+        ArrayAdapter<CharSequence> dataAdapter = ArrayAdapter.createFromResource(this, R.array.data_bits, R.layout.my_spinner_textview);
         dataAdapter.setDropDownViewResource(R.layout.my_spinner_textview);
         dataSpinner.setAdapter(dataAdapter);
         dataSpinner.setSelection(1);
         dataBit = 8;
 
-        /* parity */
+        // parity
         paritySpinner = (Spinner) findViewById(R.id.parityValue);
-        ArrayAdapter<CharSequence> parityAdapter = ArrayAdapter.createFromResource(this,
-                R.array.parity,R.layout.my_spinner_textview);
+        ArrayAdapter<CharSequence> parityAdapter = ArrayAdapter.createFromResource(this, R.array.parity, R.layout.my_spinner_textview);
         parityAdapter.setDropDownViewResource(R.layout.my_spinner_textview);
         paritySpinner.setAdapter(parityAdapter);
         parity = 0;
 
-        /* flow control */
+        // flow control
         flowSpinner = (Spinner) findViewById(R.id.flowControlValue);
-        ArrayAdapter<CharSequence> flowAdapter = ArrayAdapter.createFromResource(this,
-                R.array.flow_control,R.layout.my_spinner_textview);
+        ArrayAdapter<CharSequence> flowAdapter = ArrayAdapter.createFromResource(this, R.array.flow_control, R.layout.my_spinner_textview);
         flowAdapter.setDropDownViewResource(R.layout.my_spinner_textview);
         flowSpinner.setAdapter(flowAdapter);
         flowSpinner.setSelection(1);
         flowControl = 1;
 
-        /* port */
+        // port
         portSpinner = (Spinner) findViewById(R.id.portSelectValue);
-        portAdapter = ArrayAdapter.createFromResource(this,R.array.port_list_1,
-                      R.layout.my_spinner_textview);
+        portAdapter = ArrayAdapter.createFromResource(this, R.array.port_list_1, R.layout.my_spinner_textview);
         flowAdapter.setDropDownViewResource(R.layout.my_spinner_textview);
         portSpinner.setAdapter(portAdapter);
         portIndex = 0;
@@ -525,100 +514,70 @@ public class J2xxHyperTerm extends Activity
         portSpinner.setOnItemSelectedListener(new MyOnPortSelectedListener());
 
         // Implementation of buttons
-        settingButton.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
-                if(DeviceStatus.DEV_CONFIG == checkDevice())
-                {
+        settingButton.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                if (checkDevice() == DeviceStatus.DEV_CONFIG) {
                     resetStatusData();
                     toggleMenuKey();
                 }
             }
         });
 
-        configButton.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
+        configButton.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
                 // always check whether there is a device or not
                 createDeviceList();
-                if(DevCount > 0)
-                {
+                if (DevCount > 0)
                     connectFunction();
-                }
-
-                if(DeviceStatus.DEV_NOT_CONNECT  == checkDevice())
-                {
+                if (checkDevice() == DeviceStatus.DEV_NOT_CONNECT)
                     return;
-                }
-
                 setConfig(baudRate, dataBit, stopBit, parity, flowControl);
-
                 uart_configured = true;
                 toggleMenuSetting();
             }
         });
 
-        ctrlCButton.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
-                if(DeviceStatus.DEV_CONFIG == checkDevice())
-                {
+        ctrlCButton.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                if (checkDevice() == DeviceStatus.DEV_CONFIG) {
                     writeBuffer[0] = 0x03; // Ctrl-C, ETX (End of text)
                     sendData(1, writeBuffer);
                 }
             }
         });
 
-        escButton.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
-                if(DeviceStatus.DEV_CONFIG == checkDevice())
-                {
+        escButton.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                if (checkDevice() == DeviceStatus.DEV_CONFIG) {
                     writeBuffer[0] = 0x1B; // ESC
                     sendData(1, writeBuffer);
                 }
             }
         });
 
-        formatButton.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
-                if(bFormatHex == false)
-                {
+        formatButton.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                if (!bFormatHex) {
                     formatButton.setText("HEX");
                     bFormatHex = true;
-                }
-                else
-                {
+                } else {
                     formatButton.setText("CHAR");
                     bFormatHex = false;
                 }
             }
         });
 
-// write button +
-        writeButton.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
-                if(DeviceStatus.DEV_CONFIG != checkDevice())
-                {
+        // write button +
+        writeButton.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                if (checkDevice() != DeviceStatus.DEV_CONFIG)
                     return;
-                }
 
                 // check whether there is some data
-                if (writeText.length() != 0x00)
-                {
+                if (writeText.length() != 0x00) {
                     // check format
-                    if(false == bFormatHex) // character format
-                    {
-                        if(true == bWriteEcho)
-                        {
+                    if (!bFormatHex) {// character format
+                        if (bWriteEcho) {
                             String temp = writeText.getText() + "\n";
                             String tmp = temp.replace("\\n", "\n");
                             appendData(tmp);
@@ -627,46 +586,34 @@ public class J2xxHyperTerm extends Activity
                         int numBytes = writeText.length();
 
                         for (int i = 0; i < numBytes; i++)
-                        {
-                            writeBuffer[i] = (byte)(writeText.getText().charAt(i));
-                        }
+                            writeBuffer[i] = (byte) (writeText.getText().charAt(i));
 
                         sendData(numBytes, writeBuffer);
                         writeText.setText("");
-                    }
-                    else  // hexadecimal format
-                    {
-                        if(writeText.length()%2 != 0)
-                        {
-                            midToast("Incorrect input for HEX format."
-                                    +"\nIt should be 2 bytes for each HEX word.",Toast.LENGTH_SHORT);
+                    } else {
+                        // hexadecimal format
+                        if (writeText.length() % 2 != 0) {
+                            midToast("Incorrect input for HEX format." + "\nIt should be 2 bytes for each HEX word.", Toast.LENGTH_SHORT);
                             return;
                         }
 
                         String temp = writeText.getText().toString();
-                        try
-                        {
+                        try {
                             String atemp = hexToAscii(temp);
-                            DLog.e(TT,"atemp:" + atemp);
+                            DLog.e(TT, "atemp:" + atemp);
 
                             byte numBytes = (byte) atemp.length();
                             for (int i = 0; i < numBytes; i++)
-                            {
                                 writeBuffer[i] = (byte) atemp.charAt(i);
-                            }
 
                             sendData(numBytes, writeBuffer);
-                        }
-                        catch(IllegalArgumentException e)
-                        {
-                            midToast("Incorrect input for HEX format."
-                                    +"\nAllowed charater: 0~9, a~f and A~F",Toast.LENGTH_SHORT);
-                            DLog.e(TT,"Illeagal HEX input.");
+                        } catch (IllegalArgumentException e) {
+                            midToast("Incorrect input for HEX format." + "\nAllowed charater: 0~9, a~f and A~F", Toast.LENGTH_SHORT);
+                            DLog.e(TT, "Illeagal HEX input.");
                             return;
                         }
 
-                        if(true == bWriteEcho)
-                        {
+                        if (bWriteEcho) {
                             temp += "(hex)\n";
                             String tmp = temp.replace("\\n", "\n");
                             bSendHexData = true;
@@ -678,112 +625,77 @@ public class J2xxHyperTerm extends Activity
                 }
             }
         });
-// write button -
+        // write button -
 
-// save file button +
-        logButton.setOnClickListener(new View.OnClickListener()
-        {
-            public void onClick(View v)
-            {
-                if(DeviceStatus.DEV_CONFIG != checkDevice())
-                {
+        // save file button +
+        logButton.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                if (checkDevice() != DeviceStatus.DEV_CONFIG)
                     return;
-                }
 
-                DLog.e(TT,"log button clicked");
+                DLog.e(TT, "log button clicked");
 
-                if(false == checkContentFormat())
-                {
+                if (!checkContentFormat())
                     return;
-                }
 
-                if(false == bLogButtonClick)
-                {
+                if (!bLogButtonClick) {
                     resetStatusData();
-                    new AlertDialog.Builder(global_context).setTitle("Protocol")
-                    .setItems(protocolItems, new DialogInterface.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which)
-                        {
-                            if(0 == which)
-                            {
+                    new AlertDialog.Builder(global_context).setTitle("Protocol").setItems(protocolItems, new DialogInterface.OnClickListener() {
+                        @Override public void onClick(DialogInterface dialog, int which) {
+                            if (which == 0) {
                                 bUartModeTaskSet = true;
                                 tempTransferMode = MODE_GENERAL_UART;
-                            }
-                            else if(1 == which)
-                            {
+                            } else if (which == 1) {
                                 bUartModeTaskSet = false;
                                 tempTransferMode = MODE_X_MODEM_CHECKSUM_RECEIVE;
                                 cleanModemVar();
-                            }
-                            else if(2 == which)
-                            {
+                            } else if (which == 2) {
                                 bUartModeTaskSet = false;
                                 tempTransferMode = MODE_X_MODEM_CRC_RECEIVE;
                                 cleanModemVar();
-                            }
-                            else if(3 == which)
-                            {
+                            } else if (which == 3) {
                                 bUartModeTaskSet = false;
                                 tempTransferMode = MODE_X_MODEM_1K_CRC_RECEIVE;
                                 cleanModemVar();
-                            }
-                            else if(4 == which)
-                            {
+                            } else if (which == 4) {
                                 bUartModeTaskSet = false;
                                 tempTransferMode = MODE_Y_MODEM_1K_CRC_RECEIVE;
                                 cleanModemVar();
-                            }
-                            else if(5 == which)
-                            {
+                            } else if (which == 5) {
                                 bUartModeTaskSet = false;
                                 tempTransferMode = MODE_Z_MODEM_RECEIVE;
                                 cleanModemVar();
-                            }
-                            else
-                            {
+                            } else {
                                 return;
                             }
 
-                            DLog.e(TT,"logbutton w1 transferMode:"+transferMode+" UART:" + (bUartModeTaskSet?"True":"False"));
+                            DLog.e(TT, "logbutton w1 transferMode:" + transferMode + " UART:" + (bUartModeTaskSet ? "True" : "False"));
 
-                            if(MODE_Y_MODEM_1K_CRC_RECEIVE == tempTransferMode ||
-                               MODE_Z_MODEM_RECEIVE == tempTransferMode)
-                            {
+                            if (tempTransferMode == MODE_Y_MODEM_1K_CRC_RECEIVE || tempTransferMode == MODE_Z_MODEM_RECEIVE) {
                                 // select folder
                                 fileDialog.setSelectDirectoryOption(true);
                                 fileDialog.setActionCode(ACT_MODEM_SELECT_SAVED_FILE_FOLDER);
                                 fileDialog.showDialog();
-                            }
-                            else
-                            {
+                            } else {
                                 // select file
-                                final String[] actItems = {"Create New File","Save to File"};
-                                new AlertDialog.Builder(global_context).setTitle("File Destination")
-                                    .setItems(actItems, new DialogInterface.OnClickListener()
-                                    {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            if(0 == which)
-                                            {
-                                                fileDialog.setSelectDirectoryOption(true);
-                                                fileDialog.setActionCode(ACT_SELECT_SAVED_FILE_FOLDER);
-                                                fileDialog.showDialog();
-                                            }
-                                            else if(1 == which)
-                                            {
-                                                fileDialog.setSelectDirectoryOption(false);
-                                                fileDialog.setActionCode(ACT_SELECT_SAVED_FILE_NAME);
-                                                fileDialog.showDialog();
-                                            }
+                                final String[] actItems = { "Create New File", "Save to File" };
+                                new AlertDialog.Builder(global_context).setTitle("File Destination").setItems(actItems, new DialogInterface.OnClickListener() {
+                                    @Override public void onClick(DialogInterface dialog, int which) {
+                                        if (which == 0) {
+                                            fileDialog.setSelectDirectoryOption(true);
+                                            fileDialog.setActionCode(ACT_SELECT_SAVED_FILE_FOLDER);
+                                            fileDialog.showDialog();
+                                        } else if (which == 1) {
+                                            fileDialog.setSelectDirectoryOption(false);
+                                            fileDialog.setActionCode(ACT_SELECT_SAVED_FILE_NAME);
+                                            fileDialog.showDialog();
                                         }
-                                    }).show();
+                                    }
+                                }).show();
                             }
                         }
 
-                        void cleanModemVar()
-                        {
+                        void cleanModemVar() {
                             receivedPacketNumber = 1;
                             modemReceiveDataBytes[0] = 0;
                             totalModemReceiveDataBytes = 0;
@@ -792,9 +704,7 @@ public class J2xxHyperTerm extends Activity
                             fileNameInfo = null;
                         }
                     }).show();
-                }
-                else
-                {
+                } else {
                     // manually stop the action of save to file
                     bLogButtonClick = false;
                     receivedPacketNumber = 1;
@@ -808,95 +718,66 @@ public class J2xxHyperTerm extends Activity
                 }
             }
         });
-//save file button -
+        // save file button -
 
-//send file button +
-        sendButton.setOnClickListener(new View.OnClickListener()
-        {
-            //@Override
-            public void onClick(View v)
-            {
-                if(DeviceStatus.DEV_CONFIG != checkDevice())
-                {
+        // send file button +
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                if (checkDevice() != DeviceStatus.DEV_CONFIG)
                     return;
-                }
 
-                DLog.e(TT,"send button clicked");
+                DLog.e(TT, "send button clicked");
 
-                if(false == checkContentFormat())
-                {
+                if (!checkContentFormat())
                     return;
-                }
 
-                if(false == bSendButtonClick)
-                {
+                if (!bSendButtonClick) {
                     resetStatusData();
-                    new AlertDialog.Builder(global_context).setTitle("Protocol").setItems(protocolItems, new DialogInterface.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which)
-                            {
-                                if(0 == which)
-                                {
-                                    bUartModeTaskSet = true;
-                                    tempTransferMode = MODE_GENERAL_UART;
-                                }
-                                else if(1 == which)
-                                {
-                                    bUartModeTaskSet = false;
-                                    tempTransferMode = MODE_X_MODEM_CHECKSUM_SEND;
-
-                                }
-                                else if(2 == which)
-                                {
-                                    bUartModeTaskSet = false;
-                                    tempTransferMode = MODE_X_MODEM_CRC_SEND;
-                                }
-                                else if(3 == which)
-                                {
-                                    bUartModeTaskSet = false;
-                                    tempTransferMode = MODE_X_MODEM_1K_CRC_SEND;
-                                }
-                                else if(4 == which)
-                                {
-                                    bUartModeTaskSet = false;
-                                    tempTransferMode = MODE_Y_MODEM_1K_CRC_SEND;
-                                }
-                                else if(5 == which)
-                                {
-                                    bUartModeTaskSet = false;
-                                    tempTransferMode = MODE_Z_MODEM_SEND;
-                                }
-                                else
-                                {
-                                    return;
-                                }
-
-                                DLog.e(TT,"sendbutton w1 tempTransferMode:"+tempTransferMode+" UART:" + (bUartModeTaskSet?"True":"False"));
-
-                                fileDialog.setSelectDirectoryOption(false);
-                                fileDialog.setActionCode(ACT_SELECT_SEND_FILE_NAME);
-                                fileDialog.showDialog();
+                    new AlertDialog.Builder(global_context).setTitle("Protocol").setItems(protocolItems, new DialogInterface.OnClickListener() {
+                        @Override public void onClick(DialogInterface dialog, int which) {
+                            if (which == 0) {
+                                bUartModeTaskSet = true;
+                                tempTransferMode = MODE_GENERAL_UART;
+                            } else if (which == 1) {
+                                bUartModeTaskSet = false;
+                                tempTransferMode = MODE_X_MODEM_CHECKSUM_SEND;
+                            } else if (which == 2) {
+                                bUartModeTaskSet = false;
+                                tempTransferMode = MODE_X_MODEM_CRC_SEND;
+                            } else if (which == 3) {
+                                bUartModeTaskSet = false;
+                                tempTransferMode = MODE_X_MODEM_1K_CRC_SEND;
+                            } else if (which == 4) {
+                                bUartModeTaskSet = false;
+                                tempTransferMode = MODE_Y_MODEM_1K_CRC_SEND;
+                            } else if (which == 5) {
+                                bUartModeTaskSet = false;
+                                tempTransferMode = MODE_Z_MODEM_SEND;
+                            } else {
+                                return;
                             }
-                        }).show();
-                }
-                else
-                {
-                    DLog.e(TT,"Send button: manual stop sending file");
+
+                            DLog.e(TT, "sendbutton w1 tempTransferMode:" + tempTransferMode + " UART:" + (bUartModeTaskSet ? "True" : "False"));
+
+                            fileDialog.setSelectDirectoryOption(false);
+                            fileDialog.setActionCode(ACT_SELECT_SEND_FILE_NAME);
+                            fileDialog.showDialog();
+                        }
+                    }).show();
+                } else {
+                    DLog.e(TT, "Send button: manual stop sending file");
                     resetSendButton();
                 }
             }
 
-
         });
-// send file button -
+        // send file button -
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
-// menu function +
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    // menu function +
+    @Override public boolean onCreateOptionsMenu(Menu menu) {
         myMenu = menu;
         myMenu.add(0, MENU_SETTING, 0, "Setting");
         myMenu.add(0, MENU_CONTENT_FORMAT, 0, "Content Format");
@@ -908,193 +789,145 @@ public class J2xxHyperTerm extends Activity
         return super.onCreateOptionsMenu(myMenu);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId())
-        {
-        case MENU_SETTING:
-            toggleMenuSetting();
-            break;
-
-        case MENU_CONTENT_FORMAT:
-
-            new AlertDialog.Builder(global_context).setTitle("Content Format")
-            .setItems(contentFormatItems, new DialogInterface.OnClickListener()
-            {
-                @Override
-                public void onClick(DialogInterface dialog, int which)
-                {
-                    if(0 == which)
-                    {
-                        if(true ==  bContentFormatHex)
-                        {
-                            toggleContentHexFormat(false);
-                        }
-                    }
-                    else if(1 == which)
-                    {
-                        if(false ==  bContentFormatHex)
-                        {
-                            toggleContentHexFormat(true);
-                        }
-                    }
-                }
-            }).show();
-
-            break;
-
-        case MENU_FONT_SIZE:
-
-            new AlertDialog.Builder(global_context).setTitle("Font Size")
-            .setItems(fontSizeItems, new DialogInterface.OnClickListener()
-            {
-                @Override
-                public void onClick(DialogInterface dialog, int which)
-                {
-                    contentFontSize = Integer.parseInt(fontSizeItems[which]);
-                    readText.setTextSize(contentFontSize);
-                }
-            }).show();
-
-            break;
-
-        case MENU_SAVE_CONTENT_DATA:
-        {
-
-            if(true == bSendButtonClick || true == bLogButtonClick)
-            {
-                midToast("Can't save content data to file during sending file and saving data.",Toast.LENGTH_LONG);
+    @Override public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case MENU_SETTING: {
+                toggleMenuSetting();
+                break;
             }
-            else
-            {
-                bUartModeTaskSet = false;
-                tempTransferMode = MODE_SAVE_CONTENT_DATA;
 
-                // select file
-                final String[] actItems = {"Create New File","Save to File"};
-                new AlertDialog.Builder(global_context).setTitle("File Destination")
-                    .setItems(actItems, new DialogInterface.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if(0 == which)
-                            {
+            case MENU_CONTENT_FORMAT: {
+                new AlertDialog.Builder(global_context).setTitle("Content Format").setItems(contentFormatItems, new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface dialog, int which) {
+                        if (which == 0) {
+                            if (bContentFormatHex)
+                                toggleContentHexFormat(false);
+                        } else if (which == 1) {
+                            if (!bContentFormatHex)
+                                toggleContentHexFormat(true);
+                        }
+                    }
+                }).show();
+                break;
+            }
+
+            case MENU_FONT_SIZE: {
+                new AlertDialog.Builder(global_context).setTitle("Font Size").setItems(fontSizeItems, new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface dialog, int which) {
+                        contentFontSize = Integer.parseInt(fontSizeItems[which]);
+                        readText.setTextSize(contentFontSize);
+                    }
+                }).show();
+                break;
+            }
+
+            case MENU_SAVE_CONTENT_DATA: {
+                if (bSendButtonClick || bLogButtonClick) {
+                    midToast("Can't save content data to file during sending file and saving data.", Toast.LENGTH_LONG);
+                } else {
+                    bUartModeTaskSet = false;
+                    tempTransferMode = MODE_SAVE_CONTENT_DATA;
+
+                    // select file
+                    final String[] actItems = { "Create New File", "Save to File" };
+                    new AlertDialog.Builder(global_context).setTitle("File Destination").setItems(actItems, new DialogInterface.OnClickListener() {
+                        @Override public void onClick(DialogInterface dialog, int which) {
+                            if (which == 0) {
                                 fileDialog.setSelectDirectoryOption(true);
                                 fileDialog.setActionCode(ACT_SELECT_SAVED_FILE_FOLDER);
                                 fileDialog.showDialog();
-                            }
-                            else if(1 == which)
-                            {
+                            } else if (which == 1) {
                                 fileDialog.setSelectDirectoryOption(false);
                                 fileDialog.setActionCode(ACT_SELECT_SAVED_FILE_NAME);
                                 fileDialog.showDialog();
                             }
                         }
                     }).show();
+                }
+                break;
             }
-        }
-            break;
 
-        case MENU_CLEAN_SCREEN:
-            readText.setText("");
-            contentCharSequence = readText.getText();
-            break;
+            case MENU_CLEAN_SCREEN: {
+                readText.setText("");
+                contentCharSequence = readText.getText();
+                break;
+            }
 
-        case MENU_ECHO:
-            new AlertDialog.Builder(global_context).setTitle("Echo")
-            .setItems(echoSettingItems, new DialogInterface.OnClickListener()
-            {
-                @Override
-                public void onClick(DialogInterface dialog, int which)
-                {
-                    MenuItem item = myMenu.findItem(MENU_ECHO);
-                    if(0 == which)
-                    {
-                        bWriteEcho = true;
-                        item.setTitle("Echo - On");
+            case MENU_ECHO: {
+                new AlertDialog.Builder(global_context).setTitle("Echo").setItems(echoSettingItems, new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface dialog, int which) {
+                        MenuItem item = myMenu.findItem(MENU_ECHO);
+                        if (which == 0) {
+                            bWriteEcho = true;
+                            item.setTitle("Echo - On");
+                        } else if (which == 1) {
+                            bWriteEcho = false;
+                            item.setTitle("Echo - Off");
+                        }
                     }
-                    else if(1 == which)
-                    {
-                        bWriteEcho = false;
-                        item.setTitle("Echo - Off");
+                }).show();
+                break;
+            }
+
+            case MENU_HELP: {
+                File file = new File(android.os.Environment.getExternalStorageDirectory() + "/Download/AN_242_FTDI_UART_Terminal_User_Manual.pdf");
+
+                if (file.exists()) {
+                    // open file
+                    Uri path = Uri.fromFile(file);
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setDataAndType(path, "application/pdf");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    try {
+                        startActivity(intent);
+                    } catch (ActivityNotFoundException e) {
+                        midToast("Can't open help file. Please manually open it in the /Download folder.", Toast.LENGTH_SHORT);
+                    }
+                } else {
+                    // download help file from webstie
+                    Uri uri = Uri.parse("http://www.ftdichip.com/Support/Documents/AppNotes/AN_242_FTDI_UART_Terminal_User_Manual.pdf");
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    try {
+                        startActivity(intent);
+                    } catch (ActivityNotFoundException e) {
+                        midToast("Can't download help file.", Toast.LENGTH_SHORT);
                     }
                 }
-            }).show();
-
-            break;
-
-        case MENU_HELP:
-        {
-            File file = new File(android.os.Environment.getExternalStorageDirectory() + "/Download/AN_242_FTDI_UART_Terminal_User_Manual.pdf");
-
-            if(true == file.exists())
-            {
-                // open file
-                Uri path = Uri.fromFile(file);
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setDataAndType(path, "application/pdf");
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                try
-                {
-                    startActivity(intent);
-                }
-                catch (ActivityNotFoundException e)
-                {
-                    midToast("Can't open help file. Please manually open it in the /Download folder.", Toast.LENGTH_SHORT);
-                }
             }
-            else
-            {
-                // download help file from webstie
-                Uri uri = Uri.parse("http://www.ftdichip.com/Support/Documents/AppNotes/AN_242_FTDI_UART_Terminal_User_Manual.pdf");
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                try
-                {
-                    startActivity(intent);
-                }
-                catch (ActivityNotFoundException e)
-                {
-                    midToast("Can't download help file.", Toast.LENGTH_SHORT);
-                }
+
+            default: {
+                break;
             }
-        }
-        default:
-            break;
-        }
+        } // switch item.getItemId()
 
         return super.onOptionsItemSelected(item);
     }
-// menu function -
+    // menu function -
 
-    boolean checkContentFormat()
-    {
-        if(true == bContentFormatHex)
-        {
-            midToast("Please change content format to Charater before tranfer file.",Toast.LENGTH_LONG);
+    boolean checkContentFormat() {
+        if (bContentFormatHex) {
+            midToast("Please change content format to Charater before tranfer file.", Toast.LENGTH_LONG);
             return false;
         }
 
         return true;
     }
 
-    void setLogButton()
-    {
+    void setLogButton() {
         bLogButtonClick = true;
         logButton.setText("Stop Saving");
         logButton.setBackgroundResource(R.drawable.button_pattern_2);
         sendButton.setClickable(false);
     }
 
-    void resetLogButton()
-    {
+    void resetLogButton() {
         bLogButtonClick = false;
         logButton.setText("Save to File");
         logButton.setBackgroundResource(R.drawable.button_pattern);
         sendButton.setClickable(true);
     }
 
-    void setSendButton()
-    {
+    void setSendButton() {
         bSendButtonClick = true;
         sendButton.setText("Stop Sending");
         sendButton.setBackgroundResource(R.drawable.button_pattern_2);
@@ -1102,8 +935,7 @@ public class J2xxHyperTerm extends Activity
         writeButton.setClickable(false);
     }
 
-    void resetSendButton()
-    {
+    void resetSendButton() {
         transferMode = MODE_GENERAL_UART;
         bUartModeTaskSet = true;
         bSendButtonClick = false;
@@ -1113,20 +945,15 @@ public class J2xxHyperTerm extends Activity
         writeButton.setClickable(true);
     }
 
-    void getSelectedFolder()
-    {
+    void getSelectedFolder() {
         File fFolder = fileDialog.getChosenFolder();
-        if(null == fFolder)
-        {
+        if (fFolder == null)
             return;
-        }
 
         LayoutInflater inflater = getLayoutInflater();
         View layout = inflater.inflate(R.layout.file_name_dialog, (ViewGroup) findViewById(R.id.filenamedialog));
 
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this).setTitle("Create New File").
-            setView(layout).setPositiveButton("OK", null).
-            setNegativeButton("Cancel", null);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this).setTitle("Create New File").setView(layout).setPositiveButton("OK", null).setNegativeButton("Cancel", null);
 
         AlertDialog dialog = dialogBuilder.create();
         dialog.setCanceledOnTouchOutside(false);
@@ -1135,38 +962,28 @@ public class J2xxHyperTerm extends Activity
         theButton.setOnClickListener(new CreateNewFileNameListener(dialog, handler, fFolder.toString()));
     }
 
-    class CreateNewFileNameListener implements View.OnClickListener
-    {
+    class CreateNewFileNameListener implements View.OnClickListener {
         final Dialog dialog;
         Handler handler;
         String sFolder;
         EditText etCreateFileName;
 
-        public CreateNewFileNameListener(Dialog dialog, Handler handler, String folder)
-        {
+        public CreateNewFileNameListener(Dialog dialog, Handler handler, String folder) {
             this.dialog = dialog;
             this.handler = handler;
             this.sFolder = folder;
         }
-        @Override
-        public void onClick(View v)
-        {
 
+        @Override public void onClick(View v) {
             etCreateFileName = (EditText) dialog.findViewById(R.id.createFileName);
             String sfname = etCreateFileName.getText().toString();
 
             // check whether the file name is valid
-            if(0 == sfname.length())
-            {
+            if (sfname.length() == 0) {
                 midToast("Please input file name.", Toast.LENGTH_SHORT);
-            }
-            else if(sfname.matches(".*[:?\\s/\"<>|\\*]+.*") || sfname.contains("\\"))
-            {
-                midToast("A file name can't contain space or any of "
-                        +"\nthe following characters: \\ / : * ? \" < > ", Toast.LENGTH_SHORT);
-            }
-            else
-            {
+            } else if (sfname.matches(".*[:?\\s/\"<>|\\*]+.*") || sfname.contains("\\")) {
+                midToast("A file name can't contain space or any of " + "\nthe following characters: \\ / : * ? \" < > ", Toast.LENGTH_SHORT);
+            } else {
                 String filePath = sFolder + java.io.File.separator + sfname;
                 Message msg = handler.obtainMessage(ACT_SAVED_FILE_NAME_CREATED, filePath);
                 handler.sendMessage(msg);
@@ -1176,19 +993,15 @@ public class J2xxHyperTerm extends Activity
     }
 
     // In Y, Z modem, they should selecet a folder for the file transfer
-    void getModemSelectedFolder()
-    {
+    void getModemSelectedFolder() {
         File fFolder = fileDialog.getChosenFolder();
-        if(null == fFolder)
-        {
+        if (fFolder == null)
             return;
-        }
 
         setLogButton();
 
-        if(MODE_Y_MODEM_1K_CRC_RECEIVE == transferMode)
-        {
-            DLog.e(TT,"ymodem rec 1k crc -  send C");
+        if (transferMode == MODE_Y_MODEM_1K_CRC_RECEIVE) {
+            DLog.e(TT, "ymodem rec 1k crc -  send C");
             sendData(CHAR_C);
 
             updateStatusData("YModem - Wait data...");
@@ -1198,87 +1011,73 @@ public class J2xxHyperTerm extends Activity
 
             sendCharCThread charCThread = new sendCharCThread();
             charCThread.start();
-        }
-        else if(MODE_Z_MODEM_RECEIVE == transferMode)
-        {
+        } else if (transferMode == MODE_Z_MODEM_RECEIVE) {
             updateStatusData("ZModem - Wait data...");
             zmodemState = ZRQINIT;
             ZModemReadDataThread zmReadThread = new ZModemReadDataThread(handler);
             zmReadThread.start();
-        }
-        else
-        {
-            DLog.e(TT,"NG CASE!!!!!!!!!!!!!!!!");
+        } else {
+            DLog.e(TT, "NG CASE!!!!!!!!!!!!!!!!");
         }
     }
 
-    boolean openModemSaveFile()
-    {
-        DLog.e(TT,"S:"+android.os.Environment.getExternalStorageDirectory().toString());
+    boolean openModemSaveFile() {
+        DLog.e(TT, "S:" + android.os.Environment.getExternalStorageDirectory().toString());
 
         File fFolder = fileDialog.getChosenFolder();
         String filePath;
-        if(fFolder != null)
+        if (fFolder != null)
             filePath = fFolder + java.io.File.separator + modemFileName;
         else
             filePath = android.os.Environment.getExternalStorageDirectory() + java.io.File.separator + modemFileName;
 
         fGetFile = new File(filePath);
-        DLog.e(TT, "Save data to "+filePath);
+        DLog.e(TT, "Save data to " + filePath);
 
-        try
-        {
+        try {
             fos_save = new FileOutputStream(filePath);
-            buf_save =  new BufferedOutputStream(fos_save);
-        }
-        catch (FileNotFoundException e)
-        {
+            buf_save = new BufferedOutputStream(fos_save);
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
             return false;
         }
 
         modemRemainData = iFileSize = Integer.parseInt(modemFileSize);
-        if(iFileSize <= 1024)
-            fileNameInfo = "File:" + modemFileName + "("+ iFileSize +"Bytes)";
-        else if(iFileSize <= 1048576)
-            fileNameInfo = "File:" + modemFileName + "("+ new java.text.DecimalFormat("#.00").format(iFileSize/(double)1024) +"KB)";
+        if (iFileSize <= 1024)
+            fileNameInfo = "File:" + modemFileName + "(" + iFileSize + "Bytes)";
+        else if (iFileSize <= 1048576)
+            fileNameInfo = "File:" + modemFileName + "(" + new java.text.DecimalFormat("#.00").format(iFileSize / (double) 1024) + "KB)";
         else
-            fileNameInfo = "File:" + modemFileName + "("+ new java.text.DecimalFormat("#.00").format(iFileSize/(double)1024/1024) +"MB)";
+            fileNameInfo = "File:" + modemFileName + "(" + new java.text.DecimalFormat("#.00").format(iFileSize / (double) 1024 / 1024) + "MB)";
 
         WriteFileThread_start = true;
         return true;
     }
 
-    void saveFileAction()
-    {
-        DLog.e(TT,"saveFileAction transferMode:"+transferMode+" UART:" + (bUartModeTaskSet?"True":"False"));
-        if(null == fGetFile)
-        {
+    void saveFileAction() {
+        DLog.e(TT, "saveFileAction transferMode:" + transferMode + " UART:" + (bUartModeTaskSet ? "True" : "False"));
+        if (fGetFile == null) {
             midToast("Selected file null!", Toast.LENGTH_SHORT);
             return;
-        }
-        else
-        {
+        } else {
             String stemp = fGetFile.toString();
             String[] tokens = stemp.split("/");
             fileNameInfo = tokens[tokens.length - 1];
-            midToast("Save data to file:"+fileNameInfo, Toast.LENGTH_SHORT);
+            midToast("Save data to file:" + fileNameInfo, Toast.LENGTH_SHORT);
         }
 
-        try
-        {
+        try {
             fos_save = new FileOutputStream(fGetFile);
-            buf_save =  new BufferedOutputStream(fos_save);
+            buf_save = new BufferedOutputStream(fos_save);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
-        catch (FileNotFoundException e) {e.printStackTrace();}
 
         WriteFileThread_start = true;
 
-        if(MODE_SAVE_CONTENT_DATA == transferMode)
-        {
+        if (transferMode == MODE_SAVE_CONTENT_DATA) {
             byte[] tmpData = readText.getText().toString().getBytes();
-            try
-            {
+            try {
                 buf_save.write(tmpData, 0, tmpData.length);
 
                 midToast("Content data is saved.", Toast.LENGTH_SHORT);
@@ -1286,22 +1085,19 @@ public class J2xxHyperTerm extends Activity
                 buf_save.flush();
                 buf_save.close();
                 fos_save.close();
-
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            catch (IOException e) {e.printStackTrace();}
 
-            MediaScannerConnection.scanFile(global_context, new String[] {fGetFile.toString()}, null, null);
+            MediaScannerConnection.scanFile(global_context, new String[] { fGetFile.toString() }, null, null);
 
             transferMode = MODE_GENERAL_UART;
             bUartModeTaskSet = true;
-        }
-        else
-        {
+        } else {
             setLogButton();
 
-            if(MODE_X_MODEM_CHECKSUM_RECEIVE == transferMode)
-            {
-                DLog.e(TT,"x rec - send NAK");
+            if (transferMode == MODE_X_MODEM_CHECKSUM_RECEIVE) {
+                DLog.e(TT, "x rec - send NAK");
                 sendData(NAK);
 
                 updateStatusData("XModem-Checksum - Wait data...");
@@ -1311,10 +1107,8 @@ public class J2xxHyperTerm extends Activity
 
                 XModemNakThread nakThread = new XModemNakThread();
                 nakThread.start();
-            }
-            else if(MODE_X_MODEM_CRC_RECEIVE == transferMode)
-            {
-                DLog.e(TT,"x rec crc -  send C");
+            } else if (transferMode == MODE_X_MODEM_CRC_RECEIVE) {
+                DLog.e(TT, "x rec crc -  send C");
                 sendData(CHAR_C);
 
                 updateStatusData("XModem-CRC - Wait data...");
@@ -1324,10 +1118,8 @@ public class J2xxHyperTerm extends Activity
 
                 sendCharCThread charCThread = new sendCharCThread();
                 charCThread.start();
-            }
-            else if(MODE_X_MODEM_1K_CRC_RECEIVE == transferMode)
-            {
-                DLog.e(TT,"x rec 1k crc -  send C");
+            } else if (transferMode == MODE_X_MODEM_1K_CRC_RECEIVE) {
+                DLog.e(TT, "x rec 1k crc -  send C");
                 sendData(CHAR_C);
 
                 updateStatusData("XModem-1KCRC - Wait data...");
@@ -1337,9 +1129,7 @@ public class J2xxHyperTerm extends Activity
 
                 sendCharCThread charCThread = new sendCharCThread();
                 charCThread.start();
-            }
-            else // Ascii mode
-            {
+            } else { // Ascii mode
                 totalReceiveDataBytes = 0;
                 AsciiReadDataThread asciiReadThread = new AsciiReadDataThread(handler);
                 asciiReadThread.start();
@@ -1347,161 +1137,125 @@ public class J2xxHyperTerm extends Activity
         }
     }
 
-    class XModemNakThread extends Thread
-    {
-        public void run()
-        {
+    class XModemNakThread extends Thread {
+        @Override public void run() {
             int errorCount = 0;
-            DLog.e(TXR,"xmodem nak thread run");
-            while(0 == modemReceiveDataBytes[0] && 0 == totalModemReceiveDataBytes)
-            {
+            DLog.e(TXR, "xmodem nak thread run");
+            while (modemReceiveDataBytes[0] == 0 && totalModemReceiveDataBytes == 0) {
                 errorCount++;
-                try
-                {
+                try {
                     Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-                catch (InterruptedException e) {e.printStackTrace();}
 
-                if(false == bReadDataProcess)
-                {
+                if (!bReadDataProcess)
                     break;
-                }
 
-                if(0 == modemReceiveDataBytes[0] && 0 == totalModemReceiveDataBytes)
-                {
-                    DLog.e(TXR,"x rec checksum - no packet in, send NAK again");
+                if (modemReceiveDataBytes[0] == 0 && totalModemReceiveDataBytes == 0) {
+                    DLog.e(TXR, "x rec checksum - no packet in, send NAK again");
                     sendData(NAK);
                 }
 
-                if(60 == errorCount)
-                {
+                if (errorCount == 60)
                     break;
-                }
             }
         }
     }
 
-    class sendCharCThread extends Thread
-    {
-        public void run()
-        {
+    class sendCharCThread extends Thread {
+        @Override public void run() {
             int errorCount = 0;
-            DLog.e(TT,"modem - send CharC thread");
+            DLog.e(TT, "modem - send CharC thread");
 
-            if(MODE_Y_MODEM_1K_CRC_RECEIVE == transferMode)
-            {
-                while(false == bReceiveFirstPacket)
-                {
+            if (transferMode == MODE_Y_MODEM_1K_CRC_RECEIVE) {
+                while (!bReceiveFirstPacket) {
                     errorCount++;
-                    try
-                    {
+                    try {
                         Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                    catch (InterruptedException e) {e.printStackTrace();}
 
-                    if(false == bReadDataProcess)
-                    {
+                    if (!bReadDataProcess)
                         break;
-                    }
 
-                    if(false == bDataReceived)
-                    {
-                        DLog.e(TYR,"y rec - no packet in, send CharC again");
+                    if (!bDataReceived) {
+                        DLog.e(TYR, "y rec - no packet in, send CharC again");
                         sendData(CHAR_C);
                     }
 
-                    if(60 == errorCount)
-                    {
+                    if (errorCount == 60)
                         break;
-                    }
                 }
-            }
-            else
-            {
-                while(0 == modemReceiveDataBytes[0] && 0 == totalModemReceiveDataBytes)
-                {
+            } else {
+                while (modemReceiveDataBytes[0] == 0 && totalModemReceiveDataBytes == 0) {
                     errorCount++;
-                    try
-                    {
+                    try {
                         Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                    catch (InterruptedException e) {e.printStackTrace();}
 
-                    if(false == bReadDataProcess)
-                    {
+                    if (!bReadDataProcess)
                         break;
-                    }
 
-                    if(0 == modemReceiveDataBytes[0] && 0 == totalModemReceiveDataBytes)
-                    {
-                        DLog.e(TXR,"x CRC rec - no packet in, send CharC again");
+                    if (modemReceiveDataBytes[0] == 0 && totalModemReceiveDataBytes == 0) {
+                        DLog.e(TXR, "x CRC rec - no packet in, send CharC again");
                         sendData(CHAR_C);
                     }
 
-                    if(60 == errorCount)
-                    {
+                    if (errorCount == 60)
                         break;
-                    }
                 }
             }
         }
     }
 
-    void saveFileActionDone()
-    {
-
+    void saveFileActionDone() {
         WriteFileThread_start = false;
 
-        try
-        {
+        try {
             Thread.sleep(50);
-        } catch (InterruptedException e) {e.printStackTrace();}
-
-
-        if(buf_save == null) // YModem saved file fail case
-        {
-            midToast("Stop saving data.", Toast.LENGTH_SHORT);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        else
-        {
+
+        if (buf_save == null) { // YModem saved file fail case
+            midToast("Stop saving data.", Toast.LENGTH_SHORT);
+        } else {
             midToast("Stop saving data and close file.", Toast.LENGTH_SHORT);
-            try
-            {
+            try {
                 buf_save.flush();
                 buf_save.close();
                 fos_save.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            catch (IOException e) {e.printStackTrace();}
-            MediaScannerConnection.scanFile(global_context, new String[] {fGetFile.toString()}, null, null);
+            MediaScannerConnection.scanFile(global_context, new String[] { fGetFile.toString() }, null, null);
         }
 
         resetLogButton();
     }
 
-    void sendFileAction()
-    {
-        if(null == fGetFile)
-        {
+    void sendFileAction() {
+        if (fGetFile == null) {
             midToast("Selected file null!", Toast.LENGTH_SHORT);
             resetSendButton();
             return;
         }
 
-        try
-        {
+        try {
             File filenew = fGetFile;
             iFileSize = Integer.parseInt(String.valueOf(filenew.length()));
             fis_open = new FileInputStream(filenew);
-        }
-        catch (FileNotFoundException e)
-        {
+        } catch (FileNotFoundException e) {
             resetSendButton();
             e.printStackTrace();
             return;
         }
 
-        if(0 == iFileSize)
-        {
+        if (iFileSize == 0) {
             midToast("Selected file is 0 byte!", Toast.LENGTH_SHORT);
             resetSendButton();
             return;
@@ -1510,99 +1264,74 @@ public class J2xxHyperTerm extends Activity
         String[] tokens = fGetFile.toString().split("/");
         sFileName = tokens[tokens.length - 1];
 
-        if(iFileSize <= 1024)
-            fileNameInfo = "File:" + sFileName + "("+ iFileSize +"Bytes)";
-        else if(iFileSize <= 1048576)
-            fileNameInfo = "File:" + sFileName + "("+ new java.text.DecimalFormat("#.00").format(iFileSize/(double)1024) +"KB)";
+        if (iFileSize <= 1024)
+            fileNameInfo = "File:" + sFileName + "(" + iFileSize + "Bytes)";
+        else if (iFileSize <= 1048576)
+            fileNameInfo = "File:" + sFileName + "(" + new java.text.DecimalFormat("#.00").format(iFileSize / (double) 1024) + "KB)";
         else
-            fileNameInfo = "File:" + sFileName + "("+ new java.text.DecimalFormat("#.00").format(iFileSize/(double)1024/1024) +"MB)";
+            fileNameInfo = "File:" + sFileName + "(" + new java.text.DecimalFormat("#.00").format(iFileSize / (double) 1024 / 1024) + "MB)";
 
         setSendButton();
-        if(MODE_GENERAL_UART == transferMode)
-        {
+        if (transferMode == MODE_GENERAL_UART) {
             updateStatusData(currentProtocol + " - Sending data...");
-        }
-        else
-        {
+        } else {
             updateStatusData(currentProtocol + " - Wait receiver response...");
         }
 
-        DLog.e(TT,"sendFileAction transferMode:" + transferMode);
+        DLog.e(TT, "sendFileAction transferMode:" + transferMode);
 
-        if(MODE_Z_MODEM_SEND == transferMode)
-        {
-            DLog.e(TT,"send file - MODE: " + currentProtocol);
+        if (transferMode == MODE_Z_MODEM_SEND) {
+            DLog.e(TT, "send file - MODE: " + currentProtocol);
             ZModemSendFileThread zModemSendFileThread = new ZModemSendFileThread(handler, fis_open);
             zModemSendFileThread.start();
-        }
-        else if(MODE_Y_MODEM_1K_CRC_SEND == transferMode)
-        {
-            DLog.e(TT,"send file - MODE: " + currentProtocol);
+        } else if (transferMode == MODE_Y_MODEM_1K_CRC_SEND) {
+            DLog.e(TT, "send file - MODE: " + currentProtocol);
             sendData(CHAR_C);
             YModemSendFileThread yModemSendFileThread = new YModemSendFileThread(handler, fis_open);
             yModemSendFileThread.start();
-        }
-        else if( (MODE_X_MODEM_CHECKSUM_SEND == transferMode)
-                ||(MODE_X_MODEM_CRC_SEND == transferMode)
-                ||(MODE_X_MODEM_1K_CRC_SEND == transferMode) )
-        {
-            DLog.e(TT,"send file - MODE: " + currentProtocol);
+        } else if (transferMode == MODE_X_MODEM_CHECKSUM_SEND || transferMode == MODE_X_MODEM_CRC_SEND || transferMode == MODE_X_MODEM_1K_CRC_SEND) {
+            DLog.e(TT, "send file - MODE: " + currentProtocol);
             XModemSendFileThread xModemSendFileThread = new XModemSendFileThread(handler, fis_open);
             xModemSendFileThread.start();
-        }
-        else
-        {
-            DLog.e(TT,"send file - MODE: " + currentProtocol);
-            SendFileThread  sendFileThread = new SendFileThread(handler, fis_open);
+        } else {
+            DLog.e(TT, "send file - MODE: " + currentProtocol);
+            SendFileThread sendFileThread = new SendFileThread(handler, fis_open);
             sendFileThread.start();
         }
     }
 
     // call this API to show message
-    void midToast(String str, int showTime)
-    {
+    void midToast(String str, int showTime) {
         Toast toast = Toast.makeText(global_context, str, showTime);
-        toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.CENTER_HORIZONTAL , 0, 0);
-
+        toast.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL, 0, 0);
         TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
         v.setTextColor(Color.YELLOW);
         toast.show();
     }
 
-    void toggleMenuSetting()
-    {
-        if (View.GONE == mMenuSetting.getVisibility())
-        {
+    void toggleMenuSetting() {
+        if (mMenuSetting.getVisibility() == View.GONE) {
             mMenuSetting.setVisibility(View.VISIBLE);
-        }
-        else
-        {
+        } else {
             mMenuSetting.setVisibility(View.GONE);
         }
     }
 
-    void toggleMenuKey()
-    {
-        if (View.GONE == mMenuKey.getVisibility())
-        {
+    void toggleMenuKey() {
+        if (mMenuKey.getVisibility() == View.GONE) {
             mMenuKey.setVisibility(View.VISIBLE);
-        }
-        else
-        {
+        } else {
             mMenuKey.setVisibility(View.GONE);
         }
     }
 
-    void toggleContentHexFormat(boolean setHex)
-    {
-        if(true == bSendButtonClick || true == bLogButtonClick)
-        {
-            midToast("Can't change content format during sending file and saving data.",Toast.LENGTH_LONG);
+    void toggleContentHexFormat(boolean setHex) {
+        if (bSendButtonClick || bLogButtonClick) {
+            midToast("Can't change content format during sending file and saving data.", Toast.LENGTH_LONG);
             return;
         }
 
-        if(true == setHex)
-        {
+        if (setHex) {
             bContentFormatHex = true;
             int line = 0;
             int i = 0;
@@ -1618,77 +1347,62 @@ public class J2xxHyperTerm extends Activity
             dataLength = contentCharSequence.length();
             readText.setText("");
 
-            for(; line*16 < dataLength; line++ )
-            {
+            for (; line * 16 < dataLength; line++) {
                 strBuf1.delete(0, strBuf1.length());
-                temp = Integer.toHexString(line*16);
+                temp = Integer.toHexString(line * 16);
                 len = temp.length();
-                for(int j=0; j < (7 - len);j++)
-                {
+                for (int j = 0; j < 7-len; j++)
                     strBuf1.append("0");
-                }
                 strBuf1.append(temp);
                 strBuf1.append("h:");
 
                 strBuf2.delete(0, strBuf2.length());
-                for (; (i < (line+1)*16) && (i < dataLength); i++)
-                {
+                for (; i < (line + 1) * 16 && i < dataLength; i++) {
                     cData = contentCharSequence.charAt(i);
-                    switch(cData)
-                    {
-                    case 0x00: case 0x01: case 0x02: case 0x03:
-                    case 0x04: case 0x05: case 0x06: case 0x07:
-                    case 0x08: case 0x09: case 0x0a: case 0x0b:
-                    case 0x0c: case 0x0d: case 0x0e: case 0x0f:
-                        strBuf1.append(" 0");
-                        strBuf1.append(Integer.toHexString(cData));
-                        break;
+                    switch(cData) {
+                        case 0x00: case 0x01: case 0x02: case 0x03:
+                        case 0x04: case 0x05: case 0x06: case 0x07:
+                        case 0x08: case 0x09: case 0x0a: case 0x0b:
+                        case 0x0c: case 0x0d: case 0x0e: case 0x0f:
+                            strBuf1.append(" 0");
+                            strBuf1.append(Integer.toHexString(cData));
+                            break;
 
-                    default:
-                        temp = Integer.toHexString(cData);
+                        default:
+                            temp = Integer.toHexString(cData);
 
-                        if(temp.length() == 4)
-                        {
-                            strBuf1.append(" ");
-                            strBuf1.append(temp.substring(2, 4));
-                        }
-                        else
-                        {
-                            strBuf1.append(" ");
-                            strBuf1.append(temp);
-                        }
-                        break;
-        }
+                            if (temp.length() == 4) {
+                                strBuf1.append(" ");
+                                strBuf1.append(temp.substring(2, 4));
+                            } else {
+                                strBuf1.append(" ");
+                                strBuf1.append(temp);
+                            }
+                            break;
+                    }
 
-                    switch(cData)
-                    {
-                    case 0x00:
-                    case 0x0a:
-                    case 0x0d:
-                        strBuf2.append(" ");
-                        break;
-                    default:
-                        strBuf2.append(cData);
-                        break;
+                    switch (cData) {
+                        case 0x00:
+                        case 0x0a:
+                        case 0x0d:
+                            strBuf2.append(" ");
+                            break;
+                        default:
+                            strBuf2.append(cData);
+                            break;
                     }
                 }
 
-                if (i == dataLength && (i < (line+1)*16))
-                {
-                    for (;i < (line+1)*16; i++)
-                    {
+                if (i == dataLength && i < (line + 1) * 16)
+                    for (; i < (line + 1) * 16; i++)
                         strBuf1.append("   ");
-                    }
-                }
 
                 temp = "\n";
                 temp = temp.replace("\\n", "\n");
-                strBuffer.append(strBuf1.toString()+"; "+strBuf2.toString()+temp);
+                strBuffer.append(strBuf1.toString() + "; " + strBuf2.toString() + temp);
             }
             readText.append(strBuffer.toString());
-        }
-        else
-        {
+        } else {
             readText.setText(contentCharSequence);
             bContentFormatHex = false;
         }
@@ -1697,52 +1411,39 @@ public class J2xxHyperTerm extends Activity
     }
 
     // add data to UI(@+id/ReadValues)
-    void appendData(String data)
-    {
-        if(true == bContentFormatHex)
-        {
-            if(timesMessageHexFormatWriteData < 3)
-            {
+    void appendData(String data) {
+        if (bContentFormatHex) {
+            if (timesMessageHexFormatWriteData < 3) {
                 timesMessageHexFormatWriteData++;
-                midToast("The writing data won't be showed on data area while content format is hexadecimal format.",Toast.LENGTH_LONG);
+                midToast("The writing data won't be showed on data area while content format is hexadecimal format.", Toast.LENGTH_LONG);
             }
             return;
         }
 
-        if(true == bSendHexData)
-        {
+        if (bSendHexData) {
             SpannableString text = new SpannableString(data);
             text.setSpan(new ForegroundColorSpan(Color.YELLOW), 0, data.length(), 0);
             readText.append(text);
             bSendHexData = false;
-        }
-        else
-        {
+        } else {
             readText.append(data);
         }
 
         int overLine = readText.getLineCount() - TEXT_MAX_LINE;
 
-        if (overLine > 0)
-        {
+        if (overLine > 0) {
             int IndexEndOfLine = 0;
             CharSequence charSequence = readText.getText();
 
-            for (int i = 0; i < overLine; i++)
-            {
-                do
-                {
+            for (int i = 0; i < overLine; i++) {
+                do {
                     IndexEndOfLine++;
-                }
-                while (IndexEndOfLine < charSequence.length() && charSequence.charAt(IndexEndOfLine) != '\n');
+                } while (IndexEndOfLine < charSequence.length() && charSequence.charAt(IndexEndOfLine) != '\n');
             }
 
-            if (IndexEndOfLine < charSequence.length())
-            {
+            if (IndexEndOfLine < charSequence.length()) {
                 readText.getEditableText().delete(0, IndexEndOfLine + 1);
-            }
-            else
-            {
+            } else {
                 readText.setText("");
             }
         }
@@ -1751,135 +1452,69 @@ public class J2xxHyperTerm extends Activity
     }
 
     // for uart settings: buad rate, stop bit and etc. selection
-    class MyOnBaudSelectedListener implements OnItemSelectedListener
-    {
-        public void onItemSelected(AdapterView<?> parent, View view, int pos, long id)
-        {
+    class MyOnBaudSelectedListener implements OnItemSelectedListener {
+        @Override public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
             baudRate = Integer.parseInt(parent.getItemAtPosition(pos).toString());
         }
-
-        public void onNothingSelected(AdapterView<?> parent) {}
+        @Override public void onNothingSelected(AdapterView<?> parent) {}
     }
 
-    class MyOnStopSelectedListener implements OnItemSelectedListener
-    {
-        public void onItemSelected(AdapterView<?> parent, View view, int pos,long id)
-        {
+    class MyOnStopSelectedListener implements OnItemSelectedListener {
+        @Override public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
             stopBit = (byte) Integer.parseInt(parent.getItemAtPosition(pos).toString());
         }
-
-        public void onNothingSelected(AdapterView<?> parent) {}
+        @Override public void onNothingSelected(AdapterView<?> parent) {}
     }
 
-    class MyOnDataSelectedListener implements OnItemSelectedListener
-    {
-        public void onItemSelected(AdapterView<?> parent, View view, int pos, long id)
-        {
+    class MyOnDataSelectedListener implements OnItemSelectedListener {
+        @Override public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
             dataBit = (byte) Integer.parseInt(parent.getItemAtPosition(pos).toString());
         }
-
-        public void onNothingSelected(AdapterView<?> parent) {}
+        @Override public void onNothingSelected(AdapterView<?> parent) {}
     }
 
-    class MyOnParitySelectedListener implements OnItemSelectedListener
-    {
-        public void onItemSelected(AdapterView<?> parent, View view, int pos, long id)
-        {
-            String tempString = new String(parent.getItemAtPosition(pos)
-                    .toString());
-            if (tempString.compareTo("None") == 0)
-            {
-                parity = 0;
-            }
-            else if (tempString.compareTo("Odd") == 0)
-            {
-                parity = 1;
-            }
-            else if (tempString.compareTo("Even") == 0)
-            {
-                parity = 2;
-            }
-            else if (tempString.compareTo("Mark") == 0)
-            {
-                parity = 3;
-            }
-            else if (tempString.compareTo("Space") == 0)
-            {
-                parity = 4;
-            }
+    class MyOnParitySelectedListener implements OnItemSelectedListener {
+        @Override public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+            String tempString = new String(parent.getItemAtPosition(pos).toString());
+            if      (tempString.compareTo("None" ) == 0) parity = 0;
+            else if (tempString.compareTo("Odd"  ) == 0) parity = 1;
+            else if (tempString.compareTo("Even" ) == 0) parity = 2;
+            else if (tempString.compareTo("Mark" ) == 0) parity = 3;
+            else if (tempString.compareTo("Space") == 0) parity = 4;
         }
-
-        public void onNothingSelected(AdapterView<?> parent) {}
+        @Override public void onNothingSelected(AdapterView<?> parent) {}
     }
 
-    class MyOnFlowSelectedListener implements OnItemSelectedListener
-    {
-        public void onItemSelected(AdapterView<?> parent, View view, int pos,long id)
-        {
+    class MyOnFlowSelectedListener implements OnItemSelectedListener {
+        @Override public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
             String flowString = new String(parent.getItemAtPosition(pos).toString());
-            if (flowString.compareTo("None") == 0)
-            {
-                flowControl = 0;
-                midToast("When using None Flow control option, please consider you know how data flow between the receiver and the transmitter."
-                         ,Toast.LENGTH_LONG);
-            }
-            else if (flowString.compareTo("CTS/RTS") == 0)
-            {
-                flowControl = 1;
-            }
-            else if(flowString.compareTo("DTR/DSR")==0)
-            {
-                flowControl = 2;
-            }
-            else if(flowString.compareTo("XOFF/XON")==0)
-            {
-                flowControl = 3;
-            }
+            if      (flowString.compareTo("None"    ) == 0) flowControl = 0; // midToast("When using None Flow control option, please consider you know how data flow between the receiver and the transmitter.", Toast.LENGTH_LONG);
+            else if (flowString.compareTo("CTS/RTS" ) == 0) flowControl = 1;
+            else if (flowString.compareTo("DTR/DSR" ) == 0) flowControl = 2;
+            else if (flowString.compareTo("XOFF/XON") == 0) flowControl = 3;
         }
-
-        public void onNothingSelected(AdapterView<?> parent) {}
+        @Override public void onNothingSelected(AdapterView<?> parent) {}
     }
 
     public class MyOnPortSelectedListener implements OnItemSelectedListener {
-        public void onItemSelected(AdapterView<?> parent, View view, int pos, long id)
-        {
+        @Override public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
             portIndex = Integer.parseInt(parent.getItemAtPosition(pos).toString());
         }
-
-        public void onNothingSelected(AdapterView<?> parent) {}
+        @Override public void onNothingSelected(AdapterView<?> parent) {}
     }
 
-    public void updatePortNumberSelector()
-    {
+    public void updatePortNumberSelector() {
         midToast(DevCount + " port device attached", Toast.LENGTH_SHORT);
-
-        switch(DevCount)
-        {
-        case 2:
-            portAdapter = ArrayAdapter.createFromResource(global_context, R.array.port_list_2, R.layout.my_spinner_textview);
-            break;
-        case 3:
-            portAdapter = ArrayAdapter.createFromResource(global_context, R.array.port_list_3, R.layout.my_spinner_textview);
-            break;
-        case 4:
-            portAdapter = ArrayAdapter.createFromResource(global_context, R.array.port_list_4, R.layout.my_spinner_textview);
-            break;
-        case 5:
-            portAdapter = ArrayAdapter.createFromResource(global_context, R.array.port_list_5, R.layout.my_spinner_textview);
-            break;
-        case 6:
-            portAdapter = ArrayAdapter.createFromResource(global_context, R.array.port_list_6, R.layout.my_spinner_textview);
-            break;
-        case 7:
-            portAdapter = ArrayAdapter.createFromResource(global_context, R.array.port_list_7, R.layout.my_spinner_textview);
-            break;
-        case 8:
-            portAdapter = ArrayAdapter.createFromResource(global_context, R.array.port_list_8, R.layout.my_spinner_textview);
-            break;
-        case 1:
-        default:
-            portAdapter = ArrayAdapter.createFromResource(global_context, R.array.port_list_1, R.layout.my_spinner_textview);
-            break;
+        switch (DevCount) {
+            case 2:  portAdapter = ArrayAdapter.createFromResource(global_context, R.array.port_list_2, R.layout.my_spinner_textview); break;
+            case 3:  portAdapter = ArrayAdapter.createFromResource(global_context, R.array.port_list_3, R.layout.my_spinner_textview); break;
+            case 4:  portAdapter = ArrayAdapter.createFromResource(global_context, R.array.port_list_4, R.layout.my_spinner_textview); break;
+            case 5:  portAdapter = ArrayAdapter.createFromResource(global_context, R.array.port_list_5, R.layout.my_spinner_textview); break;
+            case 6:  portAdapter = ArrayAdapter.createFromResource(global_context, R.array.port_list_6, R.layout.my_spinner_textview); break;
+            case 7:  portAdapter = ArrayAdapter.createFromResource(global_context, R.array.port_list_7, R.layout.my_spinner_textview); break;
+            case 8:  portAdapter = ArrayAdapter.createFromResource(global_context, R.array.port_list_8, R.layout.my_spinner_textview); break;
+            case 1:
+            default: portAdapter = ArrayAdapter.createFromResource(global_context, R.array.port_list_1, R.layout.my_spinner_textview); break;
         }
 
         portAdapter.setDropDownViewResource(R.layout.my_spinner_textview);
@@ -1887,96 +1522,50 @@ public class J2xxHyperTerm extends Activity
         portAdapter.notifyDataSetChanged();
     }
 
-    void updateBaudRateSelector(int baudListNum)
-    {
-        if(1 == baudListNum)
-        {
-            baudAdapter = ArrayAdapter.createFromResource(this, R.array.baud_rate_1,
-                            R.layout.my_spinner_textview);
-        }
-        else
-        {
-            baudAdapter = ArrayAdapter.createFromResource(this, R.array.baud_rate_2,
-                            R.layout.my_spinner_textview);
-            if(baudRate >= 230400)
-                baudRate = 115200;
+    /*void updateBaudRateSelector(int baudListNum) { // scheint unused zu sein
+        if (baudListNum == 1) {
+            baudAdapter = ArrayAdapter.createFromResource(this, R.array.baud_rate_1, R.layout.my_spinner_textview);
+        } else {
+            baudAdapter = ArrayAdapter.createFromResource(this, R.array.baud_rate_2, R.layout.my_spinner_textview);
+            if (baudRate >= 230400) baudRate = 115200;
         }
         baudAdapter.setDropDownViewResource(R.layout.my_spinner_textview);
         baudSpinner.setAdapter(baudAdapter);
         baudAdapter.notifyDataSetChanged();
 
-        switch(baudRate)
-        {
-        case 300:
-            baudSpinner.setSelection(0);
-            break;
-        case 600:
-            baudSpinner.setSelection(1);
-            break;
-        case 1200:
-            baudSpinner.setSelection(2);
-            break;
-        case 4800:
-            baudSpinner.setSelection(3);
-            break;
-        case 9600:
-            baudSpinner.setSelection(4);
-            break;
-        case 19200:
-            baudSpinner.setSelection(5);
-            break;
-        case 38400:
-            baudSpinner.setSelection(6);
-            break;
-        case 57600:
-            baudSpinner.setSelection(7);
-            break;
-        case 115200:
-            baudSpinner.setSelection(8);
-            break;
-        case 230400:
-            baudSpinner.setSelection(9);
-            break;
-        case 250000:
-            baudSpinner.setSelection(10);
-            break;
-        case 460800:
-            baudSpinner.setSelection(11);
-            break;
-        case 500000:
-            baudSpinner.setSelection(12);
-            break;
-        case 921600:
-            baudSpinner.setSelection(13);
-            break;
-        case 1000000:
-            baudSpinner.setSelection(14);
-            break;
-        default:
-            baudSpinner.setSelection(4);
-            break;
+        switch (baudRate) {
+            case     300: baudSpinner.setSelection( 0); break;
+            case     600: baudSpinner.setSelection( 1); break;
+            case    1200: baudSpinner.setSelection( 2); break;
+            case    4800: baudSpinner.setSelection( 3); break;
+            case    9600: baudSpinner.setSelection( 4); break;
+            case   19200: baudSpinner.setSelection( 5); break;
+            case   38400: baudSpinner.setSelection( 6); break;
+            case   57600: baudSpinner.setSelection( 7); break;
+            case  115200: baudSpinner.setSelection( 8); break;
+            case  230400: baudSpinner.setSelection( 9); break;
+            case  250000: baudSpinner.setSelection(10); break;
+            case  460800: baudSpinner.setSelection(11); break;
+            case  500000: baudSpinner.setSelection(12); break;
+            case  921600: baudSpinner.setSelection(13); break;
+            case 1000000: baudSpinner.setSelection(14); break;
+            default:      baudSpinner.setSelection( 4); break;  // Default auf 9600 ?!
         }
-    }
+    }*/
 
-    public void onAttachedToWindow()
-    {
+    @Override public void onAttachedToWindow() {
         this.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD);
         super.onAttachedToWindow();
     }
 
-    public boolean onKeyDown(int keyCode, KeyEvent event)
-    {
-        if(KeyEvent.KEYCODE_HOME == keyCode)
-        {
-            DLog.e(TT,"Home key pressed");
-        }
+    @Override public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_HOME)
+            DLog.e(TT, "Home key pressed");
         return super.onKeyDown(keyCode, event);
     }
 
-    public void onBackPressed()
-    {
-        if(false == bBackButtonClick)
-        {
+    @Override public void onBackPressed() {
+        if (!bBackButtonClick) {
             midToast("Are you sure you will exit the program? Press again to exit.", Toast.LENGTH_LONG);
 
             back_button_click_time = System.currentTimeMillis();
@@ -1984,47 +1573,39 @@ public class J2xxHyperTerm extends Activity
 
             ResetBackButtonThread backButtonThread = new ResetBackButtonThread();
             backButtonThread.start();
-        }
-        else
-        {
+        } else {
             super.onBackPressed();
         }
     }
 
-    class ResetBackButtonThread extends Thread
-    {
-        public void run()
-        {
-            try
-            {
+    class ResetBackButtonThread extends Thread {
+        @Override public void run() {
+            try {
                 Thread.sleep(3500);
-            } catch (InterruptedException e) {e.printStackTrace();}
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
             bBackButtonClick = false;
         }
     }
 
-    @Override
-    protected void onStart() {
+    @Override protected void onStart() {
         super.onStart();
         createDeviceList();
-        if(DevCount > 0)
-        {
+        if (DevCount > 0) {
             connectFunction();
             setUARTInfoString();
             setConfig(baudRate, dataBit, stopBit, parity, flowControl);
         }
     }
 
-    protected void onResume()
-    {
+    @Override protected void onResume() {
         super.onResume();
-        if(null == ftDev || false == ftDev.isOpen())
-        {
-            DLog.e(TT,"onResume - reconnect");
+        if (ftDev == null || !ftDev.isOpen()) {
+            DLog.e(TT, "onResume - reconnect");
             createDeviceList();
-            if(DevCount > 0)
-            {
+            if (DevCount > 0) {
                 connectFunction();
                 setUARTInfoString();
                 setConfig(baudRate, dataBit, stopBit, parity, flowControl);
@@ -2032,160 +1613,123 @@ public class J2xxHyperTerm extends Activity
         }
     }
 
-    protected void onPause()
-    {
+    @Override protected void onPause() {
         super.onPause();
     }
 
-    protected void onStop()
-    {
+    @Override protected void onStop() {
         super.onStop();
     }
 
-    protected void onDestroy()
-    {
+    @Override protected void onDestroy() {
         disconnectFunction();
         android.os.Process.killProcess(android.os.Process.myPid());
         super.onDestroy();
     }
 
-// j2xx functions +
-    public void createDeviceList()
-    {
+    // j2xx functions +
+    public void createDeviceList() {
         int tempDevCount = ftD2xx.createDeviceInfoList(global_context);
 
-        if (tempDevCount > 0)
-        {
-            if( DevCount != tempDevCount )
-            {
+        if (tempDevCount > 0) {
+            if (tempDevCount != DevCount) {
                 DevCount = tempDevCount;
                 updatePortNumberSelector();
             }
-        }
-        else
-        {
+        } else {
             DevCount = -1;
             currentPortIndex = -1;
         }
     }
 
-    public void disconnectFunction()
-    {
+    public void disconnectFunction() {
         DevCount = -1;
         currentPortIndex = -1;
         bReadTheadEnable = false;
-        try
-        {
+        try {
             Thread.sleep(50);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        catch (InterruptedException e) {e.printStackTrace();}
 
-        if(ftDev != null)
-        {
-            if( true == ftDev.isOpen())
-            {
-                ftDev.close();
-            }
-        }
+        if (ftDev != null && ftDev.isOpen())
+            ftDev.close();
     }
 
-    public void connectFunction()
-    {
-        if( portIndex + 1 > DevCount)
-        {
+    public void connectFunction() {
+        if (portIndex  >= DevCount)
             portIndex = 0;
-        }
 
-        if( currentPortIndex == portIndex
-                && ftDev != null
-                && true == ftDev.isOpen() )
-        {
-            //Toast.makeText(global_context,"Port("+portIndex+") is already opened.", Toast.LENGTH_SHORT).show();
+        if (currentPortIndex == portIndex && ftDev != null && ftDev.isOpen()) {
+            // Toast.makeText(global_context,"Port("+portIndex+") is already opened.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if(true == bReadTheadEnable)
-        {
+        if (bReadTheadEnable) {
             bReadTheadEnable = false;
-            try
-            {
+            try {
                 Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-            catch (InterruptedException e) {e.printStackTrace();}
         }
 
-        if(null == ftDev)
-        {
+        if (ftDev == null)
             ftDev = ftD2xx.openByIndex(global_context, portIndex);
-        }
         else
-        {
             ftDev = ftD2xx.openByIndex(global_context, portIndex);
-        }
+
         uart_configured = false;
 
-        if(ftDev == null)
-        {
-            midToast("Open port("+portIndex+") NG!", Toast.LENGTH_LONG);
+        if (ftDev == null) {
+            midToast("Open port(" + portIndex + ") NG!", Toast.LENGTH_LONG);
             return;
         }
 
-        if (true == ftDev.isOpen())
-        {
+        if (ftDev.isOpen()) {
             currentPortIndex = portIndex;
-            //Toast.makeText(global_context, "open device port(" + portIndex + ") OK", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(global_context, "open device port(" + portIndex + ") OK", Toast.LENGTH_SHORT).show();
 
-            if(false == bReadTheadEnable)
-            {
+            if (!bReadTheadEnable) {
                 readThread = new ReadThread(handler);
                 readThread.start();
             }
-        }
-        else
-        {
-            midToast("Open port("+portIndex+") NG!", Toast.LENGTH_LONG);
+        } else {
+            midToast("Open port(" + portIndex + ") NG!", Toast.LENGTH_LONG);
         }
     }
 
-    DeviceStatus checkDevice()
-    {
-        if(ftDev == null || false == ftDev.isOpen())
-        {
-            midToast("Need to connect to cable.",Toast.LENGTH_SHORT);
+    DeviceStatus checkDevice() {
+        if (ftDev == null || !ftDev.isOpen()) {
+            midToast("Need to connect to cable.", Toast.LENGTH_SHORT);
             return DeviceStatus.DEV_NOT_CONNECT;
-        }
-        else if(false == uart_configured)
-        {
-            //midToast("CHECK: uart_configured == false", Toast.LENGTH_SHORT);
-            midToast("Need to configure UART.",Toast.LENGTH_SHORT);
+        } else if (!uart_configured) {
+            // midToast("CHECK: uart_configured == false", Toast.LENGTH_SHORT);
+            midToast("Need to configure UART.", Toast.LENGTH_SHORT);
             return DeviceStatus.DEV_NOT_CONFIG;
         }
 
         return DeviceStatus.DEV_CONFIG;
-
     }
 
-    void setUARTInfoString()
-    {
+    void setUARTInfoString() {
         String parityString, flowString;
 
-        switch(parity)
-        {
-        case 0: parityString = new String("None"); break;
-        case 1: parityString = new String("Odd"); break;
-        case 2: parityString = new String("Even"); break;
-        case 3: parityString = new String("Mark"); break;
-        case 4: parityString = new String("Space"); break;
-        default: parityString = new String("None"); break;
+        switch(parity) {
+            case 0 : parityString = new String("None" ); break;
+            case 1 : parityString = new String("Odd"  ); break;
+            case 2 : parityString = new String("Even" ); break;
+            case 3 : parityString = new String("Mark" ); break;
+            case 4 : parityString = new String("Space"); break;
+            default: parityString = new String("None" ); break;
         }
 
-        switch(flowControl)
-        {
-        case 0: flowString = new String("None"); break;
-        case 1: flowString = new String("CTS/RTS"); break;
-        case 2: flowString = new String("DTR/DSR"); break;
-        case 3: flowString = new String("XOFF/XON"); break;
-        default: flowString = new String("None"); break;
+        switch(flowControl) {
+            case 0 : flowString = new String("None"    ); break;
+            case 1 : flowString = new String("CTS/RTS" ); break;
+            case 2 : flowString = new String("DTR/DSR" ); break;
+            case 3 : flowString = new String("XOFF/XON"); break;
+            default: flowString = new String("None"    ); break;
         }
 
         uartSettings = "Port " + portIndex + "; UART Setting  -  Baudrate:" + baudRate + "  StopBit:" + stopBit
@@ -2195,151 +1739,100 @@ public class J2xxHyperTerm extends Activity
         resetStatusData();
     }
 
-    void setConfig(int baud, byte dataBits, byte stopBits, byte parity, byte flowControl)
-    {
+    void setConfig(int baud, byte dataBits, byte stopBits, byte parity, byte flowControl) {
         // configure port
         // reset to UART mode for 232 devices
         ftDev.setBitMode((byte) 0, D2xxManager.FT_BITMODE_RESET);
 
         ftDev.setBaudRate(baud);
 
-        switch (dataBits)
-        {
-        case 7:
-            dataBits = D2xxManager.FT_DATA_BITS_7;
-            break;
-        case 8:
-            dataBits = D2xxManager.FT_DATA_BITS_8;
-            break;
-        default:
-            dataBits = D2xxManager.FT_DATA_BITS_8;
-            break;
+        switch (dataBits) {
+            case 7 : dataBits = D2xxManager.FT_DATA_BITS_7; break;
+            case 8 : dataBits = D2xxManager.FT_DATA_BITS_8; break;
+            default: dataBits = D2xxManager.FT_DATA_BITS_8; break;
         }
 
-        switch (stopBits)
-        {
-        case 1:
-            stopBits = D2xxManager.FT_STOP_BITS_1;
-            break;
-        case 2:
-            stopBits = D2xxManager.FT_STOP_BITS_2;
-            break;
-        default:
-            stopBits = D2xxManager.FT_STOP_BITS_1;
-            break;
+        switch (stopBits) {
+            case 1 : stopBits = D2xxManager.FT_STOP_BITS_1; break;
+            case 2 : stopBits = D2xxManager.FT_STOP_BITS_2; break;
+            default: stopBits = D2xxManager.FT_STOP_BITS_1; break;
         }
 
-        switch (parity)
-        {
-        case 0:
-            parity = D2xxManager.FT_PARITY_NONE;
-            break;
-        case 1:
-            parity = D2xxManager.FT_PARITY_ODD;
-            break;
-        case 2:
-            parity = D2xxManager.FT_PARITY_EVEN;
-            break;
-        case 3:
-            parity = D2xxManager.FT_PARITY_MARK;
-            break;
-        case 4:
-            parity = D2xxManager.FT_PARITY_SPACE;
-            break;
-        default:
-            parity = D2xxManager.FT_PARITY_NONE;
-            break;
+        switch (parity) {
+            case 0 : parity = D2xxManager.FT_PARITY_NONE ; break;
+            case 1 : parity = D2xxManager.FT_PARITY_ODD  ; break;
+            case 2 : parity = D2xxManager.FT_PARITY_EVEN ; break;
+            case 3 : parity = D2xxManager.FT_PARITY_MARK ; break;
+            case 4 : parity = D2xxManager.FT_PARITY_SPACE; break;
+            default: parity = D2xxManager.FT_PARITY_NONE ; break;
         }
 
         ftDev.setDataCharacteristics(dataBits, stopBits, parity);
 
         short flowCtrlSetting;
-        switch (flowControl)
-        {
-        case 0:
-            flowCtrlSetting = D2xxManager.FT_FLOW_NONE;
-            break;
-        case 1:
-            flowCtrlSetting = D2xxManager.FT_FLOW_RTS_CTS;
-            break;
-        case 2:
-            flowCtrlSetting = D2xxManager.FT_FLOW_DTR_DSR;
-            break;
-        case 3:
-            flowCtrlSetting = D2xxManager.FT_FLOW_XON_XOFF;
-            break;
-        default:
-            flowCtrlSetting = D2xxManager.FT_FLOW_NONE;
-            break;
+        switch (flowControl) {
+            case 0 : flowCtrlSetting = D2xxManager.FT_FLOW_NONE    ; break;
+            case 1 : flowCtrlSetting = D2xxManager.FT_FLOW_RTS_CTS ; break;
+            case 2 : flowCtrlSetting = D2xxManager.FT_FLOW_DTR_DSR ; break;
+            case 3 : flowCtrlSetting = D2xxManager.FT_FLOW_XON_XOFF; break;
+            default: flowCtrlSetting = D2xxManager.FT_FLOW_NONE    ; break;
         }
 
         ftDev.setFlowControl(flowCtrlSetting, XON, XOFF);
 
         setUARTInfoString();
-        midToast(uartSettings,Toast.LENGTH_SHORT);
+        midToast(uartSettings, Toast.LENGTH_SHORT);
 
         uart_configured = true;
     }
 
-    void sendData(int numBytes, byte[] buffer)
-    {
-        if (ftDev.isOpen() == false) {
+    void sendData(int numBytes, byte[] buffer) {
+        if (!ftDev.isOpen()) {
             DLog.e(TT, "SendData: device not open");
             Toast.makeText(global_context, "Device not open!", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (numBytes > 0)
-        {
             ftDev.write(buffer, numBytes);
-        }
     }
 
-    void sendData(byte buffer)
-    {
-        DLog.e(TT,"send buf:"+ Integer.toHexString(buffer));
+    void sendData(byte buffer) {
+        DLog.e(TT, "send buf:" + Integer.toHexString(buffer));
         byte tmpBuf[] = new byte[1];
         tmpBuf[0] = buffer;
         ftDev.write(tmpBuf, 1);
     }
-// j2xx functions -
+    // j2xx functions -
 
     // get the first byte of incoming data
-    byte firstData()
-    {
-        if(iTotalBytes > 0)
-        {
+    byte firstData() {
+        if (iTotalBytes > 0)
             return readDataBuffer[iReadIndex];
-        }
 
         return 0x00;
     }
 
     // For zmWaitReadData: Write data at offset of buffer.
-    byte readData(int numBytes, int offset, byte[] buffer)
-    {
-        byte intstatus = 0x00; /* success by default */
+    byte readData(int numBytes, int offset, byte[] buffer) {
+        byte intstatus = 0x00; // success by default
 
-        /* should be at least one byte to read */
-        if ((numBytes < 1) || (0 == iTotalBytes))
-        {
+        // should be at least one byte to read
+        if (numBytes < 1 || iTotalBytes == 0) {
             actualNumBytes = 0;
             intstatus = 0x01;
             return intstatus;
         }
 
         if (numBytes > iTotalBytes)
-        {
             numBytes = iTotalBytes;
-        }
 
-        /* update the number of bytes available */
+        // update the number of bytes available
         iTotalBytes -= numBytes;
         actualNumBytes = numBytes;
 
-        /* copy to the user buffer */
-        for (int count = offset; count < numBytes+offset; count++)
-        {
+        // copy to the user buffer
+        for (int count = offset; count < numBytes + offset; count++) {
             buffer[count] = readDataBuffer[iReadIndex];
             iReadIndex++;
             iReadIndex %= MAX_NUM_BYTES;
@@ -2348,30 +1841,25 @@ public class J2xxHyperTerm extends Activity
         return intstatus;
     }
 
-    byte readData(int numBytes, byte[] buffer)
-    {
-        byte intstatus = 0x00; /* success by default */
+    byte readData(int numBytes, byte[] buffer) {
+        byte intstatus = 0x00; // success by default
 
-        /* should be at least one byte to read */
-        if ((numBytes < 1) || (0 == iTotalBytes))
-        {
+        // should be at least one byte to read
+        if (numBytes < 1 || iTotalBytes == 0) {
             actualNumBytes = 0;
             intstatus = 0x01;
             return intstatus;
         }
 
         if (numBytes > iTotalBytes)
-        {
             numBytes = iTotalBytes;
-        }
 
-        /* update the number of bytes available */
+        // update the number of bytes available
         iTotalBytes -= numBytes;
         actualNumBytes = numBytes;
 
-        /* copy to the user buffer */
-        for (int count = 0; count < numBytes; count++)
-        {
+        // copy to the user buffer
+        for (int count = 0; count < numBytes; count++) {
             buffer[count] = readDataBuffer[iReadIndex];
             iReadIndex++;
             iReadIndex %= MAX_NUM_BYTES;
@@ -2380,17 +1868,15 @@ public class J2xxHyperTerm extends Activity
         return intstatus;
     }
 
-    void resetStatusData()
-    {
-        String tempStr = "Format - " + (bContentFormatHex?"Hexadecimal":"Character") +"\n"+ uartSettings;
+    void resetStatusData() {
+        String tempStr = "Format - " + (bContentFormatHex ? "Hexadecimal" : "Character") + "\n" + uartSettings;
         String tmp = tempStr.replace("\\n", "\n");
         uartInfo.setText(tmp);
     }
 
-    void updateStatusData(String str)
-    {
+    void updateStatusData(String str) {
         String temp;
-        if(null == fileNameInfo)
+        if (fileNameInfo == null)
             temp = "\n" + str;
         else
             temp = fileNameInfo + "\n" + str;
@@ -2399,340 +1885,309 @@ public class J2xxHyperTerm extends Activity
         uartInfo.setText(tmp);
     }
 
-    final Handler handler = new Handler()
-    {
-        public void handleMessage(Message msg)
-        {
-            switch(msg.what)
-            {
-            case UPDATE_TEXT_VIEW_CONTENT:
-                if (actualNumBytes > 0)
-                {
-                    totalUpdateDataBytes += actualNumBytes;
-                    for(int i=0; i<actualNumBytes; i++)
-                    {
-                        readBufferToChar[i] = (char)readBuffer[i];
+    final Handler handler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case UPDATE_TEXT_VIEW_CONTENT: {
+                    if (actualNumBytes > 0) {
+                        totalUpdateDataBytes += actualNumBytes;
+                        for (int i = 0; i < actualNumBytes; i++)
+                            readBufferToChar[i] = (char) readBuffer[i];
+                        appendData(String.copyValueOf(readBufferToChar, 0, actualNumBytes));
                     }
-                    appendData(String.copyValueOf(readBufferToChar, 0, actualNumBytes));
+                    break;
                 }
-                break;
 
-            case UPDATE_SEND_FILE_STATUS:
-            {
-                String temp = currentProtocol;
-                if(sendByteCount <= 10240)
-                    temp += " Send:" + sendByteCount + "B("
-                            + new java.text.DecimalFormat("#.00").format(sendByteCount/(iFileSize/(double)100))+"%)";
-                else
-                    temp += " Send:" +  new java.text.DecimalFormat("#.00").format(sendByteCount/(double)1024) + "KB("
-                            + new java.text.DecimalFormat("#.00").format(sendByteCount/(iFileSize/(double)100))+"%)";
-
-                updateStatusData(temp);
-            }
-                break;
-
-            case UPDATE_SEND_FILE_DONE:
-            {
-                midToast("Send file Done.", Toast.LENGTH_SHORT);
-
-                String temp = currentProtocol;
-                if(0 == iFileSize)
-                {
-                    temp += " - The sent file is 0 byte";
-                }
-                else if(iFileSize < 100)
-                {
-                    temp += " Send:" + sendByteCount + "B("
-                            + new java.text.DecimalFormat("#.00").format(sendByteCount*100/iFileSize)+"%)";
-                }
-                else
-                {
-                    if(sendByteCount <= 10240)
-                        temp += " Send:" + sendByteCount + "B("
-                                + new java.text.DecimalFormat("#.00").format(sendByteCount/(iFileSize/(double)100))+"%)";
+                case UPDATE_SEND_FILE_STATUS: {
+                    String temp = currentProtocol;
+                    if (sendByteCount <= 10240)
+                        temp += " Send:" + sendByteCount + "B(" + new java.text.DecimalFormat("#.00").format(sendByteCount / (iFileSize / (double) 100)) + "%)";
                     else
-                        temp += " Send:" + new java.text.DecimalFormat("#.00").format(sendByteCount/(double)1024) + "KB("
-                                + new java.text.DecimalFormat("#.00").format(sendByteCount/(iFileSize/(double)100))+"%)";
+                        temp += " Send:" + new java.text.DecimalFormat("#.00").format(sendByteCount / (double) 1024) + "KB("
+                                + new java.text.DecimalFormat("#.00").format(sendByteCount / (iFileSize / (double) 100)) + "%)";
+                    updateStatusData(temp);
+                    break;
                 }
 
-                Double diffime = (double)(end_time-start_time)/1000;
-                temp += " in " + diffime.toString() + " seconds";
+                case UPDATE_SEND_FILE_DONE: {
+                    midToast("Send file Done.", Toast.LENGTH_SHORT);
 
-                updateStatusData(temp);
+                    String temp = currentProtocol;
+                    if (iFileSize == 0) {
+                        temp += " - The sent file is 0 byte";
+                    } else if (iFileSize < 100) {
+                        temp += " Send:" + sendByteCount + "B(" + new java.text.DecimalFormat("#.00").format(sendByteCount * 100 / iFileSize) + "%)";
+                    } else {
+                        if (sendByteCount <= 10240)
+                            temp += " Send:" + sendByteCount + "B(" + new java.text.DecimalFormat("#.00").format(sendByteCount / (iFileSize / (double) 100)) + "%)";
+                        else
+                            temp += " Send:" + new java.text.DecimalFormat("#.00").format(sendByteCount / (double) 1024) + "KB("
+                                    + new java.text.DecimalFormat("#.00").format(sendByteCount / (iFileSize / (double) 100)) + "%)";
+                    }
 
-                resetSendButton();
-            }
-                break;
+                    Double diffime = (double) (end_time - start_time) / 1000;
+                    temp += " in " + diffime.toString() + " seconds";
 
-            case ACT_SELECT_SAVED_FILE_NAME:
-                setProtocolMode();
+                    updateStatusData(temp);
 
-                DLog.e(TT,"ACT_SELECT_SAVED_FILE_NAME transferMode:"+transferMode+" UART:" + (bUartModeTaskSet?"True":"False"));
-                saveFileAction();
-                break;
-
-            case ACT_SELECT_SAVED_FILE_FOLDER:
-                getSelectedFolder();
-                break;
-
-            case ACT_SAVED_FILE_NAME_CREATED:
-                setProtocolMode();
-
-                DLog.e(TT,"ACT_SAVED_FILE_NAME_CREATED transferMode:"+transferMode+" UART:" + (bUartModeTaskSet?"True":"False"));
-                fGetFile = new File((String)msg.obj);
-                saveFileAction();
-                break;
-
-            case ACT_SELECT_SEND_FILE_NAME:
-                setProtocolMode();
-
-                sendFileAction();
-                break;
-
-            case MSG_SELECT_FOLDER_NOT_FILE:
-                midToast("Do not pick a file.\n" +
-                        "Plesae press \"Select Directory\" button to select current directory.", Toast.LENGTH_LONG);
-                break;
-
-            case MSG_XMODEM_SEND_FILE_TIMEOUT:
-            {
-                String temp = currentProtocol + " - No response when send file.";
-                midToast(temp, Toast.LENGTH_LONG);
-                updateStatusData(temp);
-
-                resetSendButton();
-            }
-                break;
-
-            case UPDATE_MODEM_RECEIVE_DATA:
-                midToast(currentProtocol + " - Receiving data...",Toast.LENGTH_LONG);
-
-            case UPDATE_MODEM_RECEIVE_DATA_BYTES:
-            {
-                String temp = currentProtocol;
-                if(totalModemReceiveDataBytes <= 10240)
-                    temp += " Receive " + totalModemReceiveDataBytes + "Bytes";
-                else
-                    temp += " Receive " +  new java.text.DecimalFormat("#.00").format(totalModemReceiveDataBytes/(double)1024) + "KBytes";
-
-                updateStatusData(temp);
-            }
-                break;
-
-            case UPDATE_MODEM_RECEIVE_DONE:
-            {
-                saveFileActionDone();
-
-                String temp = currentProtocol;
-                if(totalModemReceiveDataBytes <= 10240)
-                    temp += " Receive " + totalModemReceiveDataBytes + "Bytes";
-                else
-                    temp += " Receive " +  new java.text.DecimalFormat("#.00").format(totalModemReceiveDataBytes/(double)1024) + "KBytes";
-
-                Double diffime = (double)(end_time-start_time)/1000;
-                temp += " in " + diffime.toString() + " seconds";
-
-                updateStatusData(temp);
-            }
-                break;
-
-            case MSG_MODEM_RECEIVE_PACKET_TIMEOUT:
-            {
-                midToast( currentProtocol + " - No Incoming Data.", Toast.LENGTH_LONG);
-                String temp = currentProtocol;
-                if(totalModemReceiveDataBytes <= 10240)
-                    temp += " Receive " + totalModemReceiveDataBytes + "Bytes";
-                else
-                    temp += " Receive " +  new java.text.DecimalFormat("#.00").format(totalModemReceiveDataBytes/(double)1024) + "KBytes";
-
-                updateStatusData(temp);
-                saveFileActionDone();
-            }
-                break;
-
-            case ACT_MODEM_SELECT_SAVED_FILE_FOLDER:
-                setProtocolMode();
-
-                getModemSelectedFolder();
-                break;
-
-            case MSG_MODEM_OPEN_SAVE_FILE_FAIL:
-                midToast(currentProtocol + " - Open save file fail!", Toast.LENGTH_LONG);
-                break;
-
-            case MSG_YMODEM_PARSE_FIRST_PACKET_FAIL:
-                midToast("YModem - Can't parse packet due to incorrect data format!", Toast.LENGTH_LONG);
-                resetLogButton();
-                break;
-
-            case MSG_FORCE_STOP_SEND_FILE:
-                midToast("Stop sending file.", Toast.LENGTH_LONG);
-                break;
-
-            case UPDATE_ASCII_RECEIVE_DATA_BYTES:
-            {
-                String temp = currentProtocol;
-                if(totalReceiveDataBytes <= 10240)
-                    temp += " Receive " + totalReceiveDataBytes + "Bytes";
-                else
-                    temp += " Receive " +  new java.text.DecimalFormat("#.00").format(totalReceiveDataBytes/(double)1024) + "KBytes";
-
-                long tempTime = System.currentTimeMillis();
-                Double diffime = (double)(tempTime-start_time)/1000;
-                temp += " in " + diffime.toString() + " seconds";
-
-                updateStatusData(temp);
-            }
-                break;
-
-            case UPDATE_ASCII_RECEIVE_DATA_DONE:
-                saveFileActionDone();
-                break;
-
-            case MSG_FORCE_STOP_SAVE_TO_FILE:
-                midToast("Stop saving to file.", Toast.LENGTH_LONG);
-                break;
-
-            case UPDATE_ZMODEM_STATE_INFO:
-                updateStatusData("zmodemState:"+zmodemState);
-
-                if(ZOO == zmodemState)
-                {
-                    midToast("ZModem revice file done.", Toast.LENGTH_SHORT);
+                    resetSendButton();
+                    break;
                 }
-                break;
 
-            case ACT_ZMODEM_AUTO_START_RECEIVE:
-                bUartModeTaskSet = false;
-                transferMode = MODE_Z_MODEM_RECEIVE;
-                currentProtocol = "ZModem";
+                case ACT_SELECT_SAVED_FILE_NAME: {
+                    setProtocolMode();
+                    DLog.e(TT, "ACT_SELECT_SAVED_FILE_NAME transferMode:" + transferMode + " UART:" + (bUartModeTaskSet ? "True" : "False"));
+                    saveFileAction();
+                    break;
+                }
 
+                case ACT_SELECT_SAVED_FILE_FOLDER: {
+                    getSelectedFolder();
+                    break;
+                }
 
-                receivedPacketNumber = 1;
-                modemReceiveDataBytes[0] = 0;
-                totalModemReceiveDataBytes = 0;
-                bDataReceived = false;
-                bReceiveFirstPacket = false;
-                fileNameInfo = null;
+                case ACT_SAVED_FILE_NAME_CREATED: {
+                    setProtocolMode();
+                    DLog.e(TT, "ACT_SAVED_FILE_NAME_CREATED transferMode:" + transferMode + " UART:" + (bUartModeTaskSet ? "True" : "False"));
+                    fGetFile = new File((String) msg.obj);
+                    saveFileAction();
+                    break;
+                }
 
-                setLogButton();
+                case ACT_SELECT_SEND_FILE_NAME: {
+                    setProtocolMode();
+                    sendFileAction();
+                    break;
+                }
 
-                zmodemState = ZRINIT;
-                start_time = System.currentTimeMillis();
-                ZModemReadDataThread zmReadThread = new ZModemReadDataThread(handler);
-                zmReadThread.start();
-                break;
+                case MSG_SELECT_FOLDER_NOT_FILE: {
+                    midToast("Do not pick a file.\n" + "Plesae press \"Select Directory\" button to select current directory.", Toast.LENGTH_LONG);
+                    break;
+                }
 
+                case MSG_XMODEM_SEND_FILE_TIMEOUT: {
+                    String temp = currentProtocol + " - No response when send file.";
+                    midToast(temp, Toast.LENGTH_LONG);
+                    updateStatusData(temp);
+                    resetSendButton();
+                    break;
+                }
 
-            case MSG_SPECIAL_INFO:
+                case UPDATE_MODEM_RECEIVE_DATA: {
+                    midToast(currentProtocol + " - Receiving data...", Toast.LENGTH_LONG);
+                }
 
-                midToast("INFO:" + (String)(msg.obj), Toast.LENGTH_LONG);
-                break;
+                case UPDATE_MODEM_RECEIVE_DATA_BYTES: {
+                    String temp = currentProtocol;
+                    if (totalModemReceiveDataBytes <= 10240)
+                        temp += " Receive " + totalModemReceiveDataBytes + "Bytes";
+                    else
+                        temp += " Receive " + new java.text.DecimalFormat("#.00").format(totalModemReceiveDataBytes / (double) 1024) + "KBytes";
 
-            case MSG_UNHANDLED_CASE:
-                if(msg.obj != null)
-                    midToast("UNHANDLED CASE:"+ (String)(msg.obj), Toast.LENGTH_LONG);
-                else
-                    midToast("UNHANDLED CASE ?", Toast.LENGTH_LONG);
-                break;
-            default:
-                midToast("NG CASE", Toast.LENGTH_LONG);
-                //Toast.makeText(global_context, ".", Toast.LENGTH_SHORT).show();
-                break;
-            }
+                    updateStatusData(temp);
+                    break;
+                }
+
+                case UPDATE_MODEM_RECEIVE_DONE: {
+                    saveFileActionDone();
+
+                    String temp = currentProtocol;
+                    if (totalModemReceiveDataBytes <= 10240)
+                        temp += " Receive " + totalModemReceiveDataBytes + "Bytes";
+                    else
+                        temp += " Receive " + new java.text.DecimalFormat("#.00").format(totalModemReceiveDataBytes / (double) 1024) + "KBytes";
+
+                    Double diffime = (double) (end_time - start_time) / 1000;
+                    temp += " in " + diffime.toString() + " seconds";
+
+                    updateStatusData(temp);
+                    break;
+                }
+
+                case MSG_MODEM_RECEIVE_PACKET_TIMEOUT: {
+                    midToast(currentProtocol + " - No Incoming Data.", Toast.LENGTH_LONG);
+                    String temp = currentProtocol;
+                    if (totalModemReceiveDataBytes <= 10240)
+                        temp += " Receive " + totalModemReceiveDataBytes + "Bytes";
+                    else
+                        temp += " Receive " + new java.text.DecimalFormat("#.00").format(totalModemReceiveDataBytes / (double) 1024) + "KBytes";
+
+                    updateStatusData(temp);
+                    saveFileActionDone();
+                    break;
+                }
+
+                case ACT_MODEM_SELECT_SAVED_FILE_FOLDER: {
+                    setProtocolMode();
+                    getModemSelectedFolder();
+                    break;
+                }
+
+                case MSG_MODEM_OPEN_SAVE_FILE_FAIL: {
+                    midToast(currentProtocol + " - Open save file fail!", Toast.LENGTH_LONG);
+                    break;
+                }
+
+                case MSG_YMODEM_PARSE_FIRST_PACKET_FAIL: {
+                    midToast("YModem - Can't parse packet due to incorrect data format!", Toast.LENGTH_LONG);
+                    resetLogButton();
+                    break;
+                }
+
+                case MSG_FORCE_STOP_SEND_FILE: {
+                    midToast("Stop sending file.", Toast.LENGTH_LONG);
+                    break;
+                }
+
+                case UPDATE_ASCII_RECEIVE_DATA_BYTES: {
+                    String temp = currentProtocol;
+                    if (totalReceiveDataBytes <= 10240)
+                        temp += " Receive " + totalReceiveDataBytes + "Bytes";
+                    else
+                        temp += " Receive " + new java.text.DecimalFormat("#.00").format(totalReceiveDataBytes / (double) 1024) + "KBytes";
+
+                    long tempTime = System.currentTimeMillis();
+                    Double diffime = (double) (tempTime - start_time) / 1000;
+                    temp += " in " + diffime.toString() + " seconds";
+
+                    updateStatusData(temp);
+                    break;
+                }
+
+                case UPDATE_ASCII_RECEIVE_DATA_DONE: {
+                    saveFileActionDone();
+                    break;
+                }
+
+                case MSG_FORCE_STOP_SAVE_TO_FILE: {
+                    midToast("Stop saving to file.", Toast.LENGTH_LONG);
+                    break;
+                }
+
+                case UPDATE_ZMODEM_STATE_INFO: {
+                    updateStatusData("zmodemState:" + zmodemState);
+                    if (zmodemState == ZOO)
+                        midToast("ZModem revice file done.", Toast.LENGTH_SHORT);
+                    break;
+                }
+
+                case ACT_ZMODEM_AUTO_START_RECEIVE: {
+                    bUartModeTaskSet = false;
+                    transferMode = MODE_Z_MODEM_RECEIVE;
+                    currentProtocol = "ZModem";
+
+                    receivedPacketNumber = 1;
+                    modemReceiveDataBytes[0] = 0;
+                    totalModemReceiveDataBytes = 0;
+                    bDataReceived = false;
+                    bReceiveFirstPacket = false;
+                    fileNameInfo = null;
+
+                    setLogButton();
+
+                    zmodemState = ZRINIT;
+                    start_time = System.currentTimeMillis();
+                    ZModemReadDataThread zmReadThread = new ZModemReadDataThread(handler);
+                    zmReadThread.start();
+                    break;
+                }
+
+                case MSG_SPECIAL_INFO: {
+                    midToast("INFO:" + (String) (msg.obj), Toast.LENGTH_LONG);
+                    break;
+                }
+
+                case MSG_UNHANDLED_CASE: {
+                    if (msg.obj != null)
+                        midToast("UNHANDLED CASE:" + (String) (msg.obj), Toast.LENGTH_LONG);
+                    else
+                        midToast("UNHANDLED CASE ?", Toast.LENGTH_LONG);
+                    break;
+                }
+
+                default: {
+                    midToast("NG CASE", Toast.LENGTH_LONG);
+                    // Toast.makeText(global_context, ".", Toast.LENGTH_SHORT).show();
+                    break;
+                }
+            } // switch
         }
     };
 
-    void setProtocolMode()
-    {
-        if(true == bUartModeTaskSet)
-        {
+    void setProtocolMode() {
+        if (bUartModeTaskSet) {
             transferMode = MODE_GENERAL_UART;
             currentProtocol = "Ascii";
-        }
-        else
-        {
+        } else {
             transferMode = tempTransferMode;
-            switch(transferMode)
-            {
-            case MODE_X_MODEM_CHECKSUM_RECEIVE:
-            case MODE_X_MODEM_CHECKSUM_SEND:
-                currentProtocol = "XModem-Checksum";
-                break;
+            switch (transferMode) {
+                case MODE_X_MODEM_CHECKSUM_RECEIVE:
+                case MODE_X_MODEM_CHECKSUM_SEND:
+                    currentProtocol = "XModem-Checksum";
+                    break;
 
-            case MODE_X_MODEM_CRC_RECEIVE:
-            case MODE_X_MODEM_CRC_SEND:
-                currentProtocol = "XModem-CRC";
-                break;
+                case MODE_X_MODEM_CRC_RECEIVE:
+                case MODE_X_MODEM_CRC_SEND:
+                    currentProtocol = "XModem-CRC";
+                    break;
 
-            case MODE_X_MODEM_1K_CRC_RECEIVE:
-            case MODE_X_MODEM_1K_CRC_SEND:
-                currentProtocol = "XModem-1KCRC";
-                break;
+                case MODE_X_MODEM_1K_CRC_RECEIVE:
+                case MODE_X_MODEM_1K_CRC_SEND:
+                    currentProtocol = "XModem-1KCRC";
+                    break;
 
-            case MODE_Y_MODEM_1K_CRC_RECEIVE:
-            case MODE_Y_MODEM_1K_CRC_SEND:
-                currentProtocol = "YModem";
-                break;
+                case MODE_Y_MODEM_1K_CRC_RECEIVE:
+                case MODE_Y_MODEM_1K_CRC_SEND:
+                    currentProtocol = "YModem";
+                    break;
 
-            case MODE_Z_MODEM_RECEIVE:
-            case MODE_Z_MODEM_SEND:
-                currentProtocol = "ZModem";
-                break;
+                case MODE_Z_MODEM_RECEIVE:
+                case MODE_Z_MODEM_SEND:
+                    currentProtocol = "ZModem";
+                    break;
 
-            default:
-                currentProtocol = "unknown";
-                break;
+                default:
+                    currentProtocol = "unknown";
+                    break;
             }
         }
     }
 
     // Update UI content
-    class HandlerThread extends Thread
-    {
+    class HandlerThread extends Thread {
         Handler mHandler;
 
-        HandlerThread(Handler h)
-        {
+        HandlerThread(Handler h) {
             mHandler = h;
         }
 
-        public void run()
-        {
+        @Override public void run() {
             byte status;
             Message msg;
 
-            while (true)
-            {
-                try
-                {
+            for (;;) {
+                try {
                     Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-                catch (InterruptedException e) {e.printStackTrace();}
 
-                if(true == bContentFormatHex) // consume input data at hex content format
-                {
+                if (bContentFormatHex) { // consume input data at hex content format
                     status = readData(UI_READ_BUFFER_SIZE, readBuffer);
-                }
-                else if(MODE_GENERAL_UART == transferMode)
-                {
+                } else if (transferMode == MODE_GENERAL_UART) {
                     status = readData(UI_READ_BUFFER_SIZE, readBuffer);
 
-                    if (0x00 == status)
-                    {
-                        if(false == WriteFileThread_start)
-                        {
+                    if (status == 0x00) {
+                        if (!WriteFileThread_start)
                             checkZMStartingZRQINIT();
-                        }
 
                         // save data to file
-                        if(true == WriteFileThread_start && buf_save != null)
-                        {
-                            try
-                            {
+                        if (WriteFileThread_start && buf_save != null) {
+                            try {
                                 buf_save.write(readBuffer, 0, actualNumBytes);
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
-                            catch (IOException e){e.printStackTrace();}
                         }
 
                         msg = mHandler.obtainMessage(UPDATE_TEXT_VIEW_CONTENT);
@@ -2743,112 +2198,92 @@ public class J2xxHyperTerm extends Activity
         }
     }
 
-    class ReadThread extends Thread
-    {
+    class ReadThread extends Thread {
         final int USB_DATA_BUFFER = 8192;
 
         Handler mHandler;
-        ReadThread(Handler h)
-        {
+
+        ReadThread(Handler h) {
             mHandler = h;
             this.setPriority(MAX_PRIORITY);
         }
 
-        public void run()
-        {
+        @Override public void run() {
             byte[] usbdata = new byte[USB_DATA_BUFFER];
             int readcount = 0;
             int iWriteIndex = 0;
             bReadTheadEnable = true;
 
-            while (true == bReadTheadEnable)
-            {
-                try
-                {
+            while (bReadTheadEnable) {
+                try {
                     Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-                catch (InterruptedException e) {e.printStackTrace();}
 
-                DLog.e(TT,"iTotalBytes:"+iTotalBytes);
-                while(iTotalBytes > (MAX_NUM_BYTES - (USB_DATA_BUFFER+1)))
-                {
-                    try
-                    {
+                DLog.e(TT, "iTotalBytes:" + iTotalBytes);
+                while (iTotalBytes > MAX_NUM_BYTES - (USB_DATA_BUFFER + 1)) {
+                    try {
                         Thread.sleep(50);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                    catch (InterruptedException e) {e.printStackTrace();}
                 }
 
                 readcount = ftDev.getQueueStatus();
-                //Log.e(">>@@","iavailable:" + iavailable);
-                if (readcount > 0)
-                {
-                    if(readcount > USB_DATA_BUFFER)
-                    {
+                // Log.e(">>@@","iavailable:" + iavailable);
+                if (readcount > 0) {
+                    if (readcount > USB_DATA_BUFFER) {
                         readcount = USB_DATA_BUFFER;
                     }
                     ftDev.read(usbdata, readcount);
 
-                    if( (MODE_X_MODEM_CHECKSUM_SEND == transferMode)
-                            ||(MODE_X_MODEM_CRC_SEND == transferMode)
-                            ||(MODE_X_MODEM_1K_CRC_SEND == transferMode) )
+                    if (transferMode == MODE_X_MODEM_CHECKSUM_SEND ||
+                        transferMode == MODE_X_MODEM_CRC_SEND      ||
+                        transferMode == MODE_X_MODEM_1K_CRC_SEND   )
                     {
-                        for (int i = 0; i < readcount; i++)
-                        {
+                        for (int i = 0; i < readcount; i++) {
                             modemDataBuffer[i] = usbdata[i];
-                            DLog.e(TXS,"RT usbdata["+i+"]:("+usbdata[i]+")");
+                            DLog.e(TXS, "RT usbdata[" + i + "]:(" + usbdata[i] + ")");
                         }
 
-                        if(NAK == modemDataBuffer[0])
-                        {
-                            DLog.e(TXS,"get response - NAK");
+                        if (modemDataBuffer[0] == NAK) {
+                            DLog.e(TXS, "get response - NAK");
                             bModemGetNak = true;
-                        }
-                        else if(ACK == modemDataBuffer[0])
-                        {
-                            DLog.e(TXS,"get response - ACK");
+                        } else if (modemDataBuffer[0] == ACK) {
+                            DLog.e(TXS, "get response - ACK");
                             bModemGetAck = true;
-                        }
-                        else if(CHAR_C == modemDataBuffer[0])
-                        {
-                            DLog.e(TXS,"get response - CHAR_C");
+                        } else if (modemDataBuffer[0] == CHAR_C) {
+                            DLog.e(TXS, "get response - CHAR_C");
                             bModemGetCharC = true;
                         }
-                        if(CHAR_G == modemDataBuffer[0])
-                        {
-                            DLog.e(TXS,"get response - CHAR_G");
+                        if (modemDataBuffer[0] == CHAR_G) {
+                            DLog.e(TXS, "get response - CHAR_G");
                             bModemGetCharG = true;
                         }
-                    }
-                    else
-                    {
+                    } else {
                         totalReceiveDataBytes += readcount;
-                        //DLog.e(TT,"totalReceiveDataBytes:"+totalReceiveDataBytes);
+                        // DLog.e(TT,"totalReceiveDataBytes:"+totalReceiveDataBytes);
 
-                        //DLog.e(TT,"readcount:"+readcount);
-                        for (int count = 0; count < readcount; count++)
-                        {
+                        // DLog.e(TT,"readcount:"+readcount);
+                        for (int count = 0; count < readcount; count++) {
                             readDataBuffer[iWriteIndex] = usbdata[count];
                             iWriteIndex++;
                             iWriteIndex %= MAX_NUM_BYTES;
                         }
 
                         if (iWriteIndex >= iReadIndex)
-                        {
                             iTotalBytes = iWriteIndex - iReadIndex;
-                        }
-                        else
-                        {
+                         else
                             iTotalBytes = (MAX_NUM_BYTES - iReadIndex) + iWriteIndex;
-                        }
 
-                        //DLog.e(TT,"iTotalBytes:"+iTotalBytes);
-                        if( (MODE_X_MODEM_CHECKSUM_RECEIVE == transferMode)
-                                || (MODE_X_MODEM_CRC_RECEIVE == transferMode)
-                                || (MODE_X_MODEM_1K_CRC_RECEIVE == transferMode)
-                                || (MODE_Y_MODEM_1K_CRC_RECEIVE == transferMode)
-                                || (MODE_Z_MODEM_RECEIVE == transferMode)
-                                || (MODE_Z_MODEM_SEND == transferMode) )
+                        // DLog.e(TT,"iTotalBytes:"+iTotalBytes);
+                        if (transferMode == MODE_X_MODEM_CHECKSUM_RECEIVE ||
+                            transferMode == MODE_X_MODEM_CRC_RECEIVE      ||
+                            transferMode == MODE_X_MODEM_1K_CRC_RECEIVE   ||
+                            transferMode == MODE_Y_MODEM_1K_CRC_RECEIVE   ||
+                            transferMode == MODE_Z_MODEM_RECEIVE          ||
+                            transferMode == MODE_Z_MODEM_SEND             )
                         {
                             modemReceiveDataBytes[0] += readcount;
                             DLog.e(TT,"modemReceiveDataBytes:"+modemReceiveDataBytes[0]);
@@ -2857,30 +2292,27 @@ public class J2xxHyperTerm extends Activity
                 }
             }
 
-            DLog.e(TT, "read thread terminate...");;
+            DLog.e(TT, "read thread terminate...");
         }
     }
 
-    class AsciiReadDataThread extends Thread
-    {
+    class AsciiReadDataThread extends Thread {
         Handler mHandler;
-        AsciiReadDataThread(Handler h)
-        {
+
+        AsciiReadDataThread(Handler h) {
             mHandler = h;
         }
 
-        public void run()
-        {
+        @Override public void run() {
             Message msg;
             start_time = System.currentTimeMillis();
             bReadDataProcess = true;
-            while(bReadDataProcess)
-            {
-                try
-                {
+            while (bReadDataProcess) {
+                try {
                     Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-                catch (InterruptedException e) {e.printStackTrace();}
 
                 msg = mHandler.obtainMessage(UPDATE_ASCII_RECEIVE_DATA_BYTES);
                 mHandler.sendMessage(msg);
@@ -2895,56 +2327,48 @@ public class J2xxHyperTerm extends Activity
         }
     }
 
-    class SendFileThread  extends Thread
-    {
+    class SendFileThread extends Thread {
         Handler mHandler;
         FileInputStream instream;
 
-        SendFileThread(Handler h, FileInputStream stream )
-        {
+        SendFileThread(Handler h, FileInputStream stream) {
             mHandler = h;
             instream = stream;
             this.setPriority(Thread.MAX_PRIORITY);
         }
 
-        @Override
-        public void run()
-        {
+        @Override public void run() {
             Message msg;
-            byte [] usbdata = new byte[64];
+            byte[] usbdata = new byte[64];
             int readcount = 0;
             sendByteCount = 0;
             start_time = System.currentTimeMillis();
 
-            if(instream != null)
-            {
+            if (instream != null) {
                 cal_time_1 = System.currentTimeMillis();
-                try
-                {
-                    readcount = instream.read(usbdata,0,64);
+                try {
+                    readcount = instream.read(usbdata, 0, 64);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                catch (IOException e){e.printStackTrace();}
 
-                while(readcount > 0)
-                {
+                while (readcount > 0) {
                     sendData(readcount, usbdata);
                     sendByteCount += readcount;
-                    try
-                    {
-                        readcount = instream.read(usbdata,0,64);
+                    try {
+                        readcount = instream.read(usbdata, 0, 64);
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                    catch (IOException e){e.printStackTrace();}
 
                     cal_time_2 = System.currentTimeMillis();
-                    if((cal_time_2 - cal_time_1) >= 200) // update progress every 200 milliseconds
-                    {
+                    if (cal_time_2 - cal_time_1 >= 200) { // update progress every 200 milliseconds
                         msg = mHandler.obtainMessage(UPDATE_SEND_FILE_STATUS);
                         mHandler.sendMessage(msg);
                         cal_time_1 = cal_time_2;
                     }
 
-                    if(false == bSendButtonClick)
-                    {
+                    if (!bSendButtonClick) {
                         msg = mHandler.obtainMessage(MSG_FORCE_STOP_SEND_FILE);
                         mHandler.sendMessage(msg);
                         break;
@@ -2959,18 +2383,22 @@ public class J2xxHyperTerm extends Activity
         }
     }
 
-// XModem + ===============================================================================================
-    class XModemReadDataThread extends Thread
-    {
+    // XModem + ===============================================================================================
+    //    __  __  __  __           _
+    //    \ \/ / |  \/  | ___   __| | ___ _ __ ___
+    //     \  /  | |\/| |/ _ \ / _` |/ _ \ '_ ` _ \
+    //     /  \  | |  | | (_) | (_| |  __/ | | | | |
+    //    /_/\_\ |_|  |_|\___/ \__,_|\___|_| |_| |_|
+
+    class XModemReadDataThread extends Thread {
         Handler mHandler;
-        XModemReadDataThread(Handler h)
-        {
+
+        XModemReadDataThread(Handler h) {
             mHandler = h;
             this.setPriority(MAX_PRIORITY);
         }
 
-        public void run()
-        {
+        @Override public void run() {
             Message msg;
             byte status;
             int xmodemErrorCount = 0;
@@ -2986,8 +2414,7 @@ public class J2xxHyperTerm extends Activity
             int getDataState = 0;
 
             totalErrorCount = 0;
-            switch(transferMode)
-            {
+            switch (transferMode) {
             case MODE_X_MODEM_CHECKSUM_RECEIVE:
                 xmodemPacketSize = PACTET_SIZE_XMODEM_CHECKSUM;
                 break;
@@ -3002,110 +2429,84 @@ public class J2xxHyperTerm extends Activity
                 return;
             }
 
-            DLog.e(TT,"xmodemPacketSize:"+xmodemPacketSize);
+            DLog.e(TT, "xmodemPacketSize:" + xmodemPacketSize);
 
             bReadDataProcess = true;
 
-            while(bReadDataProcess)
-            {
-                DLog.e(TXR,"xmodemPacketSize:"+xmodemPacketSize+ " iTotalBytes:"+iTotalBytes);
+            while (bReadDataProcess) {
+                DLog.e(TXR, "xmodemPacketSize:" + xmodemPacketSize + " iTotalBytes:" + iTotalBytes);
 
                 waitCount = 0;
                 resendCount = 20;
                 tempDataCount = 0;
-                while(modemReceiveDataBytes[0] < xmodemPacketSize)
-                {
+                while (modemReceiveDataBytes[0] < xmodemPacketSize) {
                     waitCount++;
-                    try
-                    {
+                    try {
                         Thread.sleep(10);
-                    }
-                    catch (InterruptedException e) {e.printStackTrace();}
-
-                    if(EOT == firstData())
-                    {
-                        break;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
 
-                    if(false == bLogButtonClick)
-                    {
+                    if (firstData() == EOT)
                         break;
-                    }
+
+                    if (!bLogButtonClick)
+                        break;
 
                     // re-send nak/ack for xmomdem revice when there is no packet in for a period of time
-                    if(10 == waitCount)
-                    {
+                    if (waitCount == 10) {
                         tempDataCount = modemReceiveDataBytes[0];
-                    }
-                    else if(waitCount > resendCount)
-                    {
+                    } else if (waitCount > resendCount) {
                         resendCount += 10;
-                        if(tempDataCount == modemReceiveDataBytes[0]) // no incoming data
-                        {
-                            if(true == bDataReceived) // transfer starting
-                            {
-                                if(0 == getDataState)
-                                {
-                                    if(modemReceiveDataBytes[0] == 0)
-                                    {
-                                        DLog.e(TYR,"Resend ackData:"+ackData);
+                        if (tempDataCount == modemReceiveDataBytes[0]) { // no incoming data
+                            if (bDataReceived) { // transfer starting
+                                if (getDataState == 0) {
+                                    if (modemReceiveDataBytes[0] == 0) {
+                                        DLog.e(TYR, "Resend ackData:" + ackData);
                                         sendData(ackData);
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         getDataState = 1;
                                     }
-                                }
-                                else if(1 == getDataState)
-                                {
+                                } else if (getDataState == 1) {
                                     getDataState = 2;
-                                    DLog.e(TXR,"A period of time no data...1");
-                                }
-                                else if(2 == getDataState)
-                                {
+                                    DLog.e(TXR, "A period of time no data...1");
+                                } else if (getDataState == 2) {
                                     getDataState = 3;
-                                    DLog.e(TXR,"A period of time no data...2");
+                                    DLog.e(TXR, "A period of time no data...2");
 
-                                }
-                                else if(3 == getDataState)
-                                {
-                                    DLog.e(TXR,"A period of time no data...3");
+                                } else if (getDataState == 3) {
+                                    DLog.e(TXR, "A period of time no data...3");
 
-                                    DLog.e(TXR,"modemReceiveDataBytes[0]:"+modemReceiveDataBytes[0]+ " iTotalBytes:"+iTotalBytes+" Set data buffer to 0");
+                                    DLog.e(TXR, "modemReceiveDataBytes[0]:" + modemReceiveDataBytes[0] + " iTotalBytes:" + iTotalBytes
+                                            + " Set data buffer to 0");
                                     readData(iTotalBytes, modemDataBuffer);
                                     iTotalBytes = 0;
                                     modemReceiveDataBytes[0] = 0;
 
-                                    DLog.e(TXR,"NG case, Send NAK");
+                                    DLog.e(TXR, "NG case, Send NAK");
                                     sendData(NAK);
                                 }
                             }
-                        }
-                        else if(false == bDataReceived)
-                        {
-                            DLog.e(TXR,"1 data receiving...");
+                        } else if (!bDataReceived) {
+                            DLog.e(TXR, "1 data receiving...");
                             bDataReceived = true;
                             msg = mHandler.obtainMessage(UPDATE_MODEM_RECEIVE_DATA);
                             mHandler.sendMessage(msg);
-                        }
-                        else
-                        {
+                        } else {
                             getDataState = 1;
                             tempDataCount = modemReceiveDataBytes[0];
                         }
                     }
 
                     // stop when long time no data 6000 * 10 ms = 60 sec.
-                    if(waitCount > 6000)
-                    {
-                        DLog.e(TXR,"no incoming data over 60 sec, stop");
+                    if (waitCount > 6000) {
+                        DLog.e(TXR, "no incoming data over 60 sec, stop");
                         bStopReceive = true;
                         break;
                     }
                 }
 
-                if(false == bLogButtonClick)
-                {
+                if (!bLogButtonClick) {
                     msg = mHandler.obtainMessage(MSG_FORCE_STOP_SAVE_TO_FILE);
                     mHandler.sendMessage(msg);
                     transferMode = MODE_GENERAL_UART;
@@ -3114,9 +2515,8 @@ public class J2xxHyperTerm extends Activity
                     continue;
                 }
 
-                if(bStopReceive)
-                {
-                    DLog.e(TXR,"XM no incoming packet for a period of time");
+                if (bStopReceive) {
+                    DLog.e(TXR, "XM no incoming packet for a period of time");
                     msg = mHandler.obtainMessage(MSG_MODEM_RECEIVE_PACKET_TIMEOUT);
                     mHandler.sendMessage(msg);
                     transferMode = MODE_GENERAL_UART;
@@ -3125,9 +2525,8 @@ public class J2xxHyperTerm extends Activity
                     continue;
                 }
 
-                if(EOT == firstData())
-                {
-                    DLog.e(TXR,"EOT send ack*3");
+                if (firstData() == EOT) {
+                    DLog.e(TXR, "EOT send ack*3");
                     readData(1, modemDataBuffer);
                     end_time = System.currentTimeMillis();
                     sendData(ACK);
@@ -3143,41 +2542,32 @@ public class J2xxHyperTerm extends Activity
 
                 status = readData(xmodemPacketSize, modemDataBuffer);
 
-
-                if (0x00 != status)
-                {
-                    DLog.e(TXR,"XMRead - status error");
-                    //midToast("XMRead - status error",Toast.LENGTH_SHORT); Exception: Do not update UI in other thread!
+                if (status != 0x00) {
+                    DLog.e(TXR, "XMRead - status error");
+                    // midToast("XMRead - status error",Toast.LENGTH_SHORT); Exception: Do not update UI in other thread!
                 }
 
-
-                DLog.e(TXR,"Mode:"+ transferMode +" data 0:["+Integer.toHexString(modemDataBuffer[0])
-                            +"] 1:["+Integer.toHexString(modemDataBuffer[1])
-                            +"] 2:["+Integer.toHexString(modemDataBuffer[2])+"]" );
-
+                DLog.e(TXR, "Mode:" + transferMode + " data 0:[" + Integer.toHexString(modemDataBuffer[0]) + "] 1:[" + Integer.toHexString(modemDataBuffer[1])
+                        + "] 2:[" + Integer.toHexString(modemDataBuffer[2]) + "]");
 
                 // parse packet
                 bXModemPktParseOK = parseModemPacket();
 
-                if(true == bReceiveFirstPacket)
-                {
-                    check_data_time_2 =  System.currentTimeMillis();
-                    if((check_data_time_2 - check_data_time_1) >= 200) // update progress every 200 milliseconds
-                    {
+                if (bReceiveFirstPacket) {
+                    check_data_time_2 = System.currentTimeMillis();
+                    if (check_data_time_2 - check_data_time_1 >= 200) { // update progress every 200 milliseconds
                         msg = mHandler.obtainMessage(UPDATE_MODEM_RECEIVE_DATA_BYTES);
                         mHandler.sendMessage(msg);
                         check_data_time_1 = check_data_time_2;
                     }
                 }
 
-                if(true == bXModemPktParseOK)
-                {
-                    DLog.e(TXR, " x rec packet OK pkt:"+receivedPacketNumber);
+                if (bXModemPktParseOK) {
+                    DLog.e(TXR, " x rec packet OK pkt:" + receivedPacketNumber);
                     xmodemErrorCount = 0;
                     receivedPacketNumber++;
                     // write received data to data area or update user area
-                    if(false == bReceiveFirstPacket)
-                    {
+                    if (!bReceiveFirstPacket) {
                         // notify receiving process starting
                         check_data_time_1 = System.currentTimeMillis();
                         start_time = System.currentTimeMillis();
@@ -3186,15 +2576,12 @@ public class J2xxHyperTerm extends Activity
                     }
 
                     ackData = ACK;
-                }
-                else
-                {
-                    DLog.e(TXR, " x rec packet NG:"+receivedPacketNumber +" xmodemErrorCount:"+xmodemErrorCount);
+                } else {
+                    DLog.e(TXR, " x rec packet NG:" + receivedPacketNumber + " xmodemErrorCount:" + xmodemErrorCount);
                     totalErrorCount++;
                     xmodemErrorCount++;
-                    if(xmodemErrorCount > 10)
-                    {
-                        DLog.e(TXR,"Get NAK too many times, stop transfer");
+                    if (xmodemErrorCount > 10) {
+                        DLog.e(TXR, "Get NAK too many times, stop transfer");
                         msg = mHandler.obtainMessage(MSG_MODEM_RECEIVE_PACKET_TIMEOUT);
                         mHandler.sendMessage(msg);
                         transferMode = MODE_GENERAL_UART;
@@ -3209,23 +2596,19 @@ public class J2xxHyperTerm extends Activity
         }
     }
 
-    class XModemSendFileThread  extends Thread
-    {
+    class XModemSendFileThread extends Thread {
         Handler mHandler;
         FileInputStream instream;
 
-        XModemSendFileThread(Handler h, FileInputStream stream )
-        {
+        XModemSendFileThread(Handler h, FileInputStream stream) {
             mHandler = h;
             instream = stream;
             this.setPriority(Thread.MAX_PRIORITY);
         }
 
-        @Override
-        public void run()
-        {
+        @Override public void run() {
             Message msg;
-            byte [] usbdata;
+            byte[] usbdata;
             int readcount = 0;
 
             long check_timeout_1, check_timeout_2;
@@ -3240,38 +2623,30 @@ public class J2xxHyperTerm extends Activity
             sendByteCount = 0;
             start_time = System.currentTimeMillis();
             totalErrorCount = 0;
-            if(MODE_X_MODEM_1K_CRC_SEND == transferMode)
-            {
+            if (transferMode == MODE_X_MODEM_1K_CRC_SEND) {
                 readDataSize = DATA_SIZE_1K;
                 usbdata = new byte[DATA_SIZE_1K];
-            }
-            else // checksum, crc
-            {
+            } else { // checksum, crc
                 readDataSize = DATA_SIZE_128;
                 usbdata = new byte[DATA_SIZE_128];
             }
 
-            if(instream != null)
-            {
-                while(true == bSendFileProcess)
-                {
-                    if(true == bSendEOT)
-                    {
+            if (instream != null) {
+                while (bSendFileProcess) {
+                    if (bSendEOT) {
                         check_timeout_1 = System.currentTimeMillis();
-                        while(false == bModemGetAck)
-                        {
-                            DLog.e(TXS,"EOT wait xModemGetAck == false");
-                            try
-                            {
+                        while (!bModemGetAck) {
+                            DLog.e(TXS, "EOT wait xModemGetAck == false");
+                            try {
                                 Thread.sleep(100);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
                             }
-                            catch (InterruptedException e) {e.printStackTrace();}
 
                             sendData(EOT);
                             check_timeout_2 = System.currentTimeMillis();
-                            if((check_timeout_2 - check_timeout_1)/1000 > 10) // over 10 seconds no response
-                            {
-                                DLog.e(TT,"File send done but no response.");
+                            if ((check_timeout_2 - check_timeout_1) / 1000 > 10) { // over 10 seconds no response
+                                DLog.e(TT, "File send done but no response.");
                                 break;
                             }
                         }
@@ -3282,50 +2657,44 @@ public class J2xxHyperTerm extends Activity
                         continue;
                     }
 
-                    if(false == bStartSendPacket)
-                    {
+                    if (!bStartSendPacket) {
                         // wait receiver ask to send file
                         check_timeout_1 = System.currentTimeMillis();
 
-                        while(  ((MODE_X_MODEM_CHECKSUM_SEND == transferMode) && (false == bModemGetNak))
-                              ||((MODE_X_MODEM_CRC_SEND == transferMode) && (false == bModemGetCharC))
-                              ||((MODE_X_MODEM_1K_CRC_SEND == transferMode) && (false == bModemGetCharC)))  // not CharG
+                        while ((transferMode == MODE_X_MODEM_CHECKSUM_SEND && !bModemGetNak    ) ||
+                               (transferMode == MODE_X_MODEM_CRC_SEND      && !bModemGetCharC  ) ||
+                               (transferMode == MODE_X_MODEM_1K_CRC_SEND   && !bModemGetCharC  )) // not CharG
                         {
-                            DLog.e(TXS,"checkCondition == false, wait... transferMode:"+currentProtocol);
-                            try
-                            {
+                            DLog.e(TXS, "checkCondition == false, wait... transferMode:" + currentProtocol);
+                            try {
                                 Thread.sleep(500);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
                             }
-                            catch (InterruptedException e) {e.printStackTrace();}
 
                             check_timeout_2 = System.currentTimeMillis();
-                            if((check_timeout_2 - check_timeout_1)/1000 > 90) // over 90 seconds no response
-                            {
-                                DLog.e(TXS,"No ask for send file, stop sending file. transferMode:"+currentProtocol);
+                            if ((check_timeout_2 - check_timeout_1) / 1000 > 90) { // over 90 seconds no response
+                                DLog.e(TXS, "No ask for send file, stop sending file. transferMode:" + currentProtocol);
                                 bSendFileProcess = false;
                                 bStartSendPacket = true; // No packet was sent, but need to set it to skip sending first packet.
                                 break;
                             }
                         }
-                    }
-                    else
-                    {
+                    } else {
                         // wait receiver notification
                         int noAckCount = 0;
-                        while(false == bModemGetAck && false == bModemGetNak)
-                        {
+                        while (!bModemGetAck && !bModemGetNak) {
                             noAckCount++;
-                            DLog.e(TXS,"wait xModemGetAck == false && xModemGetNak == false noAckCount:"+noAckCount);
-                            try
-                            {
+                            DLog.e(TXS, "wait xModemGetAck == false && xModemGetNak == false noAckCount:" + noAckCount);
+                            try {
                                 Thread.sleep(10);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
                             }
-                            catch (InterruptedException e) {e.printStackTrace();}
 
                             // 300 baud 1024kbytes: 1024/(300/8) = 27.3 sec(ideal) -> 60 sec
-                            if(noAckCount > 6000) // 10ms * 6000 = 60 sec
-                            {
-                                DLog.e(TXS,"No ACK or NAK response, stop sending file.");
+                            if (noAckCount > 6000) { // 10ms * 6000 = 60 sec
+                                DLog.e(TXS, "No ACK or NAK response, stop sending file.");
                                 bSendFileProcess = false;
                                 break;
                             }
@@ -3333,13 +2702,11 @@ public class J2xxHyperTerm extends Activity
                     }
 
                     // ACK - send next packet
-                    if(true == bModemGetAck || false == bStartSendPacket)
-                    {
+                    if (bModemGetAck || !bStartSendPacket) {
                         errorCount = 0;
-                        DLog.e(TXS,"ACK - send next packet");
-                        if(false == bStartSendPacket)
-                        {
-                            DLog.e(TXS,"ACK - send next packet - 1st case");
+                        DLog.e(TXS, "ACK - send next packet");
+                        if (!bStartSendPacket) {
+                            DLog.e(TXS, "ACK - send next packet - 1st case");
                             cal_time_1 = System.currentTimeMillis();
                             bStartSendPacket = true;
                             bModemGetNak = false;
@@ -3353,406 +2720,301 @@ public class J2xxHyperTerm extends Activity
                         sendPacketNumber++;
 
                         // generate packet
-                        if(MODE_X_MODEM_1K_CRC_SEND == transferMode)
-                        {
+                        if (transferMode == MODE_X_MODEM_1K_CRC_SEND) {
                             modemDataBuffer[0] = STX;
-                        }
-                        else
-                        {
+                        } else {
                             modemDataBuffer[0] = SOH;
                         }
                         modemDataBuffer[1] = sendPacketNumber;
-                        modemDataBuffer[2] = (byte)~sendPacketNumber;
+                        modemDataBuffer[2] = (byte) ~sendPacketNumber;
 
-                        try
-                        {
-                            readcount = instream.read(usbdata,0,readDataSize);
+                        try {
+                            readcount = instream.read(usbdata, 0, readDataSize);
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
-                        catch (IOException e){e.printStackTrace();}
 
                         // information update
-                        if(readcount > 0)
-                        {
+                        if (readcount > 0) {
                             sendByteCount += readcount;
                         }
-                        DLog.e(TXS,"sendByteCount:"+sendByteCount +" readcount:"+readcount);
+                        DLog.e(TXS, "sendByteCount:" + sendByteCount + " readcount:" + readcount);
                         cal_time_2 = System.currentTimeMillis();
-                        if((cal_time_2 - cal_time_1) >= 200) // update progress every 200 ms
-                        {
+                        if (cal_time_2 - cal_time_1 >= 200) { // update progress every 200 ms
                             msg = mHandler.obtainMessage(UPDATE_SEND_FILE_STATUS);
                             mHandler.sendMessage(msg);
                             cal_time_1 = cal_time_2;
                         }
 
-
-                        if(readDataSize == readcount)
-                        {
-                            if(MODE_X_MODEM_CHECKSUM_SEND == transferMode)
-                            {
+                        if (readDataSize == readcount) {
+                            if (transferMode == MODE_X_MODEM_CHECKSUM_SEND) {
                                 byte checksum = 0;
-                                for(int i = 0; i < DATA_SIZE_128; i++)
-                                {
-                                    modemDataBuffer[i+3] = usbdata[i];
+                                for (int i = 0; i < DATA_SIZE_128; i++) {
+                                    modemDataBuffer[i + 3] = usbdata[i];
                                     checksum += usbdata[i];
                                 }
                                 modemDataBuffer[131] = checksum;
                                 sendData(PACTET_SIZE_XMODEM_CHECKSUM, modemDataBuffer);
-                            }
-                            else if(MODE_X_MODEM_CRC_SEND == transferMode)
-                            {
-                                for(int i = 0; i < DATA_SIZE_128; i++)
-                                {
-                                    modemDataBuffer[i+3] = usbdata[i];
-                                }
+                            } else if (transferMode == MODE_X_MODEM_CRC_SEND) {
+                                for (int i = 0; i < DATA_SIZE_128; i++)
+                                    modemDataBuffer[i + 3] = usbdata[i];
 
                                 byte[] crcHL = calCrc(modemDataBuffer, 3, DATA_SIZE_128);
                                 modemDataBuffer[131] = crcHL[0];
                                 modemDataBuffer[132] = crcHL[1];
                                 sendData(PACTET_SIZE_XMODEM_CRC, modemDataBuffer);
                             }
-                            if(MODE_X_MODEM_1K_CRC_SEND == transferMode)
-                            {
-                                for(int i = 0; i < DATA_SIZE_1K; i++)
-                                {
-                                    modemDataBuffer[i+3] = usbdata[i];
-                                }
-
+                            if (transferMode == MODE_X_MODEM_1K_CRC_SEND) {
+                                for (int i = 0; i < DATA_SIZE_1K; i++)
+                                    modemDataBuffer[i + 3] = usbdata[i];
                                 byte[] crcHL = calCrc(modemDataBuffer, 3, DATA_SIZE_1K);
                                 modemDataBuffer[1027] = crcHL[0];
                                 modemDataBuffer[1028] = crcHL[1];
                                 sendData(PACTET_SIZE_XMODEM_1K_CRC, modemDataBuffer);
                             }
-                        }
-                        else if(readcount > 0) // not a complete packet
-                        {
-                            DLog.e(TXS,"ACK - readcount > 0");
-                            if(MODE_X_MODEM_CHECKSUM_SEND == transferMode)
-                            {
+                        } else if (readcount > 0) { // not a complete packet
+                            DLog.e(TXS, "ACK - readcount > 0");
+                            if (transferMode == MODE_X_MODEM_CHECKSUM_SEND) {
                                 byte checksum = 0;
-                                for(int i = 0; i < readcount; i++)
-                                {
-                                    modemDataBuffer[i+3] = usbdata[i];
+                                for (int i = 0; i < readcount; i++) {
+                                    modemDataBuffer[i + 3] = usbdata[i];
                                     checksum += usbdata[i];
                                 }
-
-                                for(int j = 0; j < (DATA_SIZE_128 - readcount); j++)
-                                {
-                                    modemDataBuffer[j+3+readcount] = 0;
-                                }
-
+                                for (int j = 0; j < DATA_SIZE_128 - readcount; j++)
+                                    modemDataBuffer[j + 3 + readcount] = 0;
                                 modemDataBuffer[131] = checksum;
                                 sendData(PACTET_SIZE_XMODEM_CHECKSUM, modemDataBuffer);
-                            }
-                            else if(MODE_X_MODEM_CRC_SEND == transferMode)
-                            {
-                                for(int i = 0; i < readcount; i++)
-                                {
-                                    modemDataBuffer[i+3] = usbdata[i];
-                                }
+                            } else if (transferMode == MODE_X_MODEM_CRC_SEND) {
+                                for (int i = 0; i < readcount; i++)
+                                    modemDataBuffer[i + 3] = usbdata[i];
 
-                                for(int j = 0; j < (DATA_SIZE_128 - readcount); j++)
-                                {
-                                    modemDataBuffer[j+3+readcount] = 0x1a;      // no data, set as 0x1A(^Z)
-                                }
+                                for (int j = 0; j < DATA_SIZE_128 - readcount; j++)
+                                    modemDataBuffer[j + 3 + readcount] = 0x1a; // no data, set as 0x1A(^Z)
 
                                 byte[] crcHL = calCrc(modemDataBuffer, 3, DATA_SIZE_128);
                                 modemDataBuffer[131] = crcHL[0];
                                 modemDataBuffer[132] = crcHL[1];
                                 sendData(PACTET_SIZE_XMODEM_CRC, modemDataBuffer);
-                            }
-                            else if(MODE_X_MODEM_1K_CRC_SEND == transferMode)
-                            {
-                                for(int i = 0; i < readcount; i++)
-                                {
-                                    modemDataBuffer[i+3] = usbdata[i];
-                                }
-
-                                for(int j = 0; j < (DATA_SIZE_1K - readcount); j++)
-                                {
-                                    modemDataBuffer[j+3+readcount] = 0x1a;      // no data, set as 0x1A(^Z)
-                                }
+                            } else if (transferMode == MODE_X_MODEM_1K_CRC_SEND) {
+                                for (int i = 0; i < readcount; i++)
+                                    modemDataBuffer[i + 3] = usbdata[i];
+                                for (int j = 0; j < DATA_SIZE_1K - readcount; j++)
+                                    modemDataBuffer[j + 3 + readcount] = 0x1a; // no data, set as 0x1A(^Z)
 
                                 byte[] crcHL = calCrc(modemDataBuffer, 3, DATA_SIZE_1K);
                                 modemDataBuffer[1027] = crcHL[0];
                                 modemDataBuffer[1028] = crcHL[1];
                                 sendData(PACTET_SIZE_XMODEM_1K_CRC, modemDataBuffer);
+                            } else {
+                                DLog.e(TXS, "XMODEM NG case, Mode:" + transferMode);
                             }
-                            else
-                            {
-                                DLog.e(TXS,"XMODEM NG case, Mode:"+transferMode);
-                            }
-                        }
-                        else if(0 == readcount || -1 == readcount)// no data
-                        {
-                            DLog.e(TXS,"ACK - readcount = 0, -1, no data, send EOT");
+                        } else if (readcount  == 0 || readcount == -1) { // no data
+                            DLog.e(TXS, "ACK - readcount = 0, -1, no data, send EOT");
                             sendData(EOT);
                             bSendEOT = true;
-                            //bSendFileDone = true;
-                        }
-                        else
-                        {
-                            DLog.e(TXS,"XMODEM NG case readcount:"+readcount);
+                            // bSendFileDone = true;
+                        } else {
+                            DLog.e(TXS, "XMODEM NG case readcount:" + readcount);
                         }
                     }
                     // NAK - Re-send previous packet
-                    else if(true == bModemGetNak)
-                    {
+                    else if (bModemGetNak) {
                         totalErrorCount++;
                         errorCount++;
-                        if(errorCount > 10)
-                        {
-                            DLog.e(TXS,"Get NAK too many times, stop transer");
+                        if (errorCount > 10) {
+                            DLog.e(TXS, "Get NAK too many times, stop transer");
                             bSendFileProcess = false;
                             continue;
                         }
 
-                        DLog.e(TXS,"NAK - Re-send previous packet");
+                        DLog.e(TXS, "NAK - Re-send previous packet");
                         bModemGetNak = false;
-                        if(MODE_X_MODEM_1K_CRC_SEND == transferMode)
-                        {
+                        if (transferMode == MODE_X_MODEM_1K_CRC_SEND) {
                             sendData(PACTET_SIZE_XMODEM_1K_CRC, modemDataBuffer);
-                        }
-                        else if(MODE_X_MODEM_CRC_SEND == transferMode)
-                        {
+                        } else if (transferMode == MODE_X_MODEM_CRC_SEND) {
                             sendData(PACTET_SIZE_XMODEM_CRC, modemDataBuffer);
-                        }
-                        else// if(MODE_X_MODEM_CHECKSUM_SEND == transferMode)
-                        {
+                        } else { // if (transferMode == MODE_X_MODEM_CHECKSUM_SEND)
                             sendData(PACTET_SIZE_XMODEM_CHECKSUM, modemDataBuffer);
                         }
                     }
 
-                    if(false == bSendButtonClick)
-                    {
+                    if (!bSendButtonClick)
                         break;
-                    }
                 }
             }
 
             transferMode = MODE_GENERAL_UART;
             bUartModeTaskSet = true;
 
-            if(true == bSendFileDone)
-            {
+            if (bSendFileDone) {
                 end_time = System.currentTimeMillis();
                 msg = mHandler.obtainMessage(UPDATE_SEND_FILE_DONE);
                 mHandler.sendMessage(msg);
-            }
-            else if(false == bSendButtonClick)
-            {
+            } else if (!bSendButtonClick) {
                 msg = mHandler.obtainMessage(MSG_FORCE_STOP_SEND_FILE);
                 mHandler.sendMessage(msg);
-            }
-            else
-            {
+            } else {
                 msg = mHandler.obtainMessage(MSG_XMODEM_SEND_FILE_TIMEOUT);
                 mHandler.sendMessage(msg);
             }
         }
     }
 
-    boolean parseModemPacket()
-    {
+    boolean parseModemPacket() {
         boolean parseOK = true;
         byte pktnum, notpktnum;
         int packetSize = 132;
 
-        if(MODE_X_MODEM_CHECKSUM_RECEIVE == transferMode)
-        {
+        if (transferMode == MODE_X_MODEM_CHECKSUM_RECEIVE) {
             packetSize = PACTET_SIZE_XMODEM_CHECKSUM;
-        }
-        else if(MODE_X_MODEM_CRC_RECEIVE == transferMode)
-        {
+        } else if (transferMode == MODE_X_MODEM_CRC_RECEIVE) {
             packetSize = PACTET_SIZE_XMODEM_CRC;
-        }
-        else if(MODE_X_MODEM_1K_CRC_RECEIVE == transferMode ||
-                MODE_Y_MODEM_1K_CRC_RECEIVE == transferMode )
-        {
+        } else if (transferMode == MODE_X_MODEM_1K_CRC_RECEIVE || transferMode == MODE_Y_MODEM_1K_CRC_RECEIVE) {
             packetSize = PACTET_SIZE_XMODEM_1K_CRC;
         }
 
-        DLog.e(TT,"parse pkt mode:"+ transferMode);
+        DLog.e(TT, "parse pkt mode:" + transferMode);
 
         pktnum = modemDataBuffer[1];
         notpktnum = modemDataBuffer[2];
 
-        DLog.e(TT,"pktnum:"+pktnum+" notpktnum:"+notpktnum);
+        DLog.e(TT, "pktnum:" + pktnum + " notpktnum:" + notpktnum);
 
-        if(MODE_Y_MODEM_1K_CRC_RECEIVE == transferMode && 0 == pktnum && false == bReceiveFirstPacket) // y modem:duplicated file info packet
-        {
+        if (transferMode == MODE_Y_MODEM_1K_CRC_RECEIVE && pktnum == 0 && !bReceiveFirstPacket) { // y modem:duplicated file info packet
             bDuplicatedPacket = true;
-            DLog.e(TYR,"pktnum:"+pktnum+" duplicated file info packet");
+            DLog.e(TYR, "pktnum:" + pktnum + " duplicated file info packet");
             modemReceiveDataBytes[0] -= PACTET_SIZE_XMODEM_CRC;
 
             int tmpRange = packetSize - PACTET_SIZE_XMODEM_CRC; // Need to move 896(1029 - 133) data.
 
-            for(int i = 0; i < tmpRange; i++)
-            {
-                modemDataBuffer[i] = modemDataBuffer[i+PACTET_SIZE_XMODEM_CRC];
-            }
+            for (int i = 0; i < tmpRange; i++)
+                modemDataBuffer[i] = modemDataBuffer[i + PACTET_SIZE_XMODEM_CRC];
+
             return true;
         }
 
-
-        if(pktnum != (~notpktnum))
-        {
-            //DLog.e(TXR,"pktnum:"+pktnum+" notpktnum:"+notpktnum);
-            DLog.e(TXR,"error: pktnum != (~notpktnum)");
+        if (pktnum != ~notpktnum) {
+            // DLog.e(TXR,"pktnum:"+pktnum+" notpktnum:"+notpktnum);
+            DLog.e(TXR, "error: pktnum != ~notpktnum");
             parseOK = false;
         }
-        if(pktnum != receivedPacketNumber)
-        {
-                DLog.e(TXR,"error: pktnum != packetNumber:" +receivedPacketNumber);
-                parseOK = false;
+        if (pktnum != receivedPacketNumber) {
+            DLog.e(TXR, "error: pktnum != packetNumber:" + receivedPacketNumber);
+            parseOK = false;
         }
 
-
-        if(MODE_X_MODEM_1K_CRC_RECEIVE == transferMode)
-        {
-            if(modemDataBuffer[0] != STX)
-            {
-                DLog.e(TXR,"error: modemDataBuffer[0] != STX");
+        if (transferMode == MODE_X_MODEM_1K_CRC_RECEIVE) {
+            if (modemDataBuffer[0] != STX) {
+                DLog.e(TXR, "error: modemDataBuffer[0] != STX");
                 parseOK = false;
             }
-        }
-        else if(MODE_Y_MODEM_1K_CRC_RECEIVE == transferMode )
-        {
+        } else if (transferMode == MODE_Y_MODEM_1K_CRC_RECEIVE) {
 
-            if(modemDataBuffer[0] == SOH)
-            {
-                DLog.e(TYR,"modemDataBuffer[0] == SOH");
+            if (modemDataBuffer[0] == SOH) {
+                DLog.e(TYR, "modemDataBuffer[0] == SOH");
                 packetSize = PACTET_SIZE_XMODEM_CRC;
+            } else if (modemDataBuffer[0] == STX) {
+                DLog.e(TYR, "modemDataBuffer[0] == STX");
+            } else {
+                parseOK = false;
             }
-            else if(modemDataBuffer[0] == STX)
-            {
-                DLog.e(TYR,"modemDataBuffer[0] == STX");
-            }
-            else
-            {
+        } else { // checksum, crc
+            if (modemDataBuffer[0] != SOH) {
+                DLog.e(TXR, "error: modemDataBuffer[0] != SOH");
                 parseOK = false;
             }
         }
-        else // checksum, crc
-        {
-            if(modemDataBuffer[0] != SOH)
-            {
-                DLog.e(TXR,"error: modemDataBuffer[0] != SOH");
-                parseOK = false;
-            }
-        }
-                modemReceiveDataBytes[0] -= packetSize;
+        modemReceiveDataBytes[0] -= packetSize;
 
-        if(true == parseOK)
-        {
-            if(MODE_X_MODEM_CHECKSUM_RECEIVE == transferMode)
-            {
+        if (parseOK) {
+            if (transferMode == MODE_X_MODEM_CHECKSUM_RECEIVE) {
                 byte checksum = 0;
-                for (int i = 3; i < (DATA_SIZE_128 + 3); i++)
-                {
+                for (int i = 3; i < DATA_SIZE_128 + 3; i++)
                     checksum += modemDataBuffer[i];
-                }
 
-                if(modemDataBuffer[131] != checksum)
-                {
-                    Log.e(TXR,"checksum check NG");
+                if (modemDataBuffer[131] != checksum) {
+                    Log.e(TXR, "checksum check NG");
                     parseOK = false;
                 }
-            }
-            else if(MODE_X_MODEM_CRC_RECEIVE == transferMode)
-            {
+            } else if (transferMode == MODE_X_MODEM_CRC_RECEIVE) {
                 byte[] crcHL = calCrc(modemDataBuffer, 3, DATA_SIZE_128);
 
-                if(crcHL[0] != modemDataBuffer[131] || crcHL[1] != modemDataBuffer[132])
-                {
-                    DLog.e(TXR,"crc check NG");
+                if (crcHL[0] != modemDataBuffer[131] || crcHL[1] != modemDataBuffer[132]) {
+                    DLog.e(TXR, "crc check NG");
                     parseOK = false;
                 }
-            }
-            else if(MODE_Y_MODEM_1K_CRC_RECEIVE == transferMode && PACTET_SIZE_XMODEM_CRC == packetSize)
-            {
+            } else if (transferMode == MODE_Y_MODEM_1K_CRC_RECEIVE && packetSize == PACTET_SIZE_XMODEM_CRC) {
                 // TODO: should check crc; last packet, assume it is ok.
-            }
-            else if(MODE_X_MODEM_1K_CRC_RECEIVE == transferMode ||
-                    MODE_Y_MODEM_1K_CRC_RECEIVE == transferMode )
-            {
+            } else if (transferMode == MODE_X_MODEM_1K_CRC_RECEIVE || transferMode == MODE_Y_MODEM_1K_CRC_RECEIVE) {
                 byte[] crcHL = calCrc(modemDataBuffer, 3, DATA_SIZE_1K);
 
-                if(crcHL[0] != modemDataBuffer[1027] || crcHL[1] != modemDataBuffer[1028])
-                {
-                    DLog.e(TXR,"1k crc check NG");
+                if (crcHL[0] != modemDataBuffer[1027] || crcHL[1] != modemDataBuffer[1028]) {
+                    DLog.e(TXR, "1k crc check NG");
                     parseOK = false;
                 }
-            }
-            else
-            {
-                DLog.e(TT,"Parse ptk error case. transferMode:"+transferMode);
+            } else {
+                DLog.e(TT, "Parse ptk error case. transferMode:" + transferMode);
                 parseOK = false;
             }
         }
 
         // save data to file
-        if(true == parseOK && true == WriteFileThread_start && buf_save != null)
-        {
-            try
-            {
-                if(MODE_Y_MODEM_1K_CRC_RECEIVE == transferMode)
-                {
-                    DLog.e(TYR, "ymodemRemainData:"+modemRemainData);
-                    if(modemRemainData >= DATA_SIZE_1K)
-                    {
+        if (parseOK && WriteFileThread_start && buf_save != null) {
+            try {
+                if (transferMode == MODE_Y_MODEM_1K_CRC_RECEIVE) {
+                    DLog.e(TYR, "ymodemRemainData:" + modemRemainData);
+                    if (modemRemainData >= DATA_SIZE_1K) {
                         totalModemReceiveDataBytes += DATA_SIZE_1K;
                         buf_save.write(modemDataBuffer, 3, DATA_SIZE_1K); // data size: 1024
-                    }
-                    else
-                    {
+                    } else {
                         totalModemReceiveDataBytes += modemRemainData;
                         buf_save.write(modemDataBuffer, 3, modemRemainData); // remain data and this packet should be last packet
                     }
                     modemRemainData -= DATA_SIZE_1K;
-                }
-                else if(MODE_X_MODEM_1K_CRC_RECEIVE == transferMode)
-                {
+                } else if (transferMode == MODE_X_MODEM_1K_CRC_RECEIVE) {
                     totalModemReceiveDataBytes += DATA_SIZE_1K;
                     buf_save.write(modemDataBuffer, 3, DATA_SIZE_1K); // data size: 1024
-                }
-                else // checksum, crc
-                {
+                } else { // checksum, crc
                     totalModemReceiveDataBytes += DATA_SIZE_128;
                     buf_save.write(modemDataBuffer, 3, DATA_SIZE_128); // data size: 128
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            catch (IOException e){e.printStackTrace();}
         }
 
         return parseOK;
     }
-// XModem - ===============================================================================================
 
-// YModem + ===============================================================================================
-    class YModemSendFileThread  extends Thread
-    {
+    // XModem - ===============================================================================================
+
+    // YModem + ===============================================================================================
+    //    __   __  __  __           _
+    //    \ \ / / |  \/  | ___   __| | ___ _ __ ___
+    //     \ V /  | |\/| |/ _ \ / _` |/ _ \ '_ ` _ \
+    //      | |   | |  | | (_) | (_| |  __/ | | | | |
+    //      |_|   |_|  |_|\___/ \__,_|\___|_| |_| |_|
+
+    class YModemSendFileThread extends Thread {
         Handler mHandler;
         FileInputStream instream;
 
-        YModemSendFileThread(Handler h, FileInputStream stream )
-        {
+        YModemSendFileThread(Handler h, FileInputStream stream) {
             mHandler = h;
             instream = stream;
             this.setPriority(Thread.MAX_PRIORITY);
         }
 
-        @Override
-        public void run()
-        {
+        @Override public void run() {
             Message msg;
-            byte [] usbdata = new byte[DATA_SIZE_1K];
+            byte[] usbdata = new byte[DATA_SIZE_1K];
             int readcount = 0;
             boolean bSendFileProcess = true;
             byte sendPacketNumber = 0;
             int readDataSize = DATA_SIZE_1K;
             int iGetRespone = 0;
 
-            if(instream == null)
+            if (instream == null)
                 return;
 
             sendByteCount = 0;
@@ -3761,72 +3023,60 @@ public class J2xxHyperTerm extends Activity
             cal_time_1 = System.currentTimeMillis();
             ymodemState = Y_MODEM_WAIT_ASK_SEND_FILE;
 
-            while(true == bSendFileProcess)
-            {
-                if(false == bSendButtonClick)
+            while (bSendFileProcess) {
+                if (!bSendButtonClick)
                     break;
 
-                if(ymodemState >= Y_MODEM_START_SEND_FILE)
-                {
+                if (ymodemState >= Y_MODEM_START_SEND_FILE) {
                     cal_time_2 = System.currentTimeMillis();
-                    if((cal_time_2 - cal_time_1) > 200) // update status every 200ms
-                    {
+                    if (cal_time_2 - cal_time_1 > 200) { // update status every 200ms
                         msg = mHandler.obtainMessage(UPDATE_SEND_FILE_STATUS);
                         mHandler.sendMessage(msg);
                         cal_time_1 = cal_time_2;
                     }
                 }
 
-                switch(ymodemState)
-                {
-                case Y_MODEM_WAIT_ASK_SEND_FILE:
-                {
+                switch (ymodemState) {
+                case Y_MODEM_WAIT_ASK_SEND_FILE: {
                     // wait receiver ask to send file
                     iGetRespone = waitAck(90000);
 
-                    if(DATA_CHAR_C == iGetRespone)
-                    {
-                        DLog.e(TT,"STATE Y_MODEM_WAIT_ASK_SEND_FILE -> Y_MODEM_SEND_FILE_INFO_PACKET");
+                    if (iGetRespone == DATA_CHAR_C) {
+                        DLog.e(TT, "STATE Y_MODEM_WAIT_ASK_SEND_FILE -> Y_MODEM_SEND_FILE_INFO_PACKET");
                         ymodemState = Y_MODEM_SEND_FILE_INFO_PACKET;
-                    }
-                    else
-                    {
+                    } else {
                         bSendFileProcess = false;
                     }
                 }
                     continue;
 
-                case Y_MODEM_SEND_FILE_INFO_PACKET:
-                {
-                    DLog.e(TT,"sFileName:"+sFileName);
-                    DLog.e(TT,"iFileSize:"+iFileSize);
+                case Y_MODEM_SEND_FILE_INFO_PACKET: {
+                    DLog.e(TT, "sFileName:" + sFileName);
+                    DLog.e(TT, "iFileSize:" + iFileSize);
                     byte[] bFileName = sFileName.getBytes();
                     byte[] bFileSize = Integer.toString(iFileSize).getBytes();
                     int lenName = bFileName.length;
                     int lenSize = bFileSize.length;
 
-                    DLog.e(TT,"bFileName:"+bFileName+" len:"+lenName);
-                    DLog.e(TT,"bFileSize:"+bFileSize+" len:"+lenSize);
+                    DLog.e(TT, "bFileName:" + bFileName + " len:" + lenName);
+                    DLog.e(TT, "bFileSize:" + bFileSize + " len:" + lenSize);
 
                     modemDataBuffer[0] = SOH;
                     modemDataBuffer[1] = sendPacketNumber;
-                    modemDataBuffer[2] = (byte)~sendPacketNumber;
+                    modemDataBuffer[2] = (byte) ~sendPacketNumber;
 
                     int i;
-                    for(i =3; i < lenName+3; i++)
-                    {
-                        modemDataBuffer[i] = bFileName[i-3];
+                    for (i = 3; i < lenName + 3; i++) {
+                        modemDataBuffer[i] = bFileName[i - 3];
                     }
                     modemDataBuffer[i] = 0;
                     i++;
                     int j;
-                    for(j=i; j < lenSize+i; j++)
-                    {
-                        modemDataBuffer[j] = bFileSize[j-i];
+                    for (j = i; j < lenSize + i; j++) {
+                        modemDataBuffer[j] = bFileSize[j - i];
                     }
 
-                    for(; j < 130; j++)
-                    {
+                    for (; j < 130; j++) {
                         modemDataBuffer[j] = 0;
                     }
 
@@ -3834,326 +3084,257 @@ public class J2xxHyperTerm extends Activity
                     modemDataBuffer[131] = crcHL[0];
                     modemDataBuffer[132] = crcHL[1];
                     sendData(PACTET_SIZE_XMODEM_CRC, modemDataBuffer);
-                    DLog.e(TT,"STATE -> Y_MODEM_SEND_FILE_INFO_PACKET_WAIT_ACK");
+                    DLog.e(TT, "STATE -> Y_MODEM_SEND_FILE_INFO_PACKET_WAIT_ACK");
                     ymodemState = Y_MODEM_SEND_FILE_INFO_PACKET_WAIT_ACK;
                 }
                     continue;
 
-                case Y_MODEM_SEND_FILE_INFO_PACKET_WAIT_ACK:
-                {
+                case Y_MODEM_SEND_FILE_INFO_PACKET_WAIT_ACK: {
                     iGetRespone = waitAck(60000);
 
-                    if(DATA_NAK == iGetRespone)
-                    {
-                        DLog.e(TT,"STATE -> Y_MODEM_SEND_FILE_INFO_PACKET");
+                    if (iGetRespone == DATA_NAK) {
+                        DLog.e(TT, "STATE -> Y_MODEM_SEND_FILE_INFO_PACKET");
                         ymodemState = Y_MODEM_SEND_FILE_INFO_PACKET;
-                    }
-                    else if(DATA_ACK == iGetRespone)
-                    {
-                        if(DATA_CHAR_C == waitAck(10000))
-                        {
-                            DLog.e(TT,"STATE -> Y_MODEM_SEND_FILE_INFO_PACKET");
+                    } else if (iGetRespone == DATA_ACK) {
+                        if (waitAck(10000) == DATA_CHAR_C) {
+                            DLog.e(TT, "STATE -> Y_MODEM_SEND_FILE_INFO_PACKET");
                             ymodemState = Y_MODEM_START_SEND_FILE;
-                        }
-                        else
-                        {
-                            DLog.e(TT,"STATE -> Y_MODEM_SEND_FILE_INFO_PACKET");
+                        } else {
+                            DLog.e(TT, "STATE -> Y_MODEM_SEND_FILE_INFO_PACKET");
                             ymodemState = Y_MODEM_SEND_FILE_INFO_PACKET;
                         }
-                    }
-                    else
-                    {
+                    } else {
                         bSendFileProcess = false;
                     }
                 }
                     continue;
 
-                case Y_MODEM_START_SEND_FILE:
-                {
+                case Y_MODEM_START_SEND_FILE: {
                     sendPacketNumber++;
 
                     // generate packet
                     modemDataBuffer[0] = STX;
 
                     modemDataBuffer[1] = sendPacketNumber;
-                    modemDataBuffer[2] = (byte)~sendPacketNumber;
+                    modemDataBuffer[2] = (byte) ~sendPacketNumber;
 
-                    try
-                    {
-                        readcount = instream.read(usbdata,0,readDataSize);
+                    try {
+                        readcount = instream.read(usbdata, 0, readDataSize);
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                    catch (IOException e){e.printStackTrace();}
 
                     // information update
-                    if(readcount > 0)
-                    {
+                    if (readcount > 0) {
                         sendByteCount += readcount;
                     }
-                    DLog.e(TYS,"sendByteCount:"+sendByteCount +" readcount:"+readcount);
+                    DLog.e(TYS, "sendByteCount:" + sendByteCount + " readcount:" + readcount);
                     cal_time_2 = System.currentTimeMillis();
-                    if((cal_time_2 - cal_time_1) >= 200) // update progress every 200 ms
-                    {
+                    if (cal_time_2 - cal_time_1 >= 200) { // update progress every 200 ms
                         msg = mHandler.obtainMessage(UPDATE_SEND_FILE_STATUS);
                         mHandler.sendMessage(msg);
                         cal_time_1 = cal_time_2;
                     }
 
-                    if(readDataSize == readcount)
-                    {
-                        for(int i = 0; i < DATA_SIZE_1K; i++)
-                        {
-                            modemDataBuffer[i+3] = usbdata[i];
-                        }
+                    if (readDataSize == readcount) {
+                        for (int i = 0; i < DATA_SIZE_1K; i++)
+                            modemDataBuffer[i + 3] = usbdata[i];
 
                         byte[] crcHL = calCrc(modemDataBuffer, 3, DATA_SIZE_1K);
                         modemDataBuffer[1027] = crcHL[0];
                         modemDataBuffer[1028] = crcHL[1];
                         sendData(PACTET_SIZE_XMODEM_1K_CRC, modemDataBuffer);
-                        DLog.e(TT,"STATE -> Y_MODEM_START_SEND_FILE_WAIT_ACK");
+                        DLog.e(TT, "STATE -> Y_MODEM_START_SEND_FILE_WAIT_ACK");
                         ymodemState = Y_MODEM_START_SEND_FILE_WAIT_ACK;
-                    }
-                    else if(readcount > 0) // not a complete packet, send last data packet
-                    {
-                        DLog.e(TYS,"ACK - readcount > 0");
+                    } else if (readcount > 0) { // not a complete packet, send last data packet
+                        DLog.e(TYS, "ACK - readcount > 0");
 
-                        for(int i = 0; i < readcount; i++)
-                        {
-                            modemDataBuffer[i+3] = usbdata[i];
-                        }
+                        for (int i = 0; i < readcount; i++)
+                            modemDataBuffer[i + 3] = usbdata[i];
 
-                        for(int j = 0; j < (DATA_SIZE_1K - readcount); j++)
-                        {
-                            modemDataBuffer[j+3+readcount] = 0x1a;      // no data, set as 0x1A(^Z)
-                        }
+                        for (int j = 0; j < DATA_SIZE_1K - readcount; j++)
+                            modemDataBuffer[j + 3 + readcount] = 0x1a; // no data, set as 0x1A(^Z)
 
                         byte[] crcHL = calCrc(modemDataBuffer, 3, DATA_SIZE_1K);
                         modemDataBuffer[1027] = crcHL[0];
                         modemDataBuffer[1028] = crcHL[1];
                         sendData(PACTET_SIZE_XMODEM_1K_CRC, modemDataBuffer);
-                        DLog.e(TT,"STATE -> Y_MODEM_START_SEND_FILE_WAIT_ACK");
+                        DLog.e(TT, "STATE -> Y_MODEM_START_SEND_FILE_WAIT_ACK");
                         ymodemState = Y_MODEM_START_SEND_FILE_WAIT_ACK;
-                    }
-                    else if(0 == readcount || -1 == readcount)// no data
-                    {
-                        DLog.e(TYS,"ACK - readcount = 0, -1, no data, send EOT");
-                        DLog.e(TT,"STATE -> Y_MODEM_SEND_EOT_PACKET");
+                    } else if (readcount == 0 || readcount == -1) { // no data
+                        DLog.e(TYS, "ACK - readcount = 0, -1, no data, send EOT");
+                        DLog.e(TT, "STATE -> Y_MODEM_SEND_EOT_PACKET");
                         ymodemState = Y_MODEM_SEND_EOT_PACKET;
                     }
                 }
-                    continue;
+                continue;
 
-                case Y_MODEM_START_SEND_FILE_WAIT_ACK:
-                {
+                case Y_MODEM_START_SEND_FILE_WAIT_ACK: {
                     iGetRespone = waitAck(60000);
 
-                    if(DATA_NAK == iGetRespone)
-                    {
-                        DLog.e(TT,"nak resend pkt STATE -> Y_MODEM_START_SEND_FILE_RESEND");
+                    if (iGetRespone == DATA_NAK) {
+                        DLog.e(TT, "nak resend pkt STATE -> Y_MODEM_START_SEND_FILE_RESEND");
                         totalErrorCount++;
                         ymodemState = Y_MODEM_START_SEND_FILE_RESEND;
-                    }
-                    else if(DATA_ACK == iGetRespone)
-                    {
-                        DLog.e(TT,"ok send next pkt STATE -> Y_MODEM_START_SEND_FILE");
+                    } else if (iGetRespone == DATA_ACK) {
+                        DLog.e(TT, "ok send next pkt STATE -> Y_MODEM_START_SEND_FILE");
                         ymodemState = Y_MODEM_START_SEND_FILE;
-                    }
-                    else
-                    {
-                        DLog.e(TT,"no response, stop transfer");
+                    } else {
+                        DLog.e(TT, "no response, stop transfer");
                         bSendFileProcess = false;
                     }
                 }
                     continue;
-                case Y_MODEM_START_SEND_FILE_RESEND:
-                {
+                case Y_MODEM_START_SEND_FILE_RESEND: {
                     sendData(PACTET_SIZE_XMODEM_1K_CRC, modemDataBuffer);
-                    DLog.e(TT,"STATE -> Y_MODEM_START_SEND_FILE_WAIT_ACK");
+                    DLog.e(TT, "STATE -> Y_MODEM_START_SEND_FILE_WAIT_ACK");
                     ymodemState = Y_MODEM_START_SEND_FILE_WAIT_ACK;
                 }
                     continue;
-                case Y_MODEM_SEND_EOT_PACKET:
-                {
+                case Y_MODEM_SEND_EOT_PACKET: {
 
                     sendData(EOT);
-                    DLog.e(TT,"STATE -> Y_MODEM_SEND_EOT_PACKET_WAIT_ACT");
+                    DLog.e(TT, "STATE -> Y_MODEM_SEND_EOT_PACKET_WAIT_ACT");
                     ymodemState = Y_MODEM_SEND_EOT_PACKET_WAIT_ACT;
                 }
                     continue;
 
-                case Y_MODEM_SEND_EOT_PACKET_WAIT_ACT:
-                {
+                case Y_MODEM_SEND_EOT_PACKET_WAIT_ACT: {
                     iGetRespone = waitAck(10000);
-                    if(DATA_NAK == iGetRespone)
-                    {
-                        DLog.e(TT,"STATE -> Y_MODEM_SEND_EOT_PACKET");
+                    if (iGetRespone == DATA_NAK) {
+                        DLog.e(TT, "STATE -> Y_MODEM_SEND_EOT_PACKET");
                         ymodemState = Y_MODEM_SEND_EOT_PACKET;
-                    }
-                    else if(DATA_ACK == iGetRespone)
-                    {
-                        if(DATA_CHAR_C == waitAck(10000))
-                        DLog.e(TT,"STATE -> Y_MODEM_SEND_LAST_END_PACKET");
+                    } else if (iGetRespone == DATA_ACK) {
+                        if (waitAck(10000) == DATA_CHAR_C)
+                            DLog.e(TT, "STATE -> Y_MODEM_SEND_LAST_END_PACKET");
                         ymodemState = Y_MODEM_SEND_LAST_END_PACKET;
-                    }
-                    else
-                    {
-                        DLog.e(TT,"Send EOT pkt but no ack, STATE -> Y_MODEM_SEND_FILE_DONE");
+                    } else {
+                        DLog.e(TT, "Send EOT pkt but no ack, STATE -> Y_MODEM_SEND_FILE_DONE");
                         bSendFileProcess = false;
                     }
                 }
                     continue;
 
-                case Y_MODEM_SEND_LAST_END_PACKET:
-                {
+                case Y_MODEM_SEND_LAST_END_PACKET: {
                     modemDataBuffer[0] = SOH;
                     modemDataBuffer[1] = 0;
                     modemDataBuffer[2] = ~0;
-                    for(int i = 0; i < DATA_SIZE_128; i++)
-                    {
-                        modemDataBuffer[i+3] = 0;
-                    }
+                    for (int i = 0; i < DATA_SIZE_128; i++)
+                        modemDataBuffer[i + 3] = 0;
+
                     byte[] crcHL = calCrc(modemDataBuffer, 3, DATA_SIZE_128);
                     modemDataBuffer[131] = crcHL[0];
                     modemDataBuffer[132] = crcHL[1];
                     sendData(PACTET_SIZE_XMODEM_CRC, modemDataBuffer);
-                    DLog.e(TT,"STATE -> Y_MODEM_SEND_LAST_END_PACKET_WAIT_ACK");
+                    DLog.e(TT, "STATE -> Y_MODEM_SEND_LAST_END_PACKET_WAIT_ACK");
                     ymodemState = Y_MODEM_SEND_LAST_END_PACKET_WAIT_ACK;
                 }
                     continue;
 
-                case Y_MODEM_SEND_LAST_END_PACKET_WAIT_ACK:
-                {
+                case Y_MODEM_SEND_LAST_END_PACKET_WAIT_ACK: {
                     iGetRespone = waitAck(40000);
-                    if(DATA_NAK == iGetRespone)
-                    {
-                        DLog.e(TT,"STATE -> Y_MODEM_SEND_LAST_END_PACKET");
+                    if (iGetRespone == DATA_NAK) {
+                        DLog.e(TT, "STATE -> Y_MODEM_SEND_LAST_END_PACKET");
                         ymodemState = Y_MODEM_SEND_LAST_END_PACKET;
-                    }
-                    else if(DATA_ACK == iGetRespone)
-                    {
-                        DLog.e(TT,"STATE -> Y_MODEM_SEND_FILE_DONE");
+                    } else if (iGetRespone == DATA_ACK) {
+                        DLog.e(TT, "STATE -> Y_MODEM_SEND_FILE_DONE");
                         ymodemState = Y_MODEM_SEND_FILE_DONE;
-                    }
-                    else
-                    {
-                        DLog.e(TT,"Send end pkt but no ack, STATE -> Y_MODEM_SEND_FILE_DONE");
+                    } else {
+                        DLog.e(TT, "Send end pkt but no ack, STATE -> Y_MODEM_SEND_FILE_DONE");
                         ymodemState = Y_MODEM_SEND_FILE_DONE;
                     }
                 }
                     continue;
 
-                case Y_MODEM_SEND_FILE_DONE:
-                {
+                case Y_MODEM_SEND_FILE_DONE: {
                     bSendFileProcess = false;
                 }
                     continue;
 
                 default:
                     // NG case, stop send file
-                    DLog.e(TT,"YModem NG CASE!!");
+                    DLog.e(TT, "YModem NG CASE!!");
                     bSendFileProcess = false;
                     break;
                 }
             }
 
-            DLog.e(TT,"ymodemState:"+ ymodemState);
+            DLog.e(TT, "ymodemState:" + ymodemState);
 
             transferMode = MODE_GENERAL_UART;
             bUartModeTaskSet = true;
 
-            if(Y_MODEM_SEND_FILE_DONE == ymodemState)
-            {
+            if (ymodemState == Y_MODEM_SEND_FILE_DONE) {
                 end_time = System.currentTimeMillis();
                 msg = mHandler.obtainMessage(UPDATE_SEND_FILE_DONE);
                 mHandler.sendMessage(msg);
-            }
-            else if(false == bSendButtonClick)
-            {
+            } else if (!bSendButtonClick) {
                 msg = mHandler.obtainMessage(MSG_FORCE_STOP_SEND_FILE);
                 mHandler.sendMessage(msg);
-            }
-            else if(Y_MODEM_START_SEND_FILE_WAIT_ACK == ymodemState)
-            {
+            } else if (ymodemState == Y_MODEM_START_SEND_FILE_WAIT_ACK) {
                 msg = mHandler.obtainMessage(MSG_XMODEM_SEND_FILE_TIMEOUT);
                 mHandler.sendMessage(msg);
-            }
-            else
-            {
+            } else {
                 msg = mHandler.obtainMessage(MSG_UNHANDLED_CASE);
                 mHandler.sendMessage(msg);
             }
         }
     }
 
-    int waitAck(int waitTime)
-    {
-        byte []tmpdata = new byte[1];
+    int waitAck(int waitTime) {
+        byte[] tmpdata = new byte[1];
         byte status;
         long time_1, time_2;
         time_1 = System.currentTimeMillis();
-        DLog.e(TT,"waitAck...");
+        DLog.e(TT, "waitAck...");
 
-        do
-        {
-            if(false == bSendButtonClick)
+        do {
+            if (!bSendButtonClick)
                 return DATA_NONE;
 
-            if(iTotalBytes > 0)
-            {
-                status = readData(1,tmpdata);
-                if (0x00 != status)
-                {
-                    DLog.e(TYS,"waitAck - status error");
-                }
+            if (iTotalBytes > 0) {
+                status = readData(1, tmpdata);
+                if (status != 0x00)
+                    DLog.e(TYS, "waitAck - status error");
 
-                if(NAK == tmpdata[0])
-                {
-                    DLog.e(TYS,"get response - NAK");
+                if (tmpdata[0] == NAK) {
+                    DLog.e(TYS, "get response - NAK");
                     return DATA_NAK;
-                }
-                else if(ACK == tmpdata[0])
-                {
-                    DLog.e(TYS,"get response - ACK");
+                } else if (tmpdata[0] == ACK) {
+                    DLog.e(TYS, "get response - ACK");
                     return DATA_ACK;
-                }
-                else if(CHAR_C == tmpdata[0])
-                {
-                    DLog.e(TYS,"get response - CHAR_C");
+                } else if (tmpdata[0] == CHAR_C) {
+                    DLog.e(TYS, "get response - CHAR_C");
                     return DATA_CHAR_C;
-                }
-                else
-                {
-                    DLog.e(TYS,"get unexpected response :" + Integer.toHexString(tmpdata[0]));
+                } else {
+                    DLog.e(TYS, "get unexpected response :" + Integer.toHexString(tmpdata[0]));
                     time_2 = System.currentTimeMillis();
                 }
 
-            }
-            else
-            {   try
-                {
+            } else {
+                try {
                     Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-                catch (InterruptedException e) {e.printStackTrace();}
 
                 time_2 = System.currentTimeMillis();
             }
-        }
-        while((time_2 - time_1) < waitTime);
+        } while (time_2 - time_1 < waitTime);
 
-        DLog.e(TYS,"DATA_NONE - timeout no response");
+        DLog.e(TYS, "DATA_NONE - timeout no response");
         return DATA_NONE;
     }
 
-    class YModemReadDataThread extends Thread // MODE_Y_MODEM_1K_CRC_RECEIVE - YModem-1K
-    {
+    class YModemReadDataThread extends Thread { // MODE_Y_MODEM_1K_CRC_RECEIVE - YModem-1K
         Handler mHandler;
-        YModemReadDataThread(Handler h)
-        {
+
+        YModemReadDataThread(Handler h) {
             mHandler = h;
             this.setPriority(MAX_PRIORITY);
         }
 
-        public void run()
-        {
+        @Override public void run() {
             Message msg;
             byte status;
             int ymodemErrorCount = 0;
@@ -4174,135 +3355,103 @@ public class J2xxHyperTerm extends Activity
             bReceiveFirstPacket = false;
             totalErrorCount = 0;
 
-            while(bReadDataProcess)
-            {
-                DLog.e(TYR,"ymodemPacketSize:"+ymodemPacketSize+ " iTotalBytes:"+iTotalBytes);
-                DLog.e(TYR, "modemRemainData:"+modemRemainData);
+            while (bReadDataProcess) {
+                DLog.e(TYR, "ymodemPacketSize:" + ymodemPacketSize + " iTotalBytes:" + iTotalBytes);
+                DLog.e(TYR, "modemRemainData:" + modemRemainData);
 
                 waitCount = 0;
                 resendCount = 20;
                 tempDataCount = 0;
 
-                while(modemReceiveDataBytes[0] < 1)
-                {
-                    try
-                    {
+                while (modemReceiveDataBytes[0] < 1) {
+                    try {
                         Thread.sleep(10);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                    catch (InterruptedException e) {e.printStackTrace();}
 
-                    if(false == bLogButtonClick)
-                    {
+                    if (!bLogButtonClick)
                         break;
-                    }
                 }
 
-                if(STX == firstData()) // check packet size
-                {
+                if (firstData() == STX) // check packet size
                     ymodemPacketSize = PACTET_SIZE_XMODEM_1K_CRC;
-                }
                 else
-                {
                     ymodemPacketSize = PACTET_SIZE_XMODEM_CRC;
-                }
 
-                DLog.e(TYR,"ymodemPacketSize:"+ymodemPacketSize);
+                DLog.e(TYR, "ymodemPacketSize:" + ymodemPacketSize);
 
                 getDataState = 0;
 
-                while(modemReceiveDataBytes[0] < ymodemPacketSize)
-                {
-                    DLog.e(TT,"modemReceiveDataBytes:"+modemReceiveDataBytes[0]);
+                while (modemReceiveDataBytes[0] < ymodemPacketSize) {
+                    DLog.e(TT, "modemReceiveDataBytes:" + modemReceiveDataBytes[0]);
                     waitCount++;
-                    try
-                    {
+                    try {
                         Thread.sleep(10);
-                    }
-                    catch (InterruptedException e) {e.printStackTrace();}
-
-                    if(EOT == firstData())
-                    {
-                        break;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
 
-                    if(false == bLogButtonClick)
-                    {
+                    if (firstData() == EOT)
                         break;
-                    }
+
+                    if (!bLogButtonClick)
+                        break;
+
 
                     // re-send nak/ack for xmomdem revice when there is no packet in for a period of time
-                    if(10 == waitCount)
-                    {
+                    if (waitCount == 10) {
                         tempDataCount = modemReceiveDataBytes[0];
-                    }
-                    else if(waitCount > resendCount)
-                    {
+                    } else if (waitCount > resendCount) {
                         resendCount += 10;
-                        if(tempDataCount == modemReceiveDataBytes[0] ) // no incoming data
-                        {
-                            if(true == bDataReceived) // transfer starting
-                            {
-                                if(0 == getDataState)
-                                {
-                                    if(modemReceiveDataBytes[0] == 0)
-                                    {
-                                        DLog.e(TYR,"Resend ackData:"+ackData);
+                        if (tempDataCount == modemReceiveDataBytes[0]) { // no incoming data
+                            if (bDataReceived) { // transfer starting
+                                if (getDataState == 0) {
+                                    if (modemReceiveDataBytes[0] == 0) {
+                                        DLog.e(TYR, "Resend ackData:" + ackData);
                                         sendData(ackData);
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         getDataState = 1;
                                     }
-                                }
-                                else if(1 == getDataState)
-                                {
+                                } else if (getDataState == 1) {
                                     getDataState = 2;
-                                    DLog.e(TYR,"A period of time no data...1");
-                                }
-                                else if(2 == getDataState)
-                                {
+                                    DLog.e(TYR, "A period of time no data...1");
+                                } else if (getDataState == 2) {
                                     getDataState = 3;
-                                    DLog.e(TYR,"A period of time no data...2");
+                                    DLog.e(TYR, "A period of time no data...2");
 
-                                }
-                                else if(3 == getDataState)
-                                {
-                                    DLog.e(TYR,"A period of time no data...3");
+                                } else if (getDataState == 3) {
+                                    DLog.e(TYR, "A period of time no data...3");
 
-                                    DLog.e(TYR,"modemReceiveDataBytes[0]:"+modemReceiveDataBytes[0]+ " iTotalBytes:"+iTotalBytes+" Set data buffer to 0");
+                                    DLog.e(TYR, "modemReceiveDataBytes[0]:" + modemReceiveDataBytes[0] + " iTotalBytes:" + iTotalBytes
+                                            + " Set data buffer to 0");
                                     readData(iTotalBytes, modemDataBuffer);
                                     iTotalBytes = 0;
                                     modemReceiveDataBytes[0] = 0;
 
-                                    DLog.e(TYR,"NG case, Send NAK");
+                                    DLog.e(TYR, "NG case, Send NAK");
                                     sendData(NAK);
                                 }
                             }
-                        }
-                        else if(false == bDataReceived)
-                        {
+                        } else if (!bDataReceived) {
                             bDataReceived = true;
                             msg = mHandler.obtainMessage(UPDATE_MODEM_RECEIVE_DATA);
                             mHandler.sendMessage(msg);
-                        }
-                        else
-                        {
+                        } else {
                             getDataState = 1;
-                            DLog.e(TYR,"Continue getting data...");
+                            DLog.e(TYR, "Continue getting data...");
                             tempDataCount = modemReceiveDataBytes[0];
                         }
                     }
 
                     // stop when long time no data 6000 * 10 ms = 60 sec.
-                    if(waitCount > 6000)
-                    {
+                    if (waitCount > 6000) {
                         bStopReceive = true;
                         break;
                     }
                 }
 
-                if(false == bLogButtonClick)
-                {
+                if (!bLogButtonClick) {
                     msg = mHandler.obtainMessage(MSG_FORCE_STOP_SAVE_TO_FILE);
                     mHandler.sendMessage(msg);
                     transferMode = MODE_GENERAL_UART;
@@ -4311,9 +3460,8 @@ public class J2xxHyperTerm extends Activity
                     continue;
                 }
 
-                if(bStopReceive)
-                {
-                    DLog.e(TYR,"YM no incoming packet for a period of time");
+                if (bStopReceive) {
+                    DLog.e(TYR, "YM no incoming packet for a period of time");
                     msg = mHandler.obtainMessage(MSG_MODEM_RECEIVE_PACKET_TIMEOUT);
                     mHandler.sendMessage(msg);
                     transferMode = MODE_GENERAL_UART;
@@ -4322,9 +3470,8 @@ public class J2xxHyperTerm extends Activity
                     continue;
                 }
 
-                if(EOT == firstData())
-                {
-                    DLog.e(TYR,"EOT send ack & C");
+                if (firstData() == EOT) {
+                    DLog.e(TYR, "EOT send ack & C");
                     readData(1, modemDataBuffer);
                     end_time = System.currentTimeMillis();
                     bGetEOT = true;
@@ -4335,9 +3482,8 @@ public class J2xxHyperTerm extends Activity
 
                 status = readData(ymodemPacketSize, modemDataBuffer);
 
-                if(true == bGetEOT)
-                {
-                    DLog.e(TYR,"Get last packet after EOT send ack");
+                if (bGetEOT) {
+                    DLog.e(TYR, "Get last packet after EOT send ack");
                     sendData(ACK);
                     msg = mHandler.obtainMessage(UPDATE_MODEM_RECEIVE_DONE);
                     mHandler.sendMessage(msg);
@@ -4347,30 +3493,23 @@ public class J2xxHyperTerm extends Activity
                     continue;
                 }
 
-                if (0x00 != status)
-                {
-                    DLog.e(TYR,"YMRead - status error");
-                    //midToast("XMRead - status error",Toast.LENGTH_SHORT); Exception: Do not update UI in other thread!
+                if (status != 0x00) {
+                    DLog.e(TYR, "YMRead - status error");
+                    // midToast("XMRead - status error",Toast.LENGTH_SHORT); Exception: Do not update UI in other thread!
                 }
 
+                DLog.e(TYR, "Mode:" + transferMode + " data 0:[" + Integer.toHexString(modemDataBuffer[0]) + "] 1:[" + Integer.toHexString(modemDataBuffer[1])
+                        + "] 2:[" + Integer.toHexString(modemDataBuffer[2]) + "]");
 
-                DLog.e(TYR,"Mode:"+ transferMode +" data 0:["+Integer.toHexString(modemDataBuffer[0])
-                        +"] 1:["+Integer.toHexString(modemDataBuffer[1])
-                        +"] 2:["+Integer.toHexString(modemDataBuffer[2])+"]" );
-
-
-                if(false == bReceiveFirstPacket)
-                {
+                if (!bReceiveFirstPacket) {
                     // parse first packet for filename, filesize
                     bYModemPktParseOK = parseYModemFirstPacket();
 
-                    if(false == bYModemPktParseOK)
-                    {
+                    if (!bYModemPktParseOK) {
                         parseFirstPktCount++;
 
-                        if(10 == parseFirstPktCount)
-                        {
-                            DLog.e(TYR,"YModem: can't parse first packet, cancel transfer");
+                        if (parseFirstPktCount == 10) {
+                            DLog.e(TYR, "YModem: can't parse first packet, cancel transfer");
                             msg = mHandler.obtainMessage(MSG_YMODEM_PARSE_FIRST_PACKET_FAIL);
                             mHandler.sendMessage(msg);
                             // In this case, the saved file is not open correctly, so need to skip the action to close file
@@ -4378,17 +3517,13 @@ public class J2xxHyperTerm extends Activity
                             bUartModeTaskSet = true;
                             bReadDataProcess = false;
                             continue;
-                        }
-                        else
-                        {
-                            DLog.e(TYR,"YModem: first packet parse NG!");
+                        } else {
+                            DLog.e(TYR, "YModem: first packet parse NG!");
                             sendData(NAK);
                             continue;
                         }
-                    }
-                    else if(false == openModemSaveFile())
-                    {
-                        DLog.e(TYR,"YModem: open save file fail!");
+                    } else if (!openModemSaveFile()) {
+                        DLog.e(TYR, "YModem: open save file fail!");
                         msg = mHandler.obtainMessage(MSG_MODEM_OPEN_SAVE_FILE_FAIL);
                         mHandler.sendMessage(msg);
 
@@ -4398,32 +3533,26 @@ public class J2xxHyperTerm extends Activity
                         bReadDataProcess = false;
                         continue;
                     }
-                }
-                else
-                {
+                } else {
                     // parse packet
                     bYModemPktParseOK = parseModemPacket();
                 }
 
-                if(true == bReceiveFirstPacket)
-                {
-                    check_data_time_2 =  System.currentTimeMillis();
-                    if((check_data_time_2 - check_data_time_1) >= 200) // update progress every 200 milliseconds
-                    {
+                if (bReceiveFirstPacket) {
+                    check_data_time_2 = System.currentTimeMillis();
+                    if (check_data_time_2 - check_data_time_1 >= 200) { // update progress every 200 milliseconds
                         msg = mHandler.obtainMessage(UPDATE_MODEM_RECEIVE_DATA_BYTES);
                         mHandler.sendMessage(msg);
                         check_data_time_1 = check_data_time_2;
                     }
                 }
 
-                if(true == bYModemPktParseOK)
-                {
-                    DLog.e(TYR, " Y rec packet OK pkt:"+receivedPacketNumber);
+                if (bYModemPktParseOK) {
+                    DLog.e(TYR, " Y rec packet OK pkt:" + receivedPacketNumber);
 
                     ymodemErrorCount = 0;
                     // write received data to data area or update user area
-                    if(false == bReceiveFirstPacket)
-                    {
+                    if (!bReceiveFirstPacket) {
                         // notify receiving process starting
                         check_data_time_1 = System.currentTimeMillis();
                         start_time = System.currentTimeMillis();
@@ -4433,27 +3562,20 @@ public class J2xxHyperTerm extends Activity
                         bDataReceived = true;
                         sendData(ACK);
                         ackData = CHAR_C;
-                    }
-                    else if(true == bDuplicatedPacket)
-                    {
+                    } else if (bDuplicatedPacket) {
                         bDuplicatedPacket = false;
                         ackData = ACK;
-                    }
-                    else
-                    {
+                    } else {
                         receivedPacketNumber++;
                         ackData = ACK;
                     }
-                }
-                else
-                {
-                    DLog.e(TYR, " Y rec packet NG:"+receivedPacketNumber);
+                } else {
+                    DLog.e(TYR, " Y rec packet NG:" + receivedPacketNumber);
                     ymodemErrorCount++;
                     totalErrorCount++;
 
-                    if(ymodemErrorCount > 10)
-                    {
-                        DLog.e(TYR,"Get NAK too many times, stop transfer");
+                    if (ymodemErrorCount > 10) {
+                        DLog.e(TYR, "Get NAK too many times, stop transfer");
                         msg = mHandler.obtainMessage(MSG_MODEM_RECEIVE_PACKET_TIMEOUT);
                         mHandler.sendMessage(msg);
                         transferMode = MODE_GENERAL_UART;
@@ -4468,104 +3590,96 @@ public class J2xxHyperTerm extends Activity
         }
     }
 
-
-    boolean parseYModemFirstPacket()
-    {
+    boolean parseYModemFirstPacket() {
         boolean parseOK = true;
         char filename[] = new char[128];
         char filesize[] = new char[12];
 
         modemReceiveDataBytes[0] -= PACTET_SIZE_XMODEM_CRC;
 
-        DLog.e(TT,"parse ym first pkt");
+        DLog.e(TT, "parse ym first pkt");
 
-        DLog.e(TYR,"Mode:"+ transferMode +" data 0:["+Integer.toHexString(modemDataBuffer[0])
-                +"] 1:["+Integer.toHexString(modemDataBuffer[1])
-                +"] 2:["+Integer.toHexString(modemDataBuffer[2])+"]" );
+        DLog.e(TYR, "Mode:" + transferMode + " data 0:[" + Integer.toHexString(modemDataBuffer[0]) + "] 1:[" + Integer.toHexString(modemDataBuffer[1])
+                + "] 2:[" + Integer.toHexString(modemDataBuffer[2]) + "]");
 
-        if(modemDataBuffer[0] != SOH)
-        {
-            DLog.e(TYR,"error: xModemBuffer[0] != SOH");
+        if (modemDataBuffer[0] != SOH) {
+            DLog.e(TYR, "error: xModemBuffer[0] != SOH");
             parseOK = false;
         }
 
-        if(modemDataBuffer[1] != 0x00)
-        {
-            DLog.e(TYR,"error: xModemBuffer[1] != 0x00");
+        if (modemDataBuffer[1] != 0x00) {
+            DLog.e(TYR, "error: xModemBuffer[1] != 0x00");
             parseOK = false;
         }
 
-        if(modemDataBuffer[2] != ~modemDataBuffer[1])
-        {
-            DLog.e(TYR,"error: xModemBuffer[2] != ~xModemBuffer[1]");
+        if (modemDataBuffer[2] != ~modemDataBuffer[1]) {
+            DLog.e(TYR, "error: xModemBuffer[2] != ~xModemBuffer[1]");
             parseOK = false;
         }
 
-        if(true == parseOK)
-        {
+        if (parseOK) {
             int i = 0;
-            while(modemDataBuffer[i+3] != 0x00)
-            {
-                filename[i] = (char)modemDataBuffer[i+3];
+            while (modemDataBuffer[i + 3] != 0x00) {
+                filename[i] = (char) modemDataBuffer[i + 3];
                 i++;
             }
 
             i++;
             int j = 0;
-            while((modemDataBuffer[j+i+3] != 0x00) && ((j+i+3) < (PACTET_SIZE_XMODEM_CRC-1)))
-            {
-                filesize[j] = (char)modemDataBuffer[j+i+3];
+            while (modemDataBuffer[j + i + 3] != 0x00 && j + i + 3 < PACTET_SIZE_XMODEM_CRC - 1) {
+                filesize[j] = (char) modemDataBuffer[j + i + 3];
                 j++;
             }
 
-            DLog.e(TYR,"i:"+ i +" j:"+j);
+            DLog.e(TYR, "i:" + i + " j:" + j);
 
-            modemFileName = String.copyValueOf(filename, 0, i-1);
+            modemFileName = String.copyValueOf(filename, 0, i - 1);
             modemFileSize = String.copyValueOf(filesize, 0, j);
 
-            DLog.e(TYR,"File Name:"+ modemFileName);
-            DLog.e(TYR,"File Size:"+ modemFileSize);
+            DLog.e(TYR, "File Name:" + modemFileName);
+            DLog.e(TYR, "File Size:" + modemFileSize);
         }
 
         return parseOK;
     }
-// YModem - ===============================================================================================
 
-// ZModem + ===============================================================================================
-    class ZModemSendFileThread  extends Thread
-    {
+    // YModem - ===============================================================================================
+
+    // ZModem + ===============================================================================================
+    //     _____  __  __           _
+    //    |__  / |  \/  | ___   __| | ___ _ __ ___
+    //      / /  | |\/| |/ _ \ / _` |/ _ \ '_ ` _ \
+    //     / /_  | |  | | (_) | (_| |  __/ | | | | |
+    //    /____| |_|  |_|\___/ \__,_|\___|_| |_| |_|
+
+    class ZModemSendFileThread extends Thread {
         Handler mHandler;
         FileInputStream instream;
 
-        ZModemSendFileThread(Handler h, FileInputStream stream )
-        {
+        ZModemSendFileThread(Handler h, FileInputStream stream) {
             mHandler = h;
             instream = stream;
             this.setPriority(Thread.MAX_PRIORITY);
         }
 
-        public void run()
-        {
+        @Override public void run() {
             Message msg;
             boolean bSendFileDone = false;
             boolean bSendFileProcess = true;
-            byte [] tempBuffer =  new byte[2048];
+            byte[] tempBuffer = new byte[2048];
             byte[] crcHL = new byte[2];
 
             // TODO: dynamic setting size for different baud rate?
-            /*
-             *  256 bytes below 2400 bps, 512 at 2400 bps,
-             *  and 1024 above 4800 bps or when the data link is known to be relatively error free.
-             */
+            // 256 bytes below 2400 bps, 512 at 2400 bps, and 1024 above 4800 bps or when the data link is known to be relatively error free.
             int zmReadDataSize = 0;
-//          if(baudRate < 2400)
-//              zmReadDataSize= DATA_SIZE_256;
-//          else if(2400 == baudRate)
-//              zmReadDataSize= DATA_SIZE_512;
-//          else
-//              zmReadDataSize= DATA_SIZE_1K;
+            // if(baudRate < 2400)
+            // zmReadDataSize= DATA_SIZE_256;
+            // else if (baudRate == 2400)
+            // zmReadDataSize= DATA_SIZE_512;
+            // else
+            // zmReadDataSize= DATA_SIZE_1K;
 
-            zmReadDataSize= DATA_SIZE_512;
+            zmReadDataSize = DATA_SIZE_512;
             int readcount = 0;
 
             sendByteCount = 0;
@@ -4574,686 +3688,290 @@ public class J2xxHyperTerm extends Activity
             cal_time_1 = System.currentTimeMillis();
             start_time = System.currentTimeMillis();
 
-            while(true == bSendFileProcess)
-            {
-                if(false == bSendButtonClick)
+            while (bSendFileProcess) {
+                if (!bSendButtonClick)
                     break;
 
-                if(zmodemState >= ZDATA)
-                {
+                if (zmodemState >= ZDATA) {
                     cal_time_2 = System.currentTimeMillis();
-                    if((cal_time_2 - cal_time_1) > 200) // update status every 200ms
-                    {
+                    if (cal_time_2 - cal_time_1 > 200) { // update status every 200ms
                         msg = mHandler.obtainMessage(UPDATE_SEND_FILE_STATUS);
                         mHandler.sendMessage(msg);
                         cal_time_1 = cal_time_2;
                     }
                 }
 
-                switch(zmodemState)
-                {
-                case ZRQINIT:
-                    tempBuffer[0] = 0x72; // r
-                    tempBuffer[1] = 0x7A; // z
-                    tempBuffer[2] = 0x0D; // \r
-                    tempBuffer[3] = 0x2A; // ZPAD
-                    tempBuffer[4] = 0x2A; // ZPAD
-                    tempBuffer[5] = 0x18; // ZDLE
-                    tempBuffer[6] = 0x42; // ZHEX
-                    tempBuffer[7] = 0x30;
-                    tempBuffer[8] = 0x30; //2
-                    tempBuffer[9] = 0x30;
-                    tempBuffer[10] = 0x30; //4
-                    tempBuffer[11] = 0x30;
-                    tempBuffer[12] = 0x30; //6
-                    tempBuffer[13] = 0x30;
-                    tempBuffer[14] = 0x30; //8
-                    tempBuffer[15] = 0x30;
-                    tempBuffer[16] = 0x30; //10
-                    tempBuffer[17] = 0x30;
-                    tempBuffer[18] = 0x30; //12
-                    tempBuffer[19] = 0x30;
-                    tempBuffer[20] = 0x30; //14
-                    tempBuffer[21] = 0x0D;
-                    tempBuffer[22] = 0x0A;
-                    tempBuffer[23] = 0x11;
-                    sendData(24, tempBuffer);
+                switch (zmodemState) {
+                    case ZRQINIT:
+                        tempBuffer[0] = 0x72; // r
+                        tempBuffer[1] = 0x7A; // z
+                        tempBuffer[2] = 0x0D; // \r
+                        tempBuffer[3] = 0x2A; // ZPAD
+                        tempBuffer[4] = 0x2A; // ZPAD
+                        tempBuffer[5] = 0x18; // ZDLE
+                        tempBuffer[6] = 0x42; // ZHEX
+                        tempBuffer[7] = 0x30;
+                        tempBuffer[8] = 0x30; // 2
+                        tempBuffer[9] = 0x30;
+                        tempBuffer[10] = 0x30; // 4
+                        tempBuffer[11] = 0x30;
+                        tempBuffer[12] = 0x30; // 6
+                        tempBuffer[13] = 0x30;
+                        tempBuffer[14] = 0x30; // 8
+                        tempBuffer[15] = 0x30;
+                        tempBuffer[16] = 0x30; // 10
+                        tempBuffer[17] = 0x30;
+                        tempBuffer[18] = 0x30; // 12
+                        tempBuffer[19] = 0x30;
+                        tempBuffer[20] = 0x30; // 14
+                        tempBuffer[21] = 0x0D;
+                        tempBuffer[22] = 0x0A;
+                        tempBuffer[23] = 0x11;
+                        sendData(24, tempBuffer);
 
-                    DLog.e(TZS,"ZRQINIT: go next state - ZRINIT");
-                    zmodemState = ZRINIT;
-                    break;
+                        DLog.e(TZS, "ZRQINIT: go next state - ZRINIT");
+                        zmodemState = ZRINIT;
+                        break;
 
+                    case ZRINIT:
 
-                case ZRINIT:
-
-                    if(true == zmWaitReadData(21, 0, 5000))
-                    {
-                        int frame = zmGetFrameType(modemDataBuffer, 0);
-                        if(ZRINIT == frame)
-                        {
-                            DLog.e(TZS,"ZRINIT: go next state - ZFILE");
-                            zmodemState = ZFILE;
-                        }
-                        else
-                        {
-                            DLog.e(TZS,"ZRINIT: get data but not ZRINIT, back to ZRQINIT");
+                        if (zmWaitReadData(21, 0, 5000)) {
+                            int frame = zmGetFrameType(modemDataBuffer, 0);
+                            if (frame == ZRINIT) {
+                                DLog.e(TZS, "ZRINIT: go next state - ZFILE");
+                                zmodemState = ZFILE;
+                            } else {
+                                DLog.e(TZS, "ZRINIT: get data but not ZRINIT, back to ZRQINIT");
+                                zmodemState = ZRQINIT;
+                            }
+                        } else {
+                            DLog.e(TZS, "ZRINIT: not get ZRINIT, back to ZRQINIT");
                             zmodemState = ZRQINIT;
                         }
-                    }
-                    else
-                    {
-                        DLog.e(TZS,"ZRINIT: not get ZRINIT, back to ZRQINIT");
-                        zmodemState = ZRQINIT;
-                    }
-                    break;
+                        break;
 
-                case ZFILE:
-                {
-                    DLog.e(TT,"sFileName:"+sFileName);
-                    DLog.e(TT,"iFileSize:"+iFileSize);
-                    byte[] bFileName = sFileName.getBytes();
-                    byte[] bFileSize = Integer.toString(iFileSize).getBytes();
-                    int lenName = bFileName.length;
-                    int lenSize = bFileSize.length;
+                    case ZFILE: {
+                        DLog.e(TT, "sFileName:" + sFileName);
+                        DLog.e(TT, "iFileSize:" + iFileSize);
+                        byte[] bFileName = sFileName.getBytes();
+                        byte[] bFileSize = Integer.toString(iFileSize).getBytes();
+                        int lenName = bFileName.length;
+                        int lenSize = bFileSize.length;
 
-                    DLog.e(TT,"bFileName:"+bFileName+" len:"+lenName);
-                    DLog.e(TT,"bFileSize:"+bFileSize+" len:"+lenSize);
+                        DLog.e(TT, "bFileName:" + bFileName + " len:" + lenName);
+                        DLog.e(TT, "bFileSize:" + bFileSize + " len:" + lenSize);
 
-                    tempBuffer[0] = ZPAD;
-                    tempBuffer[1] = ZDLE;
-                    tempBuffer[2] = ZBIN;
-                    tempBuffer[3] = 0x04; // ZFILE
-                    tempBuffer[4] = 0x00;
-                    tempBuffer[5] = 0x00;
-                    tempBuffer[6] = 0x00;
-                    tempBuffer[7] = 0x00;   // PComm
-                    tempBuffer[8] = (byte)0x89;
-                    tempBuffer[9] = 0x06;
-//                  modemDataBuffer[7] = 0x01; // XP-HT: ZBIN
-//                  modemDataBuffer[8] = (byte)0x99;
-//                  modemDataBuffer[9] = 0x27;
+                        tempBuffer[0] = ZPAD;
+                        tempBuffer[1] = ZDLE;
+                        tempBuffer[2] = ZBIN;
+                        tempBuffer[3] = 0x04; // ZFILE
+                        tempBuffer[4] = 0x00;
+                        tempBuffer[5] = 0x00;
+                        tempBuffer[6] = 0x00;
+                        tempBuffer[7] = 0x00; // PComm
+                        tempBuffer[8] = (byte) 0x89;
+                        tempBuffer[9] = 0x06;
+                        // modemDataBuffer[7] = 0x01; // XP-HT: ZBIN
+                        // modemDataBuffer[8] = (byte)0x99;
+                        // modemDataBuffer[9] = 0x27;
 
-                    sendData(10, tempBuffer);
+                        sendData(10, tempBuffer);
 
-                    int i;
+                        int i;
 
-                    for(i = 0; i < lenName; i++)
-                    {
-                        tempBuffer[i] = bFileName[i];
-                    }
-                    tempBuffer[i++] = 0x00;
-
-                    int j;
-                    for(j=i; j < lenSize+i; j++)
-                    {
-                        tempBuffer[j] = bFileSize[j-i];
-                    }
-
-                    tempBuffer[j++] = 0x00;
-                    crcHL = calCrc(tempBuffer, 0, j);
-
-                    tempBuffer[j++] = ZDLE;
-                    tempBuffer[j++] = ZCRCW;
-                    accumulateCrc(crcHL, tempBuffer, j-1, 1);
-
-
-                    j = zmAppendCRC(tempBuffer, crcHL, j);
-
-                    tempBuffer[j++] = 0x11;
-                    sendData(j, tempBuffer);
-
-                    DLog.e(TT,"ZFILE: go next state - ZRPOS");
-                    zmodemState = ZRPOS;
-                }
-                    break;
-
-                case ZRPOS:
-                    // TODO: handle error cases
-//                  final int ZSKIP = 5;     /* To sender: skip this file */
-//                  final int ZNAK = 6;      /* Last packet was garbled */
-//                  final int ZABORT = 7;    /* Abort batch transfers */
-
-                    if(true == zmWaitReadData(21, 0, 5000))
-                    {
-                        int frame = zmGetFrameType(modemDataBuffer, 0);
-
-                        if(ZRPOS == frame)
-                        {
-                            DLog.e(TZS,"ZRPOS: go next state - ZDATA_HEADER");
-                            zmodemState = ZDATA_HEADER;
+                        for (i = 0; i < lenName; i++) {
+                            tempBuffer[i] = bFileName[i];
                         }
-                        else if(ZSKIP == frame || ZABORT == frame)
-                        {
-                            DLog.e(TZS,"ZRPOS: get ZSKIP or ZABORT, end transfer goto ZOO");
-                            zmodemState = ZOO;
+                        tempBuffer[i++] = 0x00;
+
+                        int j;
+                        for (j = i; j < lenSize + i; j++) {
+                            tempBuffer[j] = bFileSize[j - i];
                         }
-                        else
-                        {
-                            DLog.e(TZS,"ZRPOS: get data but not ZRPOS, back to ZFILE");
+
+                        tempBuffer[j++] = 0x00;
+                        crcHL = calCrc(tempBuffer, 0, j);
+
+                        tempBuffer[j++] = ZDLE;
+                        tempBuffer[j++] = ZCRCW;
+                        accumulateCrc(crcHL, tempBuffer, j - 1, 1);
+
+                        j = zmAppendCRC(tempBuffer, crcHL, j);
+
+                        tempBuffer[j++] = 0x11;
+                        sendData(j, tempBuffer);
+
+                        DLog.e(TT, "ZFILE: go next state - ZRPOS");
+                        zmodemState = ZRPOS;
+                    }
+                        break;
+
+                    case ZRPOS:
+                        // TODO: handle error cases
+                        // final int ZSKIP = 5;  // To sender: skip this file
+                        // final int ZNAK = 6;   // Last packet was garbled
+                        // final int ZABORT = 7; // Abort batch transfers
+
+                        if (zmWaitReadData(21, 0, 5000)) {
+                            int frame = zmGetFrameType(modemDataBuffer, 0);
+
+                            if (frame == ZRPOS) {
+                                DLog.e(TZS, "ZRPOS: go next state - ZDATA_HEADER");
+                                zmodemState = ZDATA_HEADER;
+                            } else if (frame == ZSKIP || frame == ZABORT) {
+                                DLog.e(TZS, "ZRPOS: get ZSKIP or ZABORT, end transfer goto ZOO");
+                                zmodemState = ZOO;
+                            } else {
+                                DLog.e(TZS, "ZRPOS: get data but not ZRPOS, back to ZFILE");
+                                zmodemState = ZFILE;
+                            }
+                        } else {
+                            DLog.e(TZS, "ZRPOS: not get ZRPOS, back to ZFILE");
                             zmodemState = ZFILE;
                         }
-                    }
-                    else
-                    {
-                        DLog.e(TZS,"ZRPOS: not get ZRPOS, back to ZFILE");
-                        zmodemState = ZFILE;
-                    }
-                    break;
+                        break;
 
-                case ZDATA_HEADER:
-                    tempBuffer[0] = ZPAD;
-                    tempBuffer[1] = ZDLE;
-                    tempBuffer[2] = ZBIN;
-                    tempBuffer[3] = 0x0A; // ZDATA
-                    tempBuffer[4] = 0x00;
-                    tempBuffer[5] = 0x00;
-                    tempBuffer[6] = 0x00;
-                    tempBuffer[7] = 0x00;
-                    tempBuffer[8] = 0x46;
-                    tempBuffer[9] = (byte)0xAE;
-                    sendData(10, tempBuffer);
-                    DLog.e(TZS,"ZDATA_HEADER: go next state - ZDATA");
-                    zmodemState = ZDATA;
+                    case ZDATA_HEADER:
+                        tempBuffer[0] = ZPAD;
+                        tempBuffer[1] = ZDLE;
+                        tempBuffer[2] = ZBIN;
+                        tempBuffer[3] = 0x0A; // ZDATA
+                        tempBuffer[4] = 0x00;
+                        tempBuffer[5] = 0x00;
+                        tempBuffer[6] = 0x00;
+                        tempBuffer[7] = 0x00;
+                        tempBuffer[8] = 0x46;
+                        tempBuffer[9] = (byte) 0xAE;
+                        sendData(10, tempBuffer);
+                        DLog.e(TZS, "ZDATA_HEADER: go next state - ZDATA");
+                        zmodemState = ZDATA;
 
-                case ZDATA:
-                    try
-                    {
-                        readcount = instream.read(tempBuffer,0,zmReadDataSize);
-                    }
-                    catch (IOException e) {e.printStackTrace();}
-
-                    if(readcount > 0)
-                    {
-                        sendByteCount += readcount;
-                    }
-
-                    if(readcount > 0)
-                    {
-                        DLog.e(TZS,"a readcount:"+readcount);
-
-                        crcHL = calCrc(tempBuffer, 0, readcount);
-
-                        int numSendDataBytes = zmGenerateDataPacket(tempBuffer, readcount);
-
-                        zmDataBuffer[numSendDataBytes] = ZDLE;
-
-                        int k = 1;
-                        if(readcount == zmReadDataSize && sendByteCount != iFileSize)
-                        {
-                            zmDataBuffer[numSendDataBytes+k] = ZCRCG;
-                        }
-                        else // not a complete packet or send all data, send last data packet
-                        {
-                            zmDataBuffer[numSendDataBytes+k] = ZCRCE;
+                    case ZDATA:
+                        try {
+                            readcount = instream.read(tempBuffer, 0, zmReadDataSize);
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
 
-                        accumulateCrc(crcHL, zmDataBuffer[numSendDataBytes+k]);
-                        k++; // 2
-
-                        if(ZDLE ==  crcHL[0] ||
-                           0x10 ==  crcHL[0] || 0x11 ==  crcHL[0] || 0x13 ==  crcHL[0] ||
-                           (byte)0x90 ==  crcHL[0] || (byte)0x91 ==  crcHL[0] || (byte)0x93 ==  crcHL[0]
-                                   || ((crcHL[0] & 0x60) == 0))
-                        {
-                            zmDataBuffer[numSendDataBytes+(k++)] = ZDLE;
-                            crcHL[0] ^= 0x40;
-                            zmDataBuffer[numSendDataBytes+(k++)] = crcHL[0]; //PComm treat ZDLE crc, k:3
-                        }
-                        else
-                        {
-                            zmDataBuffer[numSendDataBytes+(k++)] = crcHL[0];
+                        if (readcount > 0) {
+                            sendByteCount += readcount;
                         }
 
-                        if(ZDLE ==  crcHL[1] ||
-                           0x10 ==  crcHL[1] || 0x11 ==  crcHL[1] || 0x13 ==  crcHL[1] ||
-                           (byte)0x90 ==  crcHL[1] || (byte)0x91 ==  crcHL[1] || (byte)0x93 ==  crcHL[1]
-                                   || ((crcHL[1] & 0x60) == 0))
-                        {
-                            zmDataBuffer[numSendDataBytes+(k++)] = ZDLE;
-                            crcHL[1] ^= 0x40;
-                            zmDataBuffer[numSendDataBytes+(k++)] = crcHL[1]; //PComm treat ZDLE crc, k:4 or 5
-                        }
-                        else
-                        {
-                            zmDataBuffer[numSendDataBytes+(k++)] = crcHL[1];
-                        }
+                        if (readcount > 0) {
+                            DLog.e(TZS, "a readcount:" + readcount);
 
+                            crcHL = calCrc(tempBuffer, 0, readcount);
 
-                        DLog.e(TZS,"ZDATA k:"+k);
-                        sendData(numSendDataBytes+k, zmDataBuffer);
+                            int numSendDataBytes = zmGenerateDataPacket(tempBuffer, readcount);
 
-                        if(readcount != zmReadDataSize || sendByteCount == iFileSize)
-                        {
-                            DLog.e(TZS,"ZDATA: transfer done, go ZEOF");
-                            bSendFileDone = true;
-                            zmodemState = ZEOF;
-                        }
-                    }
-                    else
-                    {
-                        DLog.e(TZS,"ZDATA unhandle case!!");
-                        if(true == INTERNAL_DEBUG_TRACE)
-                        {
-                            msg = mHandler.obtainMessage(MSG_UNHANDLED_CASE, String.valueOf("ZM send: ZDATA unhandle case!!"));
-                            mHandler.sendMessage(msg);
-                        }
-                    }
-                    break;
+                            zmDataBuffer[numSendDataBytes] = ZDLE;
 
-                case ZEOF:
-                    DLog.e(TZS,"ZEOF: send ZEOF");
-
-                    int offset = iFileSize;
-
-                    tempBuffer[0] = 0x2A; // ZPAD
-                    tempBuffer[1] = 0x18; // ZDLE
-                    tempBuffer[2] = 0x41; // ZBIN
-                    tempBuffer[3] = 0x0B; // ZEOF
-
-                    tempBuffer[4] = (byte)(offset);
-                    tempBuffer[5] = (byte)(offset >> 8);
-                    tempBuffer[6] = (byte)(offset >> 16);
-                    tempBuffer[7] = (byte)(offset >> 24);
-
-                    crcHL = calCrc(tempBuffer, 3, 5); // calculate CRC first before padding zdle
-
-                    int i = 4;
-                    tempBuffer[i] = (byte)(offset);
-                    i = zmCheckDLE(tempBuffer, tempBuffer[i], i);
-                    tempBuffer[i] = (byte)(offset >> 8);
-                    i = zmCheckDLE(tempBuffer, tempBuffer[i], i);
-                    tempBuffer[i] = (byte)(offset >> 16);
-                    i = zmCheckDLE(tempBuffer, tempBuffer[i], i);
-                    tempBuffer[i] = (byte)(offset >> 24);
-                    i = zmCheckDLE(tempBuffer, tempBuffer[i], i);
-
-                    int j = i;
-
-                    j = zmAppendCRC(tempBuffer, crcHL, j);
-
-                    sendData(j, tempBuffer); // send ZEOF
-
-                    if(true == zmWaitReadData(21, 0, 5000))
-                    {
-                        int frame = zmGetFrameType(modemDataBuffer, 0);
-                        if(ZRINIT == frame)
-                        {
-                            DLog.e(TZR,"ZEOF: go next state - ZFIN");
-                            zmodemState = ZFIN;
-                        }
-                        else
-                        {
-                            DLog.e(TZS,"ZEOF: get data but not ZRINIT...");
-                        }
-                    }
-                    else
-                    {
-                        DLog.e(TZS,"ZEOF: not get data...");
-                    }
-                    break;
-
-                case ZFIN:
-                    tempBuffer[0] = 0x2A; // ZPAD
-                    tempBuffer[1] = 0x2A; // ZPAD
-                    tempBuffer[2] = 0x18; // ZDLE
-                    tempBuffer[3] = 0x42; // ZHEX
-                    tempBuffer[4] = 0x30;
-                    tempBuffer[5] = 0x38;
-                    tempBuffer[6] = 0x30;
-                    tempBuffer[7] = 0x30;
-                    tempBuffer[8] = 0x30;
-                    tempBuffer[9] = 0x30;
-                    tempBuffer[10] = 0x30;
-                    tempBuffer[11] = 0x30;
-                    tempBuffer[12] = 0x30;
-                    tempBuffer[13] = 0x30;
-                    tempBuffer[14] = 0x30;
-                    tempBuffer[15] = 0x32;
-                    tempBuffer[16] = 0x32;
-                    tempBuffer[17] = 0x64;
-                    tempBuffer[18] = 0x0d;
-                    tempBuffer[19] = (byte)0x8a;
-                    sendData(20, tempBuffer); // send ZFIN
-
-                    DLog.e(TZR,"ZFIN: go next state - ZFIN_ACK ");
-                    zmodemState = ZFIN_ACK;
-                    break;
-
-                case ZFIN_ACK:
-                {
-                    if(true == zmWaitReadData(20, 0, 10000)) // get ZFIN
-                    {
-                        int frame = zmGetFrameType(modemDataBuffer, 0);
-                        if(ZFIN == frame)
-                        {
-                            DLog.e(TZR,"ZFIN_ACK: go next state - ZOO ");
-                            zmodemState = ZOO;
-                        }
-                        else if(ZRINIT == frame)
-                        {
-                            DLog.e(TZR,"ZFIN_ACK: get ZRINIT goto ZFIN ");
-                            zmWaitReadData(1, 0, 10000); // ZRINIT, should read one more data
-                            zmodemState = ZFIN;
-                        }
-                        else
-                        {
-                            DLog.e(TZS,"ZEOF: get data ??? back to ZFIN");
-                            zmodemState = ZFIN;
-                        }
-                    }
-                    else
-                    {
-                        DLog.e(TZR,"ZFIN_ACK: GET data timeout - back to ZFIN");
-                        zmodemState = ZFIN;
-                    }
-                }
-                    break;
-
-                case ZOO:
-                    tempBuffer[0] = 0x4f;
-                    tempBuffer[1] = 0x4f;
-                    sendData(2, tempBuffer);
-
-                    DLog.e(TZS,"ZOO: transfer done");
-                    bSendFileDone = true;
-                    bSendFileProcess = false;
-                    break;
-
-                default:
-                    break;
-                }
-            }
-
-            transferMode = MODE_GENERAL_UART;
-            bUartModeTaskSet = true;
-
-            if(true == bSendFileDone)
-            {
-                end_time = System.currentTimeMillis();
-                msg = mHandler.obtainMessage(UPDATE_SEND_FILE_DONE);
-                mHandler.sendMessage(msg);
-            }
-            else if(false == bSendButtonClick)
-            {
-                msg = mHandler.obtainMessage(MSG_FORCE_STOP_SEND_FILE);
-                mHandler.sendMessage(msg);
-            }
-            else
-            {
-                msg = mHandler.obtainMessage(MSG_UNHANDLED_CASE);
-                mHandler.sendMessage(msg);
-            }
-        }
-    }
-
-    class ZModemReadDataThread extends Thread
-    {
-        Handler mHandler;
-        ZModemReadDataThread(Handler h)
-        {
-            mHandler = h;
-            this.setPriority(MAX_PRIORITY);
-        }
-
-        public void run()
-        {
-            Message msg;
-            boolean bFileReciveDone = false;
-            int[] getDataNum = new int[1];
-            byte [] tempBuffer =  new byte[24];
-
-            bReadDataProcess = true;
-            totalModemReceiveDataBytes = 0;
-
-            cal_time_1 = System.currentTimeMillis();
-
-            while(bReadDataProcess)
-            {
-
-                if(false == bLogButtonClick)
-                {
-                    msg = mHandler.obtainMessage(MSG_FORCE_STOP_SAVE_TO_FILE);
-                    mHandler.sendMessage(msg);
-                    continue;
-                }
-
-                if(zmodemState >= ZDATA)
-                {
-                    cal_time_2 = System.currentTimeMillis();
-                    if((cal_time_2 - cal_time_1) > 200) // update status every 200ms
-                    {
-                        msg = mHandler.obtainMessage(UPDATE_MODEM_RECEIVE_DATA_BYTES);
-                        mHandler.sendMessage(msg);
-                        cal_time_1 = cal_time_2;
-                    }
-                }
-
-                switch(zmodemState)
-                {
-                case ZRQINIT:
-                    DLog.e(TZR,"state: ZRQINIT");
-                    if(true == zmWaitReadData(3, 0, 20000))
-                    {
-                        if(modemDataBuffer[0] == 0x72 &&  // r
-                           modemDataBuffer[1] == 0x7A &&  // z
-                           modemDataBuffer[2] == 0x0D )   // \r
-                        {
-                            start_time = System.currentTimeMillis();
-                            DLog.e(TZR,"Get startup string");
-
-                            if(true == zmWaitReadData(21, 0, 10000))
-                            {
-                                if(zmGetHeaderType() > 0)
-                                {
-                                    DLog.e(TZR,"parseZModemHeader OK");
-                                    DLog.e(TZR,"go next state - ZRINIT");
-                                    zmodemState = ZRINIT;
-
-                                    msg = mHandler.obtainMessage(UPDATE_MODEM_RECEIVE_DATA);
-                                    mHandler.sendMessage(msg);
-                                }
-                                else
-                                {
-                                    DLog.e(TZR,"ZRQINIT parseZModemHeader NG");
-                                }
-                            }
-                        }
-                        else
-                        {
-                            DLog.e(TZR,"Not startup string");
-                        }
-                    }
-                    else
-                    {
-                        DLog.e(TZR,"No startup string");
-                    }
-
-                    break;
-
-                case ZEOF:
-                case ZRINIT:
-                    // TODO: how to set ZRINIT packet
-                    DLog.e(TZR,"send ZRINIT packet...");
-                    tempBuffer[0] = 0x2A;
-                    tempBuffer[1] = 0x2A;
-                    tempBuffer[2] = 0x18;
-                    tempBuffer[3] = 0x42;
-                    tempBuffer[4] = 0x30;
-                    tempBuffer[5] = 0x31;
-                    tempBuffer[6] = 0x30;
-                    tempBuffer[7] = 0x30;
-                    tempBuffer[8] = 0x30;
-                    tempBuffer[9] = 0x30;
-                    tempBuffer[10] = 0x30;
-                    tempBuffer[11] = 0x30;
-                    tempBuffer[12] = 0x30;
-                    tempBuffer[13] = 0x33;
-                    tempBuffer[14] = 0x39;
-                    tempBuffer[15] = 0x61;
-                    tempBuffer[16] = 0x33;
-                    tempBuffer[17] = 0x32;
-                    tempBuffer[18] = 0x0D;
-                    tempBuffer[19] = 0x0A;
-                    tempBuffer[20] = 0x11;
-                    sendData(21, tempBuffer);
-
-                    if(ZRINIT == zmodemState)
-                    {
-                        DLog.e(TZR,"state: ZRINIT, send ZRINIT packet...");
-                        DLog.e(TZR,"go next state - ZFILE");
-                        zmodemState = ZFILE;
-                    }
-                    else if(ZEOF == zmodemState)
-                    {
-                        DLog.e(TZR,"state: ZEOF, send ZRINIT packet...");
-                        DLog.e(TZR,"go next state - ZFIN");
-                        zmodemState = ZFIN;
-                    }
-                    break;
-
-                case ZFILE:
-
-                    if(true == zmWaitReadData(10, 0, 10000))
-                    {
-                        if(modemDataBuffer[0] == ZPAD &&
-                           modemDataBuffer[1] == ZDLE &&
-                           modemDataBuffer[2] == ZBIN &&
-                           modemDataBuffer[3] == ZFILE )
-                        {
-                            DLog.e(TT,"ZFILE packet");
-                            // file info packet size:  fname + 1 + fsize + 1 + 5 -> 9
-                            if(true == zmWaitReadData(9, 0, 1000))
-                            {
-                                getDataNum[0] = 9;
-                            }
-                            else
-                            {
-                                getDataNum[0] = 0;
-                                DLog.e(TZR,"get zfile packet NG!");
+                            int k = 1;
+                            if (readcount == zmReadDataSize && sendByteCount != iFileSize) {
+                                zmDataBuffer[numSendDataBytes + k] = ZCRCG;
+                            } else { // not a complete packet or send all data, send last data packet
+                                zmDataBuffer[numSendDataBytes + k] = ZCRCE;
                             }
 
-                            DLog.e(TZR,"zmWaitFileInfoData ++");
-                            zmWaitFileInfoData(getDataNum);
-                            DLog.e(TZR,"zmWaitFileInfoData --");
+                            accumulateCrc(crcHL, zmDataBuffer[numSendDataBytes + k]);
+                            k++; // 2
 
-                            zmParseFileInfo(getDataNum[0]);
-
-                            if(false == openModemSaveFile())
+                            if (crcHL[0] == ZDLE ||
+                                crcHL[0] == 0x10 ||
+                                crcHL[0] == 0x11 ||
+                                crcHL[0] == 0x13 ||
+                                crcHL[0] == (byte) 0x90 ||
+                                crcHL[0] == (byte) 0x91 ||
+                                crcHL[0] == (byte) 0x93 ||
+                                (crcHL[0] & 0x60) == 0  )
                             {
-                                DLog.e(TZR,"ZModem: open save file fail!");
-                                msg = mHandler.obtainMessage(MSG_MODEM_OPEN_SAVE_FILE_FAIL);
+                                zmDataBuffer[numSendDataBytes + (k++)] = ZDLE;
+                                crcHL[0] ^= 0x40;
+                                zmDataBuffer[numSendDataBytes + (k++)] = crcHL[0]; // PComm treat ZDLE crc, k:3
+                            } else {
+                                zmDataBuffer[numSendDataBytes + (k++)] = crcHL[0];
+                            }
+
+                            if (crcHL[1] == ZDLE ||
+                                crcHL[1] == 0x10 ||
+                                crcHL[1] == 0x11 ||
+                                crcHL[1] == 0x13 ||
+                                crcHL[1] == (byte) 0x90 ||
+                                crcHL[1] == (byte) 0x91 ||
+                                crcHL[1] == (byte) 0x93 ||
+                                (crcHL[1] & 0x60) == 0  )
+                            {
+                                zmDataBuffer[numSendDataBytes + (k++)] = ZDLE;
+                                crcHL[1] ^= 0x40;
+                                zmDataBuffer[numSendDataBytes + (k++)] = crcHL[1]; // PComm treat ZDLE crc, k:4 or 5
+                            } else {
+                                zmDataBuffer[numSendDataBytes + (k++)] = crcHL[1];
+                            }
+
+                            DLog.e(TZS, "ZDATA k:" + k);
+                            sendData(numSendDataBytes + k, zmDataBuffer);
+
+                            if (readcount != zmReadDataSize || sendByteCount == iFileSize) {
+                                DLog.e(TZS, "ZDATA: transfer done, go ZEOF");
+                                bSendFileDone = true;
+                                zmodemState = ZEOF;
+                            }
+                        } else {
+                            DLog.e(TZS, "ZDATA unhandle case!!");
+                            if (INTERNAL_DEBUG_TRACE) {
+                                msg = mHandler.obtainMessage(MSG_UNHANDLED_CASE, String.valueOf("ZM send: ZDATA unhandle case!!"));
                                 mHandler.sendMessage(msg);
-                                bReadDataProcess = false;
-                                continue;
                             }
                         }
-                        else
-                        {
-                            DLog.e(TT,"Not ZFILE packet");
+                        break;
+
+                    case ZEOF:
+                        DLog.e(TZS, "ZEOF: send ZEOF");
+
+                        int offset = iFileSize;
+
+                        tempBuffer[0] = 0x2A; // ZPAD
+                        tempBuffer[1] = 0x18; // ZDLE
+                        tempBuffer[2] = 0x41; // ZBIN
+                        tempBuffer[3] = 0x0B; // ZEOF
+
+                        tempBuffer[4] = (byte) (offset);
+                        tempBuffer[5] = (byte) (offset >> 8);
+                        tempBuffer[6] = (byte) (offset >> 16);
+                        tempBuffer[7] = (byte) (offset >> 24);
+
+                        crcHL = calCrc(tempBuffer, 3, 5); // calculate CRC first before padding zdle
+
+                        int i = 4;
+                        tempBuffer[i] = (byte) (offset);
+                        i = zmCheckDLE(tempBuffer, tempBuffer[i], i);
+                        tempBuffer[i] = (byte) (offset >> 8);
+                        i = zmCheckDLE(tempBuffer, tempBuffer[i], i);
+                        tempBuffer[i] = (byte) (offset >> 16);
+                        i = zmCheckDLE(tempBuffer, tempBuffer[i], i);
+                        tempBuffer[i] = (byte) (offset >> 24);
+                        i = zmCheckDLE(tempBuffer, tempBuffer[i], i);
+
+                        int j = i;
+
+                        j = zmAppendCRC(tempBuffer, crcHL, j);
+
+                        sendData(j, tempBuffer); // send ZEOF
+
+                        if (zmWaitReadData(21, 0, 5000)) {
+                            int frame = zmGetFrameType(modemDataBuffer, 0);
+                            if (frame == ZRINIT) {
+                                DLog.e(TZR, "ZEOF: go next state - ZFIN");
+                                zmodemState = ZFIN;
+                            } else {
+                                DLog.e(TZS, "ZEOF: get data but not ZRINIT...");
+                            }
+                        } else {
+                            DLog.e(TZS, "ZEOF: not get data...");
                         }
-                    }
+                        break;
 
-
-                    DLog.e(TZR,"go next state - ZRPOS");
-                    zmodemState = ZRPOS;
-
-                    try{                    // clear remain data after zdle zcrcw
-                        Thread.sleep(300);
-                    }
-                    catch(Exception e){}
-                    zmReadAllData(1000);
-
-                    msg = mHandler.obtainMessage(UPDATE_ZMODEM_STATE_INFO);
-                    mHandler.sendMessage(msg);
-                    break;
-
-                case ZRPOS:
-                    // TODO: how to set ZRPOS packet
-                    DLog.e(TZR,"state: ZRPOS, send ZRPOS packet...");
-                    tempBuffer[0] = 0x2A;
-                    tempBuffer[1] = 0x2A;
-                    tempBuffer[2] = 0x18;
-                    tempBuffer[3] = 0x42;
-                    tempBuffer[4] = 0x30;
-                    tempBuffer[5] = 0x39;
-                    tempBuffer[6] = 0x30;
-                    tempBuffer[7] = 0x30;
-                    tempBuffer[8] = 0x30;
-                    tempBuffer[9] = 0x30;
-                    tempBuffer[10] = 0x30;
-                    tempBuffer[11] = 0x30;
-                    tempBuffer[12] = 0x30;
-                    tempBuffer[13] = 0x30;
-                    tempBuffer[14] = 0x61;
-                    tempBuffer[15] = 0x38;
-                    tempBuffer[16] = 0x37;
-                    tempBuffer[17] = 0x63;
-                    tempBuffer[18] = 0x0D;
-                    tempBuffer[19] = 0x0A;
-                    tempBuffer[20] = 0x11;
-                    sendData(21, tempBuffer);
-
-                    DLog.e(TZR,"go next state - ZDATA ");
-                    zmodemState = ZDATA_HEADER ;
-
-                    break;
-
-                case ZDATA_HEADER:
-                    if(true == zmWaitReadData(10, 0, 10000))
-                    {
-                        DLog.e(TZR,"ZDATA_HEADER:");
-                        for(int i=0;i<10;i++)
-                            DLog.e(TT,"["+i+"]:"+ Integer.toHexString(modemDataBuffer[i]));
-
-                        if(modemDataBuffer[0] == ZPAD &&
-                                   modemDataBuffer[1] == ZDLE &&
-                                   modemDataBuffer[2] == ZBIN &&
-                                   modemDataBuffer[3] == 0x0A ) // ZDATA
-                        {
-                            DLog.e(TZR,"Get ZDATA header, go next state - ZDATA ");
-                            zmodemState = ZDATA;
-                        }
-                        else
-                        {
-                            DLog.e(TZR,"ZDATA_HEADER - Not ZDATA_HEADER data");
-                            bReadDataProcess = false;
-                        }
-                    }
-                    else
-                    {
-                        DLog.e(TZR,"ZDATA_HEADER - No data");
-                        bReadDataProcess = false;
-                    }
-
-                    break;
-
-                case ZDATA:
-                {
-                    getDataNum[0] = zmReadAllData(1000);
-
-                    int zeofPos = zmCheckZEOF(getDataNum);
-                    int numSaveDataBytes = zmParseDataPacket(getDataNum, zeofPos);
-
-                    try
-                    {
-                        buf_save.write(zmDataBuffer, 0, numSaveDataBytes);
-                    } catch (IOException e) {e.printStackTrace();}
-
-                    totalModemReceiveDataBytes += numSaveDataBytes;
-
-                    if(zeofPos != -1 )
-                    {
-                        DLog.e(TZR,"find ZEOF, go next state - ZEOF ");
-                        zmodemState = ZEOF;
-                        bFileReciveDone = true;
-                    }
-                }
-                    break;
-
-                case ZFIN:
-                {
-                    if(true == zmWaitReadData(20, 0, 10000)) // get ZFIN
-                    {
+                    case ZFIN:
                         tempBuffer[0] = 0x2A; // ZPAD
                         tempBuffer[1] = 0x2A; // ZPAD
                         tempBuffer[2] = 0x18; // ZDLE
@@ -5273,69 +3991,365 @@ public class J2xxHyperTerm extends Activity
                         tempBuffer[16] = 0x32;
                         tempBuffer[17] = 0x64;
                         tempBuffer[18] = 0x0d;
-                        tempBuffer[19] = (byte)0x8a;
+                        tempBuffer[19] = (byte) 0x8a;
                         sendData(20, tempBuffer); // send ZFIN
-                        DLog.e(TZR,"ZFIN: go next state - ZOO ");
-                        zmodemState = ZOO;
-                    }
-                    else
-                    {
-                        DLog.e(TZR,"ZFIN: GET ??? - end transfer");
-                        bReadDataProcess = false;
-                    }
-                }
-                    break;
 
-                case ZOO:
-                    if(true == zmWaitReadData(2, 0, 10000)) // get ZFIN
-                    {
-                        if(0x4F == modemDataBuffer[0] && 0x4F == modemDataBuffer[1])
-                        {
-                            DLog.e(TZR,"ZOO: GET OO - transfer complete ");
-                            bReadDataProcess = false;
-                        }
-                        else
-                        {
-                            DLog.e(TZR,"ZOO: GET ??? - end transfer");
-                            bReadDataProcess = false;
+                        DLog.e(TZR, "ZFIN: go next state - ZFIN_ACK ");
+                        zmodemState = ZFIN_ACK;
+                        break;
 
-                            DLog.e(TZR,"Mode:"+ transferMode +" data 0:["+Integer.toHexString(modemDataBuffer[0])
-                                    +"] 1:["+Integer.toHexString(modemDataBuffer[1]));
-
-                            int num = zmReadAllData(10);
-
-                            if(num > 0)
-                            {
-                                DLog.e(TZR,"remain data:"+num);
-                                for(int i=0;i<num;i++)
-                                    DLog.e(TT,"["+i+"]:"+ Integer.toHexString(modemDataBuffer[i]));
+                    case ZFIN_ACK: {
+                        if (zmWaitReadData(20, 0, 10000)) { // get ZFIN
+                            int frame = zmGetFrameType(modemDataBuffer, 0);
+                            if (frame == ZFIN) {
+                                DLog.e(TZR, "ZFIN_ACK: go next state - ZOO ");
+                                zmodemState = ZOO;
+                            } else if (frame == ZRINIT) {
+                                DLog.e(TZR, "ZFIN_ACK: get ZRINIT goto ZFIN ");
+                                zmWaitReadData(1, 0, 10000); // ZRINIT, should read one more data
+                                zmodemState = ZFIN;
+                            } else {
+                                DLog.e(TZS, "ZEOF: get data ??? back to ZFIN");
+                                zmodemState = ZFIN;
                             }
+                        } else {
+                            DLog.e(TZR, "ZFIN_ACK: GET data timeout - back to ZFIN");
+                            zmodemState = ZFIN;
                         }
                     }
-                    else
-                    {
-                        DLog.e(TZR,"ZOO: No data - end transfer");
-                        bReadDataProcess = false;
-                    }
-
                     break;
 
-                default:
-                    break;
+                    case ZOO:
+                        tempBuffer[0] = 0x4f;
+                        tempBuffer[1] = 0x4f;
+                        sendData(2, tempBuffer);
+
+                        DLog.e(TZS, "ZOO: transfer done");
+                        bSendFileDone = true;
+                        bSendFileProcess = false;
+                        break;
+
+                    default:
+                        break;
                 }
             }
 
             transferMode = MODE_GENERAL_UART;
             bUartModeTaskSet = true;
+
+            if (bSendFileDone) {
+                end_time = System.currentTimeMillis();
+                msg = mHandler.obtainMessage(UPDATE_SEND_FILE_DONE);
+                mHandler.sendMessage(msg);
+            } else if (!bSendButtonClick) {
+                msg = mHandler.obtainMessage(MSG_FORCE_STOP_SEND_FILE);
+                mHandler.sendMessage(msg);
+            } else {
+                msg = mHandler.obtainMessage(MSG_UNHANDLED_CASE);
+                mHandler.sendMessage(msg);
+            }
+        }
+    }
+
+    class ZModemReadDataThread extends Thread {
+        Handler mHandler;
+
+        ZModemReadDataThread(Handler h) {
+            mHandler = h;
+            this.setPriority(MAX_PRIORITY);
+        }
+
+        @Override public void run() {
+            Message msg;
+            boolean bFileReciveDone = false;
+            int[] getDataNum = new int[1];
+            byte[] tempBuffer = new byte[24];
+
+            bReadDataProcess = true;
+            totalModemReceiveDataBytes = 0;
+
+            cal_time_1 = System.currentTimeMillis();
+
+            while (bReadDataProcess) {
+
+                if (!bLogButtonClick) {
+                    msg = mHandler.obtainMessage(MSG_FORCE_STOP_SAVE_TO_FILE);
+                    mHandler.sendMessage(msg);
+                    continue;
+                }
+
+                if (zmodemState >= ZDATA) {
+                    cal_time_2 = System.currentTimeMillis();
+                    if (cal_time_2 - cal_time_1 > 200) { // update status every 200ms
+                        msg = mHandler.obtainMessage(UPDATE_MODEM_RECEIVE_DATA_BYTES);
+                        mHandler.sendMessage(msg);
+                        cal_time_1 = cal_time_2;
+                    }
+                }
+
+                switch (zmodemState) {
+                    case ZRQINIT:
+                        DLog.e(TZR, "state: ZRQINIT");
+                        if (zmWaitReadData(3, 0, 20000)) {
+                            if (modemDataBuffer[0] == 0x72 && // r
+                                modemDataBuffer[1] == 0x7A && // z
+                                modemDataBuffer[2] == 0x0D)   // \r
+                            {
+                                start_time = System.currentTimeMillis();
+                                DLog.e(TZR, "Get startup string");
+
+                                if (zmWaitReadData(21, 0, 10000)) {
+                                    if (zmGetHeaderType() > 0) {
+                                        DLog.e(TZR, "parseZModemHeader OK");
+                                        DLog.e(TZR, "go next state - ZRINIT");
+                                        zmodemState = ZRINIT;
+
+                                        msg = mHandler.obtainMessage(UPDATE_MODEM_RECEIVE_DATA);
+                                        mHandler.sendMessage(msg);
+                                    } else {
+                                        DLog.e(TZR, "ZRQINIT parseZModemHeader NG");
+                                    }
+                                }
+                            } else {
+                                DLog.e(TZR, "Not startup string");
+                            }
+                        } else {
+                            DLog.e(TZR, "No startup string");
+                        }
+                        break;
+
+                    case ZEOF:
+                    case ZRINIT:
+                        // TODO: how to set ZRINIT packet
+                        DLog.e(TZR, "send ZRINIT packet...");
+                        tempBuffer[0] = 0x2A;
+                        tempBuffer[1] = 0x2A;
+                        tempBuffer[2] = 0x18;
+                        tempBuffer[3] = 0x42;
+                        tempBuffer[4] = 0x30;
+                        tempBuffer[5] = 0x31;
+                        tempBuffer[6] = 0x30;
+                        tempBuffer[7] = 0x30;
+                        tempBuffer[8] = 0x30;
+                        tempBuffer[9] = 0x30;
+                        tempBuffer[10] = 0x30;
+                        tempBuffer[11] = 0x30;
+                        tempBuffer[12] = 0x30;
+                        tempBuffer[13] = 0x33;
+                        tempBuffer[14] = 0x39;
+                        tempBuffer[15] = 0x61;
+                        tempBuffer[16] = 0x33;
+                        tempBuffer[17] = 0x32;
+                        tempBuffer[18] = 0x0D;
+                        tempBuffer[19] = 0x0A;
+                        tempBuffer[20] = 0x11;
+                        sendData(21, tempBuffer);
+
+                        if (zmodemState == ZRINIT) {
+                            DLog.e(TZR, "state: ZRINIT, send ZRINIT packet...");
+                            DLog.e(TZR, "go next state - ZFILE");
+                            zmodemState = ZFILE;
+                        } else if (zmodemState == ZEOF) {
+                            DLog.e(TZR, "state: ZEOF, send ZRINIT packet...");
+                            DLog.e(TZR, "go next state - ZFIN");
+                            zmodemState = ZFIN;
+                        }
+                        break;
+
+                    case ZFILE:
+
+                        if (zmWaitReadData(10, 0, 10000)) {
+                            if (modemDataBuffer[0] == ZPAD && modemDataBuffer[1] == ZDLE && modemDataBuffer[2] == ZBIN && modemDataBuffer[3] == ZFILE) {
+                                DLog.e(TT, "ZFILE packet");
+                                // file info packet size: fname + 1 + fsize + 1 + 5 -> 9
+                                if (zmWaitReadData(9, 0, 1000)) {
+                                    getDataNum[0] = 9;
+                                } else {
+                                    getDataNum[0] = 0;
+                                    DLog.e(TZR, "get zfile packet NG!");
+                                }
+
+                                DLog.e(TZR, "zmWaitFileInfoData ++");
+                                zmWaitFileInfoData(getDataNum);
+                                DLog.e(TZR, "zmWaitFileInfoData --");
+
+                                zmParseFileInfo(getDataNum[0]);
+
+                                if (!openModemSaveFile()) {
+                                    DLog.e(TZR, "ZModem: open save file fail!");
+                                    msg = mHandler.obtainMessage(MSG_MODEM_OPEN_SAVE_FILE_FAIL);
+                                    mHandler.sendMessage(msg);
+                                    bReadDataProcess = false;
+                                    continue;
+                                }
+                            } else {
+                                DLog.e(TT, "Not ZFILE packet");
+                            }
+                        }
+
+                        DLog.e(TZR, "go next state - ZRPOS");
+                        zmodemState = ZRPOS;
+
+                        try { // clear remain data after zdle zcrcw
+                            Thread.sleep(300);
+                        } catch (Exception e) {
+                        }
+                        zmReadAllData(1000);
+
+                        msg = mHandler.obtainMessage(UPDATE_ZMODEM_STATE_INFO);
+                        mHandler.sendMessage(msg);
+                        break;
+
+                    case ZRPOS:
+                        // TODO: how to set ZRPOS packet
+                        DLog.e(TZR, "state: ZRPOS, send ZRPOS packet...");
+                        tempBuffer[0] = 0x2A;
+                        tempBuffer[1] = 0x2A;
+                        tempBuffer[2] = 0x18;
+                        tempBuffer[3] = 0x42;
+                        tempBuffer[4] = 0x30;
+                        tempBuffer[5] = 0x39;
+                        tempBuffer[6] = 0x30;
+                        tempBuffer[7] = 0x30;
+                        tempBuffer[8] = 0x30;
+                        tempBuffer[9] = 0x30;
+                        tempBuffer[10] = 0x30;
+                        tempBuffer[11] = 0x30;
+                        tempBuffer[12] = 0x30;
+                        tempBuffer[13] = 0x30;
+                        tempBuffer[14] = 0x61;
+                        tempBuffer[15] = 0x38;
+                        tempBuffer[16] = 0x37;
+                        tempBuffer[17] = 0x63;
+                        tempBuffer[18] = 0x0D;
+                        tempBuffer[19] = 0x0A;
+                        tempBuffer[20] = 0x11;
+                        sendData(21, tempBuffer);
+
+                        DLog.e(TZR, "go next state - ZDATA ");
+                        zmodemState = ZDATA_HEADER;
+
+                        break;
+
+                    case ZDATA_HEADER:
+                        if (zmWaitReadData(10, 0, 10000)) {
+                            DLog.e(TZR, "ZDATA_HEADER:");
+                            for (int i = 0; i < 10; i++)
+                                DLog.e(TT, "[" + i + "]:" + Integer.toHexString(modemDataBuffer[i]));
+
+                            if (modemDataBuffer[0] == ZPAD &&
+                                modemDataBuffer[1] == ZDLE &&
+                                modemDataBuffer[2] == ZBIN &&
+                                modemDataBuffer[3] == 0x0A) // ZDATA
+                            {
+                                DLog.e(TZR, "Get ZDATA header, go next state - ZDATA ");
+                                zmodemState = ZDATA;
+                            } else {
+                                DLog.e(TZR, "ZDATA_HEADER - Not ZDATA_HEADER data");
+                                bReadDataProcess = false;
+                            }
+                        } else {
+                            DLog.e(TZR, "ZDATA_HEADER - No data");
+                            bReadDataProcess = false;
+                        }
+
+                        break;
+
+                    case ZDATA: {
+                        getDataNum[0] = zmReadAllData(1000);
+
+                        int zeofPos = zmCheckZEOF(getDataNum);
+                        int numSaveDataBytes = zmParseDataPacket(getDataNum, zeofPos);
+
+                        try {
+                            buf_save.write(zmDataBuffer, 0, numSaveDataBytes);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        totalModemReceiveDataBytes += numSaveDataBytes;
+
+                        if (zeofPos != -1) {
+                            DLog.e(TZR, "find ZEOF, go next state - ZEOF ");
+                            zmodemState = ZEOF;
+                            bFileReciveDone = true;
+                        }
+                    }
+                        break;
+
+                    case ZFIN: {
+                        if (zmWaitReadData(20, 0, 10000)) { // get ZFIN
+                            tempBuffer[0] = 0x2A; // ZPAD
+                            tempBuffer[1] = 0x2A; // ZPAD
+                            tempBuffer[2] = 0x18; // ZDLE
+                            tempBuffer[3] = 0x42; // ZHEX
+                            tempBuffer[4] = 0x30;
+                            tempBuffer[5] = 0x38;
+                            tempBuffer[6] = 0x30;
+                            tempBuffer[7] = 0x30;
+                            tempBuffer[8] = 0x30;
+                            tempBuffer[9] = 0x30;
+                            tempBuffer[10] = 0x30;
+                            tempBuffer[11] = 0x30;
+                            tempBuffer[12] = 0x30;
+                            tempBuffer[13] = 0x30;
+                            tempBuffer[14] = 0x30;
+                            tempBuffer[15] = 0x32;
+                            tempBuffer[16] = 0x32;
+                            tempBuffer[17] = 0x64;
+                            tempBuffer[18] = 0x0d;
+                            tempBuffer[19] = (byte) 0x8a;
+                            sendData(20, tempBuffer); // send ZFIN
+                            DLog.e(TZR, "ZFIN: go next state - ZOO ");
+                            zmodemState = ZOO;
+                        } else {
+                            DLog.e(TZR, "ZFIN: GET ??? - end transfer");
+                            bReadDataProcess = false;
+                        }
+                    }
+                        break;
+
+                    case ZOO:
+                        if (zmWaitReadData(2, 0, 10000)) { // get ZFIN
+                            if (modemDataBuffer[0] == 0x4F &&  modemDataBuffer[1] == 0x4F) {
+                                DLog.e(TZR, "ZOO: GET OO - transfer complete ");
+                                bReadDataProcess = false;
+                            } else {
+                                DLog.e(TZR, "ZOO: GET ??? - end transfer");
+                                bReadDataProcess = false;
+
+                                DLog.e(TZR,
+                                        "Mode:" + transferMode + " data 0:[" + Integer.toHexString(modemDataBuffer[0]) + "] 1:["
+                                                + Integer.toHexString(modemDataBuffer[1]));
+
+                                int num = zmReadAllData(10);
+
+                                if (num > 0) {
+                                    DLog.e(TZR, "remain data:" + num);
+                                    for (int i = 0; i < num; i++)
+                                        DLog.e(TT, "[" + i + "]:" + Integer.toHexString(modemDataBuffer[i]));
+                                }
+                            }
+                        } else {
+                            DLog.e(TZR, "ZOO: No data - end transfer");
+                            bReadDataProcess = false;
+                        }
+
+                        break;
+
+                    default:
+                        break;
+                    }
+            }
+
+            transferMode = MODE_GENERAL_UART;
+            bUartModeTaskSet = true;
             end_time = System.currentTimeMillis();
-            if(true == bFileReciveDone)
-            {
+            if (bFileReciveDone) {
                 DLog.e(TT, "end 1");
                 msg = mHandler.obtainMessage(UPDATE_MODEM_RECEIVE_DONE);
                 mHandler.sendMessage(msg);
-            }
-            else if(true == bLogButtonClick)
-            {
+            } else if (bLogButtonClick) {
                 DLog.e(TT, "end 2");
                 msg = mHandler.obtainMessage(MSG_MODEM_RECEIVE_PACKET_TIMEOUT);
                 mHandler.sendMessage(msg);
@@ -5343,277 +4357,225 @@ public class J2xxHyperTerm extends Activity
         }
     }
 
-    boolean zmParseFileInfo(int dataNum)
-    {
+    boolean zmParseFileInfo(int dataNum) {
         boolean parseOK = true;
         char filename[] = new char[128];
         char filesize[] = new char[12];
 
-        DLog.e(TZR,"parse zm file info pkt:"+dataNum);
+        DLog.e(TZR, "parse zm file info pkt:" + dataNum);
 
         int i = 0;
-        while(modemDataBuffer[i] != 0x00)
-        {
-            filename[i] = (char)modemDataBuffer[i];
+        while (modemDataBuffer[i] != 0x00) {
+            filename[i] = (char) modemDataBuffer[i];
             i++;
         }
 
         i++;
         int j = 0;
-        // file size: xp hyperterm  end with 0x20, pcomm end with 0x00
-        while((modemDataBuffer[j+i] != 0x00 && modemDataBuffer[j+i] != 0x20) && ((j+i) < (dataNum-1)))
-        {
-            filesize[j] = (char)modemDataBuffer[j+i];
+        // file size: xp hyperterm end with 0x20, pcomm end with 0x00
+        while (modemDataBuffer[j + i] != 0x00 && modemDataBuffer[j + i] != 0x20 && j + i < dataNum - 1) {
+            filesize[j] = (char) modemDataBuffer[j + i];
             j++;
         }
 
-        DLog.e(TZR,"i:"+ i +" j:"+j);
+        DLog.e(TZR, "i:" + i + " j:" + j);
 
-        modemFileName = String.copyValueOf(filename, 0, i-1);
+        modemFileName = String.copyValueOf(filename, 0, i - 1);
         modemFileSize = String.copyValueOf(filesize, 0, j);
 
-        DLog.e(TZR,"File Name:"+ modemFileName);
-        DLog.e(TZR,"File Size:"+ modemFileSize);
-
+        DLog.e(TZR, "File Name:" + modemFileName);
+        DLog.e(TZR, "File Size:" + modemFileSize);
 
         return parseOK;
     }
 
-    int zmReadAllData(int waitTime) // for Z modem read data
-    {
+    int zmReadAllData(int waitTime) { // for Z modem read data
         long time_1, time_2;
         time_1 = System.currentTimeMillis();
-        DLog.e(TZR ,"zmReadAllData:"+modemReceiveDataBytes[0]+" waitTime:"+waitTime);
+        DLog.e(TZR, "zmReadAllData:" + modemReceiveDataBytes[0] + " waitTime:" + waitTime);
 
-        do
-        {
-            if(modemReceiveDataBytes[0] > 0)
-            {
+        do {
+            if (modemReceiveDataBytes[0] > 0) {
                 int dataNum = modemReceiveDataBytes[0];
-                if(dataNum > DATA_SIZE_256)     // read 256 bytes data each time
-                {
+                if (dataNum > DATA_SIZE_256) // read 256 bytes data each time
                     dataNum = DATA_SIZE_256;
-                }
 
                 readData(dataNum, modemDataBuffer);
                 modemReceiveDataBytes[0] -= dataNum;
                 return dataNum;
             }
 
-            try
-            {
+            try {
                 Thread.sleep(20);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-            catch (InterruptedException e) {e.printStackTrace();}
 
-            if(false == bLogButtonClick && false == bSendButtonClick)
-            {
+            if (!bLogButtonClick && !bSendButtonClick)
                 return 0;
-            }
 
             time_2 = System.currentTimeMillis();
-        }
-        while((time_2 - time_1) < waitTime);
+        } while (time_2 - time_1 < waitTime);
 
-        DLog.e(TZR,"zmReadAllData timeout!");
+        DLog.e(TZR, "zmReadAllData timeout!");
         return 0;
     }
 
-    int zmCheckZEOF(int[] dataNum)
-    {
-        for(int i=0; i<dataNum[0]; i++)
-        {
-            if(ZPAD == modemDataBuffer[i])
-            {
-                DLog.e(TT,"checkZEOF find ZPAD dataNum:"+dataNum+" i:"+i);
+    int zmCheckZEOF(int[] dataNum) {
+        for (int i = 0; i < dataNum[0]; i++) {
+            if (modemDataBuffer[i] == ZPAD) {
+                DLog.e(TT, "checkZEOF find ZPAD dataNum:" + dataNum + " i:" + i);
 
-                if( dataNum[0] < i+3+1) // check whether there is enough data for parsing: zeof
-                {
-                    DLog.e(TZR," dataNum[0]:" + dataNum[0] +" i:"+i+" zeof append data a");
-                    zmWaitReadData((i+3+1-dataNum[0]) ,dataNum[0] ,1000);
-                    dataNum[0] += (i+3+1-dataNum[0]);
+                if (dataNum[0] < i + 3 + 1) { // check whether there is enough data for parsing: zeof
+                    DLog.e(TZR, " dataNum[0]:" + dataNum[0] + " i:" + i + " zeof append data a");
+                    zmWaitReadData(i + 3 + 1 - dataNum[0], dataNum[0], 1000);
+                    dataNum[0] += (i + 3 + 1 - dataNum[0]);
                 }
 
-                if((i+3+1) <= dataNum[0])
-                {
-                    if(ZDLE == modemDataBuffer[i+1] &&
-                       ZBIN == modemDataBuffer[i+2] &&
-                       0x0b == modemDataBuffer[i+3]) // ZEOF
+                if (i + 3 + 1 <= dataNum[0]) {
+                    if (modemDataBuffer[i + 1] == ZDLE &&
+                        modemDataBuffer[i + 2] == ZBIN &&
+                        modemDataBuffer[i + 3] == 0x0b) // ZEOF
                     {
-                        DLog.e(TT,"checkZEOF TRUE");
+                        DLog.e(TT, "checkZEOF TRUE");
 
-                        if( dataNum[0] < i+9+1) // ZEOF, get remain data
-                        {
-                            DLog.e(TZR," dataNum[0]:" + dataNum[0] +" i:"+i+" zeof append data b");
-                            zmWaitReadData((i+9+1-dataNum[0]) ,dataNum[0] ,2000);
-                            dataNum[0] += (i+9+1-dataNum[0]);
+                        if (dataNum[0] < i + 9 + 1) { // ZEOF, get remain data
+                            DLog.e(TZR, " dataNum[0]:" + dataNum[0] + " i:" + i + " zeof append data b");
+                            zmWaitReadData(i + 9 + 1 - dataNum[0], dataNum[0], 2000);
+                            dataNum[0] += (i + 9 + 1 - dataNum[0]);
                         }
 
-                        DLog.e(TZR,"zmCheckZEOF: find zeof i:"+i);
+                        DLog.e(TZR, "zmCheckZEOF: find zeof i:" + i);
                         return i;
                     }
-                }
-                else
-                {
-                    if(true == INTERNAL_DEBUG_TRACE)
-                    {
-                        Message msg = handler.obtainMessage(MSG_UNHANDLED_CASE, String.valueOf("zmCheckZEOF unhandle case") );
+                } else {
+                    if (INTERNAL_DEBUG_TRACE) {
+                        Message msg = handler.obtainMessage(MSG_UNHANDLED_CASE, String.valueOf("zmCheckZEOF unhandle case"));
                         handler.sendMessage(msg);
                     }
-                    DLog.e(TT,"zmCheckZEOF: not enough data for parse, unhandle case");
+                    DLog.e(TT, "zmCheckZEOF: not enough data for parse, unhandle case");
                 }
             }
         }
         return -1;
     }
 
-    boolean zmWaitReadData(int numByte, int offset, int waitTime) // for Z modem read data
-    {
+    boolean zmWaitReadData(int numByte, int offset, int waitTime) { // for Z modem read data
         long time_1, time_2;
         time_1 = System.currentTimeMillis();
 
-        if(offset != 0)
-        {
-            DLog.e(TT,"zmWaitReadData, offset:"+offset);
-        }
+        if (offset != 0)
+            DLog.e(TT, "zmWaitReadData, offset:" + offset);
 
-        do
-        {
-            if(modemReceiveDataBytes[0] >= numByte)
-            {
+        do {
+            if (modemReceiveDataBytes[0] >= numByte) {
                 readData(numByte, offset, modemDataBuffer);
                 modemReceiveDataBytes[0] -= numByte;
                 return true;
             }
 
-            try
-            {
+            try {
                 Thread.sleep(20);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-            catch (InterruptedException e) {e.printStackTrace();}
 
-            if(false == bLogButtonClick && false == bSendButtonClick)
-            {
+            if (!bLogButtonClick && !bSendButtonClick)
                 return false;
-            }
 
             time_2 = System.currentTimeMillis();
-        }
-        while((time_2 - time_1) < waitTime);
+        } while (time_2 - time_1 < waitTime);
 
-        DLog.e(TT,"waitReadData:"+numByte+" time:"+waitTime+ " timeout!");
+        DLog.e(TT, "waitReadData:" + numByte + " time:" + waitTime + " timeout!");
         return false;
     }
 
-    void zmWaitFileInfoData(int[] dataNum)
-    {
-        DLog.e(TZR,"zmWaitFileInfoData...dataNum[0] " + dataNum[0]);
+    void zmWaitFileInfoData(int[] dataNum) {
+        DLog.e(TZR, "zmWaitFileInfoData...dataNum[0] " + dataNum[0]);
 
-        int i=0;
-        while(true)
-        {
-            DLog.e(TZR,"a modemDataBuffer["+i+"]:" + modemDataBuffer[i] + " modemDataBuffer["+(i+1)+"]:" + modemDataBuffer[i+1]);
+        int i = 0;
+        for (;;) {
+            DLog.e(TZR, "a modemDataBuffer[" + i + "]:" + modemDataBuffer[i] + " modemDataBuffer[" + (i + 1) + "]:" + modemDataBuffer[i + 1]);
 
-            if( dataNum[0] < i+1+1)
-            {
-                DLog.e(TZR," dataNum[0]:" + dataNum[0] +" i:"+i+" append data");
-                zmWaitReadData(1 ,dataNum[0] ,1000); // // check whether there is enough data for parsing: zlde zcrcw
+            if (dataNum[0] < i + 1 + 1) {
+                DLog.e(TZR, " dataNum[0]:" + dataNum[0] + " i:" + i + " append data");
+                zmWaitReadData(1, dataNum[0], 1000); // // check whether there is enough data for parsing: zlde zcrcw
                 dataNum[0] += 1;
 
             }
 
-            DLog.e(TZR,"b modemDataBuffer["+i+"]:" + modemDataBuffer[i] + " modemDataBuffer["+(i+1)+"]:" + modemDataBuffer[i+1]);
+            DLog.e(TZR, "b modemDataBuffer[" + i + "]:" + modemDataBuffer[i] + " modemDataBuffer[" + (i + 1) + "]:" + modemDataBuffer[i + 1]);
 
-            if(ZDLE == modemDataBuffer[i])  // find zdle
-            {
-                if(ZCRCW == modemDataBuffer[i+1])
-                {
-                    DLog.e(TZR,"find ZDLE ZCRCW :" + i);
+            if (modemDataBuffer[i] == ZDLE) { // find zdle
+                if (modemDataBuffer[i + 1] == ZCRCW) {
+                    DLog.e(TZR, "find ZDLE ZCRCW :" + i);
                     return;
                 }
             }
 
             i++;
 
-            if(i>256)
+            if (i > 256)
                 break;
         }
     }
 
-    int zmGetHeaderType()
-    {
+    int zmGetHeaderType() {
         byte headerType = 0;
 
         String logStr = new String("Data: ");
-        for(int i=0;i<21;i++)
-        {
+        for (int i = 0; i < 21; i++) {
             logStr += Integer.toHexString(modemDataBuffer[i]) + " ";
         }
         DLog.e(TZR, logStr);
 
-        if(modemDataBuffer[0] != ZPAD)
-        {
-            DLog.e(TZR,"error: modem[0] != ZPAD");
+        if (modemDataBuffer[0] != ZPAD) {
+            DLog.e(TZR, "error: modem[0] != ZPAD");
             return -1;
         }
 
-        if(ZPAD == modemDataBuffer[1])
-        {
-            DLog.e(TZR,"modem[1] == ZPAD");
+        if (modemDataBuffer[1] == ZPAD) {
+            DLog.e(TZR, "modem[1] == ZPAD");
 
-            if(modemDataBuffer[2] != ZDLE)
-            {
-                DLog.e(TZR,"modem[2] == ZDLE");
+            if (modemDataBuffer[2] != ZDLE) {
+                DLog.e(TZR, "modem[2] == ZDLE");
                 return -1;
             }
 
-            if(modemDataBuffer[3] != ZHEX)
-            {
-                DLog.e(TZR,"modem[3] == ZHEX");
+            if (modemDataBuffer[3] != ZHEX) {
+                DLog.e(TZR, "modem[3] == ZHEX");
                 return -1;
-            }
-            else
-            {
+            } else {
                 headerType = ZHEX;
             }
-        }
-        else if(ZDLE == modemDataBuffer[1])
-        {
-            DLog.e(TZR,"modemDataBuffer[1] == ZDLE");
+        } else if (modemDataBuffer[1] == ZDLE) {
+            DLog.e(TZR, "modemDataBuffer[1] == ZDLE");
 
-            if(ZBIN == modemDataBuffer[2])
-            {
+            if (modemDataBuffer[2] == ZBIN) {
                 headerType = ZBIN;
-            }
-            else if(ZBIN32 == modemDataBuffer[2])
-            {
+            } else if (modemDataBuffer[2] == ZBIN32) {
                 headerType = ZBIN32;
-            }
-            else
-            {
-                DLog.e(TZR,"modem[2] != ZBIN || ZBIN32, incorrect frame type");
+            } else {
+                DLog.e(TZR, "modem[2] != ZBIN || ZBIN32, incorrect frame type");
                 return -1;
             }
-        }
-        else
-        {
-            DLog.e(TZR,"error: modem[1] != ZPAD || ZDLE, incorrect frame type");
+        } else {
+            DLog.e(TZR, "error: modem[1] != ZPAD || ZDLE, incorrect frame type");
             return -1;
         }
 
-        DLog.e(TZR,"FrameType:"+headerType);
+        DLog.e(TZR, "FrameType:" + headerType);
 
-        switch(headerType)
-        {
+        switch (headerType) {
         case ZHEX:
             DLog.e(TZR, "frame type:" + Integer.toHexString(modemDataBuffer[3]));
 
             break;
         case ZBIN:
-            DLog.e(TZR," binary mode not support yet");
+            DLog.e(TZR, " binary mode not support yet");
             break;
         case ZBIN32:
-            DLog.e(TZR," binary mode 32 not support yet");
+            DLog.e(TZR, " binary mode 32 not support yet");
             break;
         default:
             break;
@@ -5622,15 +4584,11 @@ public class J2xxHyperTerm extends Activity
         return (headerType);
     }
 
-    int zmGetFrameType(byte[] dataBuf, int offset)
-    {
+    int zmGetFrameType(byte[] dataBuf, int offset) {
         int frameType = -1;
 
-        if(dataBuf[offset] == 0x2A && dataBuf[offset+1] == 0x2A && dataBuf[offset+2] == 0x18 &&
-                dataBuf[offset+3] == 0x42 && dataBuf[offset+4] == 0x30)
-        {
-            switch(dataBuf[offset+5])
-            {
+        if (dataBuf[offset] == 0x2A && dataBuf[offset + 1] == 0x2A && dataBuf[offset + 2] == 0x18 && dataBuf[offset + 3] == 0x42 && dataBuf[offset + 4] == 0x30) {
+            switch (dataBuf[offset + 5]) {
             case 0x31:
                 frameType = ZRINIT;
                 break;
@@ -5652,38 +4610,35 @@ public class J2xxHyperTerm extends Activity
             default:
                 break;
             }
-            DLog.e(TZS,"zmGetFrameType dataBuf[offset+5]:"+dataBuf[offset+5]+ " frameType:"+frameType);
-        }
-        else
-        {
-            DLog.e(TZS,"zmGetFrameType not correct frame format");
+            DLog.e(TZS, "zmGetFrameType dataBuf[offset+5]:" + dataBuf[offset + 5] + " frameType:" + frameType);
+        } else {
+            DLog.e(TZS, "zmGetFrameType not correct frame format");
         }
 
         return frameType;
     }
 
-    int zmGenerateDataPacket(byte[] dataBuf, int dataNum)
-    {
+    int zmGenerateDataPacket(byte[] dataBuf, int dataNum) {
         int j = 0;
 
-        for(int i = 0; i < dataNum; i++)
-        {
+        for (int i = 0; i < dataNum; i++) {
             zmDataBuffer[j++] = dataBuf[i];
 
-            switch(dataBuf[i])
-            {
+            switch (dataBuf[i]) {
             case ZDLE:
-            case 0x10:  case (byte)0x90:
-            case 0x11:  case (byte)0x91:
-            case 0x13:  case (byte)0x93:
-                zmDataBuffer[j-1] = ZDLE;
+            case 0x10:
+            case (byte) 0x90:
+            case 0x11:
+            case (byte) 0x91:
+            case 0x13:
+            case (byte) 0x93:
+                zmDataBuffer[j - 1] = ZDLE;
                 dataBuf[i] ^= 0x40;
                 zmDataBuffer[j++] = dataBuf[i];
                 break;
             default:
-                if((dataBuf[i] & 0x60) == 0)
-                {
-                    zmDataBuffer[j-1] = ZDLE;
+                if ((dataBuf[i] & 0x60) == 0) {
+                    zmDataBuffer[j - 1] = ZDLE;
                     dataBuf[i] ^= 0x40;
                     zmDataBuffer[j++] = dataBuf[i];
                 }
@@ -5694,58 +4649,58 @@ public class J2xxHyperTerm extends Activity
         return j;
     }
 
-    int zmCheckDLE(byte[] dataBuf, byte data, int i)
-    {
+    int zmCheckDLE(byte[] dataBuf, byte data, int i) {
         dataBuf[i++] = data;
 
-        switch(data)
-        {
+        switch (data) {
         case ZDLE:
-        case 0x10:  case (byte)0x90:
-        case 0x11:  case (byte)0x91:
-        case 0x13:  case (byte)0x93:
-            dataBuf[i-1] = ZDLE;
+        case 0x10:
+        case (byte) 0x90:
+        case 0x11:
+        case (byte) 0x91:
+        case 0x13:
+        case (byte) 0x93:
+            dataBuf[i - 1] = ZDLE;
             data ^= 0x40;
             dataBuf[i++] = data;
             break;
         default:
-            //              if((dataBuf[i] & 0x60) == 0)
-            //              {
-            //                  dataBuf[i-1] = ZDLE;
-            //                  data ^= 0x40;
-            //                  dataBuf[i++] = data;
-            //              }
+            // if((dataBuf[i] & 0x60) == 0)
+            // {
+            // dataBuf[i-1] = ZDLE;
+            // data ^= 0x40;
+            // dataBuf[i++] = data;
+            // }
             break;
         }
-
 
         return i;
     }
 
-    int zmAppendCRC(byte[] dataBuf, byte[] crcHL, int i)
-    {
-        for(int j=0; j < 2; j++)
-        {
+    int zmAppendCRC(byte[] dataBuf, byte[] crcHL, int i) {
+        for (int j = 0; j < 2; j++) {
             dataBuf[i++] = crcHL[j];
 
-            switch(crcHL[j])
-            {
+            switch (crcHL[j]) {
             case ZDLE:
-            case 0x10:  case (byte)0x90:
-            case 0x11:  case (byte)0x91:
-            case 0x13:  case (byte)0x93:
-                dataBuf[i-1] = ZDLE;
+            case 0x10:
+            case (byte) 0x90:
+            case 0x11:
+            case (byte) 0x91:
+            case 0x13:
+            case (byte) 0x93:
+                dataBuf[i - 1] = ZDLE;
                 crcHL[j] ^= 0x40;
                 dataBuf[i++] = crcHL[j];
-            break;
+                break;
             default:
 
-//              if((dataBuf[i] & 0x60) == 0)
-//              {
-//                  dataBuf[i-1] = ZDLE;
-//                  crcHL[j] ^= 0x40;
-//                  dataBuf[i++] = crcHL[j];
-//              }
+                // if((dataBuf[i] & 0x60) == 0)
+                // {
+                // dataBuf[i-1] = ZDLE;
+                // crcHL[j] ^= 0x40;
+                // dataBuf[i++] = crcHL[j];
+                // }
                 break;
             }
         }
@@ -5754,64 +4709,53 @@ public class J2xxHyperTerm extends Activity
     }
 
     // Input readdata and zeofpos, save data to zmDataBuffer, return data number for saving
-    int zmParseDataPacket(int[] dataNum, int zeofPos)
-    {
+    int zmParseDataPacket(int[] dataNum, int zeofPos) {
         int j = 0;
         int frameendByte = ZDLE_END_SIZE_4;
 
-        if(zeofPos >= 0)
-        {
-            DLog.e(TT,"zmParseDataPacket dataNum:"+dataNum[0]+" zeofPos:"+zeofPos);
+        if (zeofPos >= 0) {
+            DLog.e(TT, "zmParseDataPacket dataNum:" + dataNum[0] + " zeofPos:" + zeofPos);
             dataNum[0] = zeofPos;
         }
 
-        for(int i = 0; i < dataNum[0]; i++)
-        {
-            if(ZDLE == modemDataBuffer[i])  // find zdle
-            {
-                if(0 == i)
-                    DLog.e(TZR,"byte 0 find zdle:"+modemDataBuffer[0]);
+        for (int i = 0; i < dataNum[0]; i++) {
+            if (modemDataBuffer[i] == ZDLE) { // find zdle
+                if (i == 0)
+                    DLog.e(TZR, "byte 0 find zdle:" + modemDataBuffer[0]);
 
                 // check whether there is enough data for parsing: zlde frameend crc1 crc2
-                if(dataNum[0] < i+3+1)
-                {
-                    DLog.e(TZR,"checkFrameEnd find zdle but remain byte not enough");
-                    DLog.e(TZR,"dataNum[0]:"+dataNum[0]+" i:"+i);
+                if (dataNum[0] < i + 3 + 1) {
+                    DLog.e(TZR, "checkFrameEnd find zdle but remain byte not enough");
+                    DLog.e(TZR, "dataNum[0]:" + dataNum[0] + " i:" + i);
 
-                    zmWaitReadData((i+3+1-dataNum[0]) ,dataNum[0] ,1000);
-                    dataNum[0] += (i+3+1-dataNum[0]);
+                    zmWaitReadData(i + 3 + 1 - dataNum[0], dataNum[0], 1000);
+                    dataNum[0] += (i + 3 + 1 - dataNum[0]);
 
-                    DLog.e(TZR,"append extra data:" + (i+3+1-dataNum[0]) +"after extra read dataNum[0]:"+dataNum[0]);
+                    DLog.e(TZR, "append extra data:" + (i + 3 + 1 - dataNum[0]) + "after extra read dataNum[0]:" + dataNum[0]);
                 }
 
-
                 // check next char is special word or not
-                DLog.e(TZR,"find zdle, check modemDataBuffer[i+1]:"+modemDataBuffer[i+1] );
+                DLog.e(TZR, "find zdle, check modemDataBuffer[i+1]:" + modemDataBuffer[i + 1]);
 
-                if (((modemDataBuffer[i+1] & 0x40) != 0) && ((modemDataBuffer[i+1] & 0x20) == 0))
-                {
-                    modemDataBuffer[i+1] &= 0xbf;
-                    zmDataBuffer[j++] = modemDataBuffer[i+1];
+                if ((modemDataBuffer[i + 1] & 0x40) != 0 && (modemDataBuffer[i + 1] & 0x20) == 0) {
+                    modemDataBuffer[i + 1] &= 0xbf;
+                    zmDataBuffer[j++] = modemDataBuffer[i + 1];
                     i++; // i+1 is converted, skip this one
 
                     // not zdle frame, keep scan next char
-                }
-                else
-                {
-                    DLog.e(TZR,"zdle frame found");
+                } else {
+                    DLog.e(TZR, "zdle frame found");
 
                     // check two zdle case
-                    if(ZDLE == modemDataBuffer[i+2] || ZDLE == modemDataBuffer[i+3])
-                    {
-                        DLog.e(TZR,"double zdle case, read 1 extra byte");
-                        zmWaitReadData(1 ,dataNum[0] ,1000);
+                    if (modemDataBuffer[i + 2] == ZDLE || modemDataBuffer[i + 3] == ZDLE) {
+                        DLog.e(TZR, "double zdle case, read 1 extra byte");
+                        zmWaitReadData(1, dataNum[0], 1000);
                         dataNum[0] += 1;
                         frameendByte = ZDLE_END_SIZE_5;
 
-                        if(ZDLE == modemDataBuffer[i+4])  // check three zlde case
-                        {
-                            DLog.e(TZR,"triple zdle case, read 1 extra byte");
-                            zmWaitReadData(1 ,dataNum[0] ,1000);
+                        if (modemDataBuffer[i + 4] == ZDLE) { // check three zlde case
+                            DLog.e(TZR, "triple zdle case, read 1 extra byte");
+                            zmWaitReadData(1, dataNum[0], 1000);
                             dataNum[0] += 1;
                             frameendByte = ZDLE_END_SIZE_6;
                         }
@@ -5820,9 +4764,7 @@ public class J2xxHyperTerm extends Activity
                     // skip frame data
                     i += frameendByte - 1;
                 }
-            }
-            else
-            {
+            } else {
                 zmDataBuffer[j++] = modemDataBuffer[i];
             }
         }
@@ -5830,147 +4772,80 @@ public class J2xxHyperTerm extends Activity
         return j; // return j: data number for saving
     }
 
-    void checkZMStartingZRQINIT()
-    {
+    void checkZMStartingZRQINIT() {
         Message msg;
-        for(int i = 0; i < actualNumBytes; i++)
-        {
-            switch(zmStartState)
-            {
-            case ZMS_0:
-                if(0x72 == readBuffer[i]) zmStartState = ZMS_1;
-                break;
-            case ZMS_1:
-                if(0x7A == readBuffer[i]) zmStartState = ZMS_2;
-                else  zmStartState = ZMS_0;
-                break;
-            case ZMS_2:
-                if(0x0D == readBuffer[i]) zmStartState = ZMS_3;
-                else  zmStartState = ZMS_0;
-                break;
-            case ZMS_3:
-                if(ZPAD == readBuffer[i]) zmStartState = ZMS_4;
-                else  zmStartState = ZMS_0;
-                break;
-            case ZMS_4:
-                if(ZPAD == readBuffer[i]) zmStartState = ZMS_5;
-                else  zmStartState = ZMS_0;
-                break;
-            case ZMS_5:
-                if(ZDLE == readBuffer[i]) zmStartState = ZMS_6;
-                else  zmStartState = ZMS_0;
-                break;
-            case ZMS_6:
-                if(ZHEX == readBuffer[i]) zmStartState = ZMS_7;
-                else  zmStartState = ZMS_0;
-                break;
-            case ZMS_7:
-                if(0x30 == readBuffer[i]) zmStartState = ZMS_8;
-                else  zmStartState = ZMS_0;
-                break;
-            case ZMS_8:
-                if(0x30 == readBuffer[i]) zmStartState = ZMS_9;
-                else  zmStartState = ZMS_0;
-                break;
-            case ZMS_9:
-                if(0x30 == readBuffer[i]) zmStartState = ZMS_10;
-                else  zmStartState = ZMS_0;
-                break;
-            case ZMS_10:
-                if(0x30 == readBuffer[i]) zmStartState = ZMS_11;
-                else  zmStartState = ZMS_0;
-                break;
-            case ZMS_11:
-                if(0x30 == readBuffer[i]) zmStartState = ZMS_12;
-                else  zmStartState = ZMS_0;
-                break;
-            case ZMS_12:
-                if(0x30 == readBuffer[i]) zmStartState = ZMS_13;
-                else  zmStartState = ZMS_0;
-                break;
-            case ZMS_13:
-                if(0x30 == readBuffer[i]) zmStartState = ZMS_14;
-                else  zmStartState = ZMS_0;
-                break;
-            case ZMS_14:
-                if(0x30 == readBuffer[i]) zmStartState = ZMS_15;
-                else  zmStartState = ZMS_0;
-                break;
-            case ZMS_15:
-                if(0x30 == readBuffer[i]) zmStartState = ZMS_16;
-                else  zmStartState = ZMS_0;
-                break;
-            case ZMS_16:
-                if(0x30 == readBuffer[i]) zmStartState = ZMS_17;
-                else  zmStartState = ZMS_0;
-                break;
-            case ZMS_17:
-                if(0x30 == readBuffer[i]) zmStartState = ZMS_18;
-                else  zmStartState = ZMS_0;
-                break;
-            case ZMS_18:
-                if(0x30 == readBuffer[i]) zmStartState = ZMS_19;
-                else  zmStartState = ZMS_0;
-                break;
-            case ZMS_19:
-                if(0x30 == readBuffer[i]) zmStartState = ZMS_20;
-                else  zmStartState = ZMS_0;
-                break;
-            case ZMS_20:
-                if(0x30 == readBuffer[i]) zmStartState = ZMS_21;
-                else  zmStartState = ZMS_0;
-                break;
-            case ZMS_21:
-                if(0x0D == readBuffer[i]) zmStartState = ZMS_22;
-                else  zmStartState = ZMS_0;
-                break;
-            case ZMS_22:
-                if(0x0A == readBuffer[i] || (byte)0x8A == readBuffer[i]) zmStartState = ZMS_23;
-                else{
-                    DLog.e(TT,"ZMS_22 stop, readBuffer[i]:"+Integer.toHexString(readBuffer[i]));
-                    zmStartState = ZMS_0;
-                }
-                break;
-            case ZMS_23:
-                if(0x11 == readBuffer[i]) zmStartState = ZMS_24;
-                else  zmStartState = ZMS_0;
-                break;
-            default:
-                break;
+        for (int i = 0; i < actualNumBytes; i++) {
+            switch (zmStartState) {
+                case ZMS_0 : if (readBuffer[i] == 0x72) zmStartState = ZMS_1 ; break;
+                case ZMS_1 : if (readBuffer[i] == 0x7A) zmStartState = ZMS_2 ; else zmStartState = ZMS_0; break;
+                case ZMS_2 : if (readBuffer[i] == 0x0D) zmStartState = ZMS_3 ; else zmStartState = ZMS_0; break;
+                case ZMS_3 : if (readBuffer[i] == ZPAD) zmStartState = ZMS_4 ; else zmStartState = ZMS_0; break;
+                case ZMS_4 : if (readBuffer[i] == ZPAD) zmStartState = ZMS_5 ; else zmStartState = ZMS_0; break;
+                case ZMS_5 : if (readBuffer[i] == ZDLE) zmStartState = ZMS_6 ; else zmStartState = ZMS_0; break;
+                case ZMS_6 : if (readBuffer[i] == ZHEX) zmStartState = ZMS_7 ; else zmStartState = ZMS_0; break;
+                case ZMS_7 : if (readBuffer[i] == 0x30) zmStartState = ZMS_8 ; else zmStartState = ZMS_0; break;
+                case ZMS_8 : if (readBuffer[i] == 0x30) zmStartState = ZMS_9 ; else zmStartState = ZMS_0; break;
+                case ZMS_9 : if (readBuffer[i] == 0x30) zmStartState = ZMS_10; else zmStartState = ZMS_0; break;
+                case ZMS_10: if (readBuffer[i] == 0x30) zmStartState = ZMS_11; else zmStartState = ZMS_0; break;
+                case ZMS_11: if (readBuffer[i] == 0x30) zmStartState = ZMS_12; else zmStartState = ZMS_0; break;
+                case ZMS_12: if (readBuffer[i] == 0x30) zmStartState = ZMS_13; else zmStartState = ZMS_0; break;
+                case ZMS_13: if (readBuffer[i] == 0x30) zmStartState = ZMS_14; else zmStartState = ZMS_0; break;
+                case ZMS_14: if (readBuffer[i] == 0x30) zmStartState = ZMS_15; else zmStartState = ZMS_0; break;
+                case ZMS_15: if (readBuffer[i] == 0x30) zmStartState = ZMS_16; else zmStartState = ZMS_0; break;
+                case ZMS_16: if (readBuffer[i] == 0x30) zmStartState = ZMS_17; else zmStartState = ZMS_0; break;
+                case ZMS_17: if (readBuffer[i] == 0x30) zmStartState = ZMS_18; else zmStartState = ZMS_0; break;
+                case ZMS_18: if (readBuffer[i] == 0x30) zmStartState = ZMS_19; else zmStartState = ZMS_0; break;
+                case ZMS_19: if (readBuffer[i] == 0x30) zmStartState = ZMS_20; else zmStartState = ZMS_0; break;
+                case ZMS_20: if (readBuffer[i] == 0x30) zmStartState = ZMS_21; else zmStartState = ZMS_0; break;
+                case ZMS_21: if (readBuffer[i] == 0x0D) zmStartState = ZMS_22; else zmStartState = ZMS_0; break;
+                case ZMS_22:
+                    if (readBuffer[i] == 0x0A || readBuffer[i] == (byte)0x8A)
+                        zmStartState = ZMS_23;
+                    else {
+                        DLog.e(TT, "ZMS_22 stop, readBuffer[i]:" + Integer.toHexString(readBuffer[i]));
+                        zmStartState = ZMS_0;
+                    }
+                    break;
+                case ZMS_23: if (readBuffer[i] == 0x11) zmStartState = ZMS_24; else zmStartState = ZMS_0; break;
+                default:
+                    break;
             }
 
-            if(zmStartState >= ZMS_1)
-            {
-                DLog.e(TZR,"zmStartState:"+zmStartState);
-            }
+            if (zmStartState >= ZMS_1)
+                DLog.e(TZR, "zmStartState:" + zmStartState);
 
-            if(ZMS_24 == zmStartState)
-            {
-                DLog.e(TZR,"ZModem auto-start receiving file");
+            if (zmStartState == ZMS_24) {
+                DLog.e(TZR, "ZModem auto-start receiving file");
                 zmStartState = ZMS_0;
-                msg= handler.obtainMessage(ACT_ZMODEM_AUTO_START_RECEIVE);
+                msg = handler.obtainMessage(ACT_ZMODEM_AUTO_START_RECEIVE);
                 handler.sendMessage(msg);
             }
         }
     }
-// ZModem - ===============================================================================================
+
+    // ZModem - ===============================================================================================
+
+    //      ____ ____   ____
+    //     / ___|  _ \ / ___|
+    //    | |   | |_) | |
+    //    | |___|  _ <| |___
+    //     \____|_| \_\\____|
 
     // calculate CRC
-    byte[] calCrc(byte[] buffer, int startPos, int count)
-    {
+    byte[] calCrc(byte[] buffer, int startPos, int count) {
         int crc = 0, i;
         byte[] crcHL = new byte[2];
 
-        while(--count >= 0)
-        {
-            crc = crc ^ (int)buffer[startPos++] << 8;
-            for(i = 0; i < 8; ++i)
-            {
-                if((crc & 0x8000)!= 0) crc = crc << 1 ^ 0x1021;
-                else crc = crc << 1;
+        while (--count >= 0) {
+            crc = crc ^ (int) buffer[startPos++] << 8;
+            for (i = 0; i < 8; ++i) {
+                if ((crc & 0x8000) != 0)
+                    crc = crc << 1 ^ 0x1021;
+                else
+                    crc = crc << 1;
             }
         }
-        crc &=  0xFFFF;
+        crc &= 0xFFFF;
 
         crcHL[0] = (byte) ((crc >> 8) & 0xFF);
         crcHL[1] = (byte) (crc & 0xFF);
@@ -5978,67 +4853,69 @@ public class J2xxHyperTerm extends Activity
         return crcHL;
     }
 
-    void accumulateCrc(byte[] crcHL, byte[] buffer ,int startPos, int count)
-    {
+    void accumulateCrc(byte[] crcHL, byte[] buffer, int startPos, int count) {
         int crc = 0, i;
-        short val=(short)( ((crcHL[0]&0xFF)<<8) | (crcHL[1]&0xFF) );
-        crc = (int)val;
+        short val = (short) (((crcHL[0] & 0xFF) << 8) | (crcHL[1] & 0xFF));
+        crc = (int) val;
 
-        while(--count >= 0)
-        {
-            crc = crc ^ (int)buffer[startPos++] << 8;
-            for(i = 0; i < 8; ++i)
-            {
-                if((crc & 0x8000)!= 0) crc = crc << 1 ^ 0x1021;
-                else crc = crc << 1;
+        while (--count >= 0) {
+            crc = crc ^ (int) buffer[startPos++] << 8;
+            for (i = 0; i < 8; ++i) {
+                if ((crc & 0x8000) != 0)
+                    crc = crc << 1 ^ 0x1021;
+                else
+                    crc = crc << 1;
             }
         }
-        crc &=  0xFFFF;
+        crc &= 0xFFFF;
 
         crcHL[0] = (byte) ((crc >> 8) & 0xFF);
         crcHL[1] = (byte) (crc & 0xFF);
     }
 
-    void accumulateCrc(byte[] crcHL, byte buffer)
-    {
+    void accumulateCrc(byte[] crcHL, byte buffer) {
         int crc = 0, i;
 
-        short val=(short)( ((crcHL[0]&0xFF)<<8) | (crcHL[1]&0xFF) );
+        short val = (short) (((crcHL[0] & 0xFF) << 8) | (crcHL[1] & 0xFF));
 
-        crc = (int)val;
+        crc = (int) val;
 
-        crc = crc ^ (int)buffer << 8;
-        for(i = 0; i < 8; ++i)
-        {
-            if((crc & 0x8000)!= 0) crc = crc << 1 ^ 0x1021;
-            else crc = crc << 1;
+        crc = crc ^ (int) buffer << 8;
+        for (i = 0; i < 8; ++i) {
+            if ((crc & 0x8000) != 0)
+                crc = crc << 1 ^ 0x1021;
+            else
+                crc = crc << 1;
         }
 
-        crc &=  0xFFFF;
+        crc &= 0xFFFF;
 
         crcHL[0] = (byte) ((crc >> 8) & 0xFF);
         crcHL[1] = (byte) (crc & 0xFF);
     }
 
-    String hexToAscii(String s) throws IllegalArgumentException
-    {
-          int n = s.length();
-          StringBuilder sb = new StringBuilder(n / 2);
-          for (int i = 0; i < n; i += 2)
-          {
+
+    //     _____ _              _
+    //    | ____| |_    ___ ___| |_ ___ _ __ __ _
+    //    |  _| | __|  / __/ _ \ __/ _ \ '__/ _` |
+    //    | |___| |_  | (_|  __/ ||  __/ | | (_| |
+    //    |_____|\__|  \___\___|\__\___|_|  \__,_|
+
+    String hexToAscii(String s) throws IllegalArgumentException {
+        int n = s.length();
+        StringBuilder sb = new StringBuilder(n / 2);
+        for (int i = 0; i < n; i += 2) {
             char a = s.charAt(i);
             char b = s.charAt(i + 1);
             sb.append((char) ((hexToInt(a) << 4) | hexToInt(b)));
-          }
-          return sb.toString();
+        }
+        return sb.toString();
     }
 
-    static int hexToInt(char ch)
-    {
-          if ('a' <= ch && ch <= 'f') { return ch - 'a' + 10; }
-          if ('A' <= ch && ch <= 'F') { return ch - 'A' + 10; }
-          if ('0' <= ch && ch <= '9') { return ch - '0'; }
+    static int hexToInt(char ch) {
+          if ('a' <= ch && ch <= 'f') return ch - 'a' + 10;
+          if ('A' <= ch && ch <= 'F') return ch - 'A' + 10;
+          if ('0' <= ch && ch <= '9') return ch - '0';
           throw new IllegalArgumentException(String.valueOf(ch));
     }
 }
-
