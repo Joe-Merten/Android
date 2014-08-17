@@ -347,7 +347,7 @@ public class J2xxHyperTerm extends Activity {
     final int TEXT_MAX_LINE = 1000;
 
     // variables
-    final int UI_READ_BUFFER_SIZE = 20480; // Notes: 115K → 1440Byte/100ms; 230k → 2880BByte/100ms; 1M → 10000Byte/100ms
+    final int UI_READ_BUFFER_SIZE = 20480; // Notes: 115K → 1440 Byte/100ms; 230k → 2880 Byte/100ms; 1M → 10000 Byte/100ms
     byte[] writeBuffer;
     byte[] readBuffer;
     char[] readBufferToChar;
