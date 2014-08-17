@@ -1,6 +1,7 @@
 package de.jme.uartterm;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -8,18 +9,16 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import de.jme.uartterm.R;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-
 import android.graphics.Color;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -336,9 +335,10 @@ public class JoeUartTerm extends Activity {
     boolean bSendHexData = false;
 
     CharSequence contentCharSequence; // contain entire text content
+    ByteArrayOutputStream rxBuffer = new ByteArrayOutputStream(65536);  // Die 64k sind nur die initiale Buffersize
     boolean bContentFormatHex = false;
     int contentFontSize = 12;
-    boolean bWriteEcho = true;
+    boolean bWriteEcho = false;
 
     // show information message while send data by tapping "Write" button in hex content format
     int timesMessageHexFormatWriteData = 0;
@@ -577,19 +577,19 @@ public class JoeUartTerm extends Activity {
                     return;
 
                 // check whether there is some data
-                if (writeText.length() != 0x00) {
+                if (writeText.length() != 0) {
                     // check format
-                    if (!bFormatHex) {// character format
-                        if (bWriteEcho) {
-                            String temp = writeText.getText() + "\n";
-                            String tmp = temp.replace("\\n", "\n");
-                            appendData(tmp);
-                        }
+                    if (!bFormatHex) { // character format
+                        //if (bWriteEcho) {
+                        //    String temp = writeText.getText() + "\n";
+                        //    String tmp = temp.replace("\\n", "\n");
+                        //    appendData(tmp);
+                        //}
 
                         int numBytes = writeText.length();
 
                         for (int i = 0; i < numBytes; i++)
-                            writeBuffer[i] = (byte) (writeText.getText().charAt(i));
+                            writeBuffer[i] = (byte) (writeText.getText().charAt(i)); // TODO: Damit funktioniert kein Utf-8
 
                         sendData(numBytes, writeBuffer);
                         writeText.setText("");
@@ -616,12 +616,12 @@ public class JoeUartTerm extends Activity {
                             return;
                         }
 
-                        if (bWriteEcho) {
-                            temp += "(hex)\n";
-                            String tmp = temp.replace("\\n", "\n");
-                            bSendHexData = true;
-                            appendData(tmp);
-                        }
+                        //if (bWriteEcho) {
+                        //    temp += "(hex)\n";
+                        //    String tmp = temp.replace("\\n", "\n");
+                        //    bSendHexData = true;
+                        //    appendData(tmp);
+                        //}
 
                         writeText.setText("");
                     }
@@ -853,6 +853,7 @@ public class JoeUartTerm extends Activity {
             case MENU_CLEAN_SCREEN: {
                 readText.setText("");
                 contentCharSequence = readText.getText();
+                rxBuffer = new ByteArrayOutputStream(65536);
                 break;
             }
 
@@ -1414,7 +1415,7 @@ public class JoeUartTerm extends Activity {
     }
 
     // add data to UI(@+id/ReadValues)
-    void appendData(String data) {
+    void appendData(byte[] rxData, int byteCount) {
         if (bContentFormatHex) {
             if (timesMessageHexFormatWriteData < 3) {
                 timesMessageHexFormatWriteData++;
@@ -1424,12 +1425,20 @@ public class JoeUartTerm extends Activity {
         }
 
         if (bSendHexData) {
-            SpannableString text = new SpannableString(data);
-            text.setSpan(new ForegroundColorSpan(Color.YELLOW), 0, data.length(), 0);
-            readText.append(text);
-            bSendHexData = false;
+            // TODO ...
+            //SpannableString text = new SpannableString(data);
+            //text.setSpan(new ForegroundColorSpan(Color.YELLOW), 0, data.length(), 0);
+            //readText.append(text);
+            //bSendHexData = false;
         } else {
-            readText.append(data);
+            rxBuffer.write(rxData, 0, byteCount);
+
+            try {
+                readText.setText(rxBuffer.toString("UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                // TODO Auto-generated catch block
+                //e.printStackTrace();
+            }
         }
 
         int overLine = readText.getLineCount() - TEXT_MAX_LINE;
@@ -1894,9 +1903,10 @@ public class JoeUartTerm extends Activity {
                 case UPDATE_TEXT_VIEW_CONTENT: {
                     if (actualNumBytes > 0) {
                         totalUpdateDataBytes += actualNumBytes;
-                        for (int i = 0; i < actualNumBytes; i++)
-                            readBufferToChar[i] = (char) readBuffer[i];
-                        appendData(String.copyValueOf(readBufferToChar, 0, actualNumBytes));
+                        //for (int i = 0; i < actualNumBytes; i++)
+                        //    readBufferToChar[i] = (char) readBuffer[i];
+                        //appendData(String.copyValueOf(readBufferToChar, 0, actualNumBytes));
+                        appendData(readBuffer, actualNumBytes);
                     }
                     break;
                 }
