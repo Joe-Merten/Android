@@ -353,11 +353,11 @@ public class J2xxHyperTerm extends Activity {
     char[] readBufferToChar;
     int actualNumBytes;
 
-    int baudRate;     // baud rate
-    byte stopBit;     // 1 = 1 stop bits; 2 = 2 stop bits
-    byte dataBit;     // 8 = 8 bit; 7 = 7bit
-    byte parity;      // 0 = none; 1 = odd; 2 = even; 3 = mark; 4 = space
-    byte flowControl; // 0 = none; 1 = CTS/RTS; 2 = DTR/DSR; 3 = XOFF/XON
+    int  baudrate = 1000000;  // baud rate
+    byte dataBit  = 8;        // 8 = 8 bit; 7 = 7bit
+    byte parity   = 0;        // 0 = none; 1 = odd; 2 = even; 3 = mark; 4 = space
+    byte stopBit  = 1;        // 1 = 1 stop bits; 2 = 2 stop bits
+    byte flowControl = 0;     // 0 = none; 1 = CTS/RTS; 2 = DTR/DSR; 3 = XOFF/XON
     public Context global_context;
     boolean uart_configured = false;
 
@@ -461,20 +461,15 @@ public class J2xxHyperTerm extends Activity {
         handlerThread = new HandlerThread(handler);
         handlerThread.start();
 
+        int spinnerPos;
+
         // setup the baud rate list
         baudSpinner = (Spinner) findViewById(R.id.baudRateValue);
-        baudAdapter = ArrayAdapter.createFromResource(this, R.array.baud_rate_1,R.layout.my_spinner_textview);
+        baudAdapter = ArrayAdapter.createFromResource(this, R.array.baud_rate_1, R.layout.my_spinner_textview);
         baudAdapter.setDropDownViewResource(R.layout.my_spinner_textview);
         baudSpinner.setAdapter(baudAdapter);
-        baudSpinner.setSelection(4);
-        baudRate = 9600;
-
-        // stop bits
-        stopSpinner = (Spinner) findViewById(R.id.stopBitValue);
-        ArrayAdapter<CharSequence> stopAdapter = ArrayAdapter.createFromResource(this, R.array.stop_bits, R.layout.my_spinner_textview);
-        stopAdapter.setDropDownViewResource(R.layout.my_spinner_textview);
-        stopSpinner.setAdapter(stopAdapter);
-        stopBit = 1;
+        spinnerPos = baudAdapter.getPosition("" + baudrate);
+        baudSpinner.setSelection(spinnerPos);
 
         // data bits
         dataSpinner = (Spinner) findViewById(R.id.dataBitValue);
@@ -482,22 +477,30 @@ public class J2xxHyperTerm extends Activity {
         dataAdapter.setDropDownViewResource(R.layout.my_spinner_textview);
         dataSpinner.setAdapter(dataAdapter);
         dataSpinner.setSelection(1);
-        dataBit = 8;
+        spinnerPos = dataAdapter.getPosition("" + dataBit);
+        dataSpinner.setSelection(spinnerPos);
 
         // parity
         paritySpinner = (Spinner) findViewById(R.id.parityValue);
         ArrayAdapter<CharSequence> parityAdapter = ArrayAdapter.createFromResource(this, R.array.parity, R.layout.my_spinner_textview);
         parityAdapter.setDropDownViewResource(R.layout.my_spinner_textview);
         paritySpinner.setAdapter(parityAdapter);
-        parity = 0;
+        paritySpinner.setSelection(parity);
+
+        // stop bits
+        stopSpinner = (Spinner) findViewById(R.id.stopBitValue);
+        ArrayAdapter<CharSequence> stopAdapter = ArrayAdapter.createFromResource(this, R.array.stop_bits, R.layout.my_spinner_textview);
+        stopAdapter.setDropDownViewResource(R.layout.my_spinner_textview);
+        stopSpinner.setAdapter(stopAdapter);
+        spinnerPos = stopAdapter.getPosition("" + stopBit);
+        stopSpinner.setSelection(spinnerPos);
 
         // flow control
         flowSpinner = (Spinner) findViewById(R.id.flowControlValue);
         ArrayAdapter<CharSequence> flowAdapter = ArrayAdapter.createFromResource(this, R.array.flow_control, R.layout.my_spinner_textview);
         flowAdapter.setDropDownViewResource(R.layout.my_spinner_textview);
         flowSpinner.setAdapter(flowAdapter);
-        flowSpinner.setSelection(1);
-        flowControl = 1;
+        flowSpinner.setSelection(flowControl);
 
         // port
         portSpinner = (Spinner) findViewById(R.id.portSelectValue);
@@ -531,7 +534,7 @@ public class J2xxHyperTerm extends Activity {
                     connectFunction();
                 if (checkDevice() == DeviceStatus.DEV_NOT_CONNECT)
                     return;
-                setConfig(baudRate, dataBit, stopBit, parity, flowControl);
+                setConfig(baudrate, dataBit, stopBit, parity, flowControl);
                 uart_configured = true;
                 toggleMenuSetting();
             }
@@ -1454,7 +1457,7 @@ public class J2xxHyperTerm extends Activity {
     // for uart settings: buad rate, stop bit and etc. selection
     class MyOnBaudSelectedListener implements OnItemSelectedListener {
         @Override public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-            baudRate = Integer.parseInt(parent.getItemAtPosition(pos).toString());
+            baudrate = Integer.parseInt(parent.getItemAtPosition(pos).toString());
         }
         @Override public void onNothingSelected(AdapterView<?> parent) {}
     }
@@ -1522,18 +1525,18 @@ public class J2xxHyperTerm extends Activity {
         portAdapter.notifyDataSetChanged();
     }
 
-    /*void updateBaudRateSelector(int baudListNum) { // scheint unused zu sein
+    /*void updateBaudrateSelector(int baudListNum) { // scheint unused zu sein
         if (baudListNum == 1) {
             baudAdapter = ArrayAdapter.createFromResource(this, R.array.baud_rate_1, R.layout.my_spinner_textview);
         } else {
             baudAdapter = ArrayAdapter.createFromResource(this, R.array.baud_rate_2, R.layout.my_spinner_textview);
-            if (baudRate >= 230400) baudRate = 115200;
+            if (baudrate >= 230400) baudrate = 115200;
         }
         baudAdapter.setDropDownViewResource(R.layout.my_spinner_textview);
         baudSpinner.setAdapter(baudAdapter);
         baudAdapter.notifyDataSetChanged();
 
-        switch (baudRate) {
+        switch (baudrate) {
             case     300: baudSpinner.setSelection( 0); break;
             case     600: baudSpinner.setSelection( 1); break;
             case    1200: baudSpinner.setSelection( 2); break;
@@ -1596,7 +1599,7 @@ public class J2xxHyperTerm extends Activity {
         if (DevCount > 0) {
             connectFunction();
             setUARTInfoString();
-            setConfig(baudRate, dataBit, stopBit, parity, flowControl);
+            setConfig(baudrate, dataBit, stopBit, parity, flowControl);
         }
     }
 
@@ -1608,7 +1611,7 @@ public class J2xxHyperTerm extends Activity {
             if (DevCount > 0) {
                 connectFunction();
                 setUARTInfoString();
-                setConfig(baudRate, dataBit, stopBit, parity, flowControl);
+                setConfig(baudrate, dataBit, stopBit, parity, flowControl);
             }
         }
     }
@@ -1732,7 +1735,7 @@ public class J2xxHyperTerm extends Activity {
             default: flowString = new String("None"    ); break;
         }
 
-        uartSettings = "Port " + portIndex + "; UART Setting  -  Baudrate:" + baudRate + "  StopBit:" + stopBit
+        uartSettings = "Port " + portIndex + "; UART Setting  -  Baudrate:" + baudrate + "  StopBit:" + stopBit
                 + "  DataBit:" + dataBit + "  Parity:" + parityString
                 + "  FlowControl:" + flowString;
 
@@ -3672,9 +3675,9 @@ public class J2xxHyperTerm extends Activity {
             // TODO: dynamic setting size for different baud rate?
             // 256 bytes below 2400 bps, 512 at 2400 bps, and 1024 above 4800 bps or when the data link is known to be relatively error free.
             int zmReadDataSize = 0;
-            // if(baudRate < 2400)
+            // if(baudrate < 2400)
             // zmReadDataSize= DATA_SIZE_256;
-            // else if (baudRate == 2400)
+            // else if (baudrate == 2400)
             // zmReadDataSize= DATA_SIZE_512;
             // else
             // zmReadDataSize= DATA_SIZE_1K;
