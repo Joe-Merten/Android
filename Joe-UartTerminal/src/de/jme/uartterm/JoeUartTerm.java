@@ -348,9 +348,7 @@ public class JoeUartTerm extends Activity {
 
     // variables
     final int UI_READ_BUFFER_SIZE = 20480; // Notes: 115K → 1440 Byte/100ms; 230k → 2880 Byte/100ms; 1M → 10000 Byte/100ms
-    byte[] writeBuffer;
     byte[] readBuffer;
-    char[] readBufferToChar;
     int actualNumBytes;
 
     int  baudrate = 1000000;  // baud rate
@@ -387,7 +385,6 @@ public class JoeUartTerm extends Activity {
     long cal_time_1, cal_time_2;
 
     // data buffer
-    byte[] writeDataBuffer;
     byte[] readDataBuffer; // circular buffer
 
     int iTotalBytes;
@@ -451,9 +448,7 @@ public class JoeUartTerm extends Activity {
         escButton = (Button) findViewById(R.id.keyESC);
 
         // allocate buffer
-        writeBuffer = new byte[512];
         readBuffer = new byte[UI_READ_BUFFER_SIZE];
-        readBufferToChar = new char[UI_READ_BUFFER_SIZE];
         readDataBuffer = new byte[MAX_NUM_BYTES];
         actualNumBytes = 0;
 
@@ -542,19 +537,15 @@ public class JoeUartTerm extends Activity {
 
         ctrlCButton.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                if (checkDevice() == DeviceStatus.DEV_CONFIG) {
-                    writeBuffer[0] = 0x03; // Ctrl-C, ETX (End of text)
-                    sendData(1, writeBuffer);
-                }
+                if (checkDevice() == DeviceStatus.DEV_CONFIG)
+                    sendData((byte)0x03); // Ctrl-C, ETX (End of text)
             }
         });
 
         escButton.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                if (checkDevice() == DeviceStatus.DEV_CONFIG) {
-                    writeBuffer[0] = 0x1B; // ESC
-                    sendData(1, writeBuffer);
-                }
+                if (checkDevice() == DeviceStatus.DEV_CONFIG)
+                    sendData((byte)0x1B); // ESC
             }
         });
 
@@ -585,13 +576,12 @@ public class JoeUartTerm extends Activity {
                         //    String tmp = temp.replace("\\n", "\n");
                         //    appendData(tmp);
                         //}
-
-                        int numBytes = writeText.length();
-
-                        for (int i = 0; i < numBytes; i++)
-                            writeBuffer[i] = (byte) (writeText.getText().charAt(i)); // TODO: Damit funktioniert kein Utf-8
-
-                        sendData(numBytes, writeBuffer);
+                        try {
+                            sendData(writeText.getText().toString().getBytes("UTF-8"));
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                            midToast("Oups: " + e.toString(), Toast.LENGTH_SHORT);
+                        }
                         writeText.setText("");
                     } else {
                         // hexadecimal format
@@ -606,10 +596,11 @@ public class JoeUartTerm extends Activity {
                             DLog.e(TT, "atemp:" + atemp);
 
                             byte numBytes = (byte) atemp.length();
+                            byte[] writeBuffer = new byte[numBytes];
                             for (int i = 0; i < numBytes; i++)
                                 writeBuffer[i] = (byte) atemp.charAt(i);
 
-                            sendData(numBytes, writeBuffer);
+                            sendData(writeBuffer);
                         } catch (IllegalArgumentException e) {
                             midToast("Incorrect input for HEX format." + "\nAllowed charater: 0~9, a~f and A~F", Toast.LENGTH_SHORT);
                             DLog.e(TT, "Illeagal HEX input.");
@@ -1639,7 +1630,14 @@ public class JoeUartTerm extends Activity {
         super.onDestroy();
     }
 
+
     // j2xx functions +
+    //     _____ _      _ _       _ ____                _____                 _   _
+    //    |  ___| |_ __| (_)     | |___ \__  ____  __  |  ___|   _ _ __   ___| |_(_) ___  _ __  ___
+    //    | |_  | __/ _` | |  _  | | __) \ \/ /\ \/ /  | |_ | | | | '_ \ / __| __| |/ _ \| '_ \/ __|
+    //    |  _| | || (_| | | | |_| |/ __/ >  <  >  <   |  _|| |_| | | | | (__| |_| | (_) | | | \__ \
+    //    |_|    \__\__,_|_|  \___/|_____/_/\_\/_/\_\  |_|   \__,_|_| |_|\___|\__|_|\___/|_| |_|___/
+
     public void createDeviceList() {
         int tempDevCount = ftD2xx.createDeviceInfoList(global_context);
 
@@ -1798,7 +1796,11 @@ public class JoeUartTerm extends Activity {
         uart_configured = true;
     }
 
-    void sendData(int numBytes, byte[] buffer) {
+    void sendData(final byte[] buffer) {
+        sendData(buffer.length, buffer);
+    }
+
+    void sendData(int numBytes, final byte[] buffer) {
         if (!ftDev.isOpen()) {
             DLog.e(TT, "SendData: device not open");
             Toast.makeText(global_context, "Device not open!", Toast.LENGTH_SHORT).show();
@@ -1816,6 +1818,7 @@ public class JoeUartTerm extends Activity {
         ftDev.write(tmpBuf, 1);
     }
     // j2xx functions -
+
 
     // get the first byte of incoming data
     byte firstData() {
@@ -1903,9 +1906,6 @@ public class JoeUartTerm extends Activity {
                 case UPDATE_TEXT_VIEW_CONTENT: {
                     if (actualNumBytes > 0) {
                         totalUpdateDataBytes += actualNumBytes;
-                        //for (int i = 0; i < actualNumBytes; i++)
-                        //    readBufferToChar[i] = (char) readBuffer[i];
-                        //appendData(String.copyValueOf(readBufferToChar, 0, actualNumBytes));
                         appendData(readBuffer, actualNumBytes);
                     }
                     break;
