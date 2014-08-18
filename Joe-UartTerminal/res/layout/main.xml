@@ -73,7 +73,6 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_margin="0dip"
-            android:focusableInTouchMode="false"
             android:gravity="left|top"
             android:typeface="monospace"
             android:textSize="12dp"
@@ -84,12 +83,13 @@
 
 <!-- Write area -->
     <LinearLayout
+        android:id="@+id/layoutWriteArea"
         android:layout_width="fill_parent"
         android:layout_height="60dp"
         android:layout_margin="5dip"
         android:tag="Write block"
-
         >
+
       <!-- android:layout_weight="1"-->
         <Button android:id="@+id/FormatButton"
             android:layout_height="fill_parent"
@@ -115,8 +115,10 @@
             android:editable="true"
             android:gravity="left|center"
             android:maxLength="512"
-            />
-
+            >
+            <requestFocus />
+        </EditText>
+        
         <Button android:id="@+id/WriteButton"
             android:layout_height="60dp"
             android:layout_width="60dp"
@@ -328,7 +330,6 @@
 
 <!--  Key code area -->
     <RelativeLayout
-
         android:id="@+id/menuSpecialKey"
         android:layout_width="fill_parent"
         android:layout_height="35dp"

@@ -11,7 +11,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-import de.jme.uartterm.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -25,6 +24,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
+import android.text.SpannableString;
+import android.text.TextWatcher;
+import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -43,14 +47,13 @@ import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 
 import com.ftdi.j2xx.D2xxManager;
 import com.ftdi.j2xx.FT_Device;
 
 public class JoeUartTerm extends Activity {
+    public static final String TAG = "JoeUartTerm";
+
     // j2xx
     public static D2xxManager ftD2xx = null;
     FT_Device ftDev;
@@ -622,6 +625,82 @@ public class JoeUartTerm extends Activity {
         });
         // write button -
 
+        writeText.addTextChangedListener(new TextWatcher() {
+            @Override public void afterTextChanged(Editable s) {
+                // alles sofort versenden
+                if (checkDevice() != DeviceStatus.DEV_CONFIG)
+                    return;
+                if (s.length() == 0 || bFormatHex)
+                    return;
+                try {
+                    byte[] data = s.toString().getBytes("UTF-8");
+                    s.clear();
+                    sendData(data);
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                    midToast("Oups: " + e.toString(), Toast.LENGTH_SHORT);
+                }
+            }
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+
+        // Handler um die Entertaste im Edit-Control abzufangen
+        // Allerdings sehe ich hier die Backspace Taste nicht
+        // writeText.setOnEditorActionListener(new OnEditorActionListener() {
+        //     @Override public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        //         if (checkDevice() != DeviceStatus.DEV_CONFIG)
+        //             return false;
+        //         if (bFormatHex)
+        //             return false;
+        //         if (event != null && event.getAction() == KeyEvent.ACTION_DOWN) {
+        //             int keyCode = event.getKeyCode();
+        //             Log.e(TAG, "actionId=" + actionId + ", keyCode=" + keyCode + ", event=" + event);
+        //             //if      (keyCode == KeyEvent.KEYCODE_ENTER) sendData((byte)0x0A);
+        //             //else if (keyCode == KeyEvent.KEYCODE_DEL  ) sendData((byte)0x08); // Ja, das ist Backspace
+        //             //else return false;
+        //             return true;
+        //         }
+        //         return false;
+        //     }
+        // });
+
+        // Hier evtl. Cursortasten abfragen und so
+        // Hier sehe ich »manchmal« auch die Buchstabentasten, aber irgendwie nicht immer
+        writeText.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (checkDevice() != DeviceStatus.DEV_CONFIG)
+                    return false;
+                if (bFormatHex)
+                    return false;
+                if (event != null && event.getAction() == KeyEvent.ACTION_DOWN) {
+                    int keyCode2 = event.getKeyCode(); // Nur aus Neurier, sollte aber stets identisch sein zu keyCode
+                    Log.e(TAG, "keyCode=" + keyCode + ", keyCode2=" + keyCode2 + ", event=" + event);
+                    if      (keyCode == KeyEvent.KEYCODE_ENTER) sendData((byte)0x0A);
+                    else if (keyCode == KeyEvent.KEYCODE_DEL  ) sendData((byte)0x08); // Ja, das ist Backspace
+                    else return false;
+                    return true;
+                }
+                return false;
+            }
+
+        });
+
+        // //readText.setOnKeyListener(...); evtl. für Cursortastern
+        // //sendData(writeText.getText().toString().getBytes("UTF-8"));
+        // readText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        //     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        //         boolean result = false;
+        //         String msg = "Edit Action: id = " + actionId + ", event = " + event.toString();
+        //         midToast(msg, Toast.LENGTH_SHORT);
+        //
+        //         if (actionId == EditorInfo.IME_ACTION_DONE) {
+        //             result = true;
+        //         }
+        //         return result;
+        // }});
+
+
         // save file button +
         logButton.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
@@ -779,8 +858,8 @@ public class JoeUartTerm extends Activity {
         myMenu.add(0, MENU_FONT_SIZE, 0, "Font Size");
         myMenu.add(0, MENU_SAVE_CONTENT_DATA, 0, "Save Content Data");
         myMenu.add(0, MENU_CLEAN_SCREEN, 0, "Clean Screen");
-        myMenu.add(0, MENU_ECHO, 0, "Echo - On");
-        myMenu.add(0, MENU_HELP, 0, "Online Help");
+        //myMenu.add(0, MENU_ECHO, 0, "Echo - On");
+        //myMenu.add(0, MENU_HELP, 0, "Online Help");
         return super.onCreateOptionsMenu(myMenu);
     }
 
@@ -1426,7 +1505,10 @@ public class JoeUartTerm extends Activity {
             rxBuffer.write(rxData, 0, byteCount);
 
             try {
-                readText.setText(rxBuffer.toString("UTF-8"));
+                String text = rxBuffer.toString("UTF-8");
+                SpannableString span = new SpannableString(text);
+                span.setSpan(new ForegroundColorSpan(Color.YELLOW), 0, text.length(), 0);
+                readText.setText(span);
             } catch (UnsupportedEncodingException e) {
                 // TODO Auto-generated catch block
                 //e.printStackTrace();
@@ -1435,24 +1517,24 @@ public class JoeUartTerm extends Activity {
             needScrollToBottom = true;
         }
 
-        int overLine = readText.getLineCount() - TEXT_MAX_LINE;
-
-        if (overLine > 0) {
-            int IndexEndOfLine = 0;
-            CharSequence charSequence = readText.getText();
-
-            for (int i = 0; i < overLine; i++) {
-                do {
-                    IndexEndOfLine++;
-                } while (IndexEndOfLine < charSequence.length() && charSequence.charAt(IndexEndOfLine) != '\n');
-            }
-
-            if (IndexEndOfLine < charSequence.length()) {
-                readText.getEditableText().delete(0, IndexEndOfLine + 1);
-            } else {
-                readText.setText("");
-            }
-        }
+        // Nachfolgenden Code entfernt, weil ich nicht so recht verstehe wozu der gut sein soll (hmm, vermutlich soll er die Zeilenanzahl begrenzen?!)
+        //int overLine = readText.getLineCount() - TEXT_MAX_LINE;
+        //if (overLine > 0) {
+        //    int IndexEndOfLine = 0;
+        //    CharSequence charSequence = readText.getText();
+        //
+        //    for (int i = 0; i < overLine; i++) {
+        //        do {
+        //            IndexEndOfLine++;
+        //        } while (IndexEndOfLine < charSequence.length() && charSequence.charAt(IndexEndOfLine) != '\n');
+        //    }
+        //
+        //    if (IndexEndOfLine < charSequence.length()) {
+        //        readText.getEditableText().delete(0, IndexEndOfLine + 1);
+        //    } else {
+        //        readText.setText("");
+        //    }
+        //}
     }
 
     // for uart settings: buad rate, stop bit and etc. selection
@@ -2188,7 +2270,12 @@ public class JoeUartTerm extends Activity {
                 if (needScrollToBottom) {
                     // Scroll direkt nach setText() geht offenbar nicht, deshalb hier.
                     needScrollToBottom = false;
-                    scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+                    runOnUiThread(new Runnable() {
+                        @Override public void run() {
+                            scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+                            writeText.requestFocus(); // weil fullScroll nimmt mir den Fokus weg
+                        }
+                    });
                 }
 
                 if (bContentFormatHex) { // consume input data at hex content format
