@@ -8,7 +8,7 @@
 
  <!-- Title area -->
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
     android:layout_width="fill_parent"
     android:layout_height="40dp"
     android:tag="Read block"
@@ -68,7 +68,6 @@
         android:layout_marginBottom="0dp"
         >
 
-        <!-- Note: FT31xHypterTerm.java int TEXT_MAX_LINE = 1000; Here set 5000 for HEX format -->
         <TextView
             android:id="@+id/ReadValues"
             android:layout_width="fill_parent"
@@ -78,14 +77,13 @@
             android:gravity="left|top"
             android:typeface="monospace"
             android:textSize="12dp"
-            android:maxLines="5000"
+            android:maxLines="50000"
              >
       </TextView>
     </ScrollView>
 
 <!-- Write area -->
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="60dp"
         android:layout_margin="5dip"
@@ -136,7 +134,6 @@
 
 <!-- Setting area -->
         <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/menuSettings"
         android:layout_width="fill_parent"
         android:layout_height="100dp"
@@ -147,14 +144,13 @@
         android:visibility="gone"
         >
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:layout_alignParentBottom="true"
-    >
+        <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentBottom="true"
+        >
 
-       <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
+       <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -181,7 +177,7 @@
 
         </LinearLayout>
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -208,7 +204,7 @@
 
         </LinearLayout>
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -235,7 +231,7 @@
 
         </LinearLayout>
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -262,7 +258,7 @@
 
         </LinearLayout>
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -288,7 +284,7 @@
                       />
         </LinearLayout>
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -332,7 +328,7 @@
 
 <!--  Key code area -->
     <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+
         android:id="@+id/menuSpecialKey"
         android:layout_width="fill_parent"
         android:layout_height="35dp"
@@ -341,7 +337,7 @@
         android:visibility="gone"
         >
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <LinearLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
@@ -349,7 +345,7 @@
             >
 
             <!--  special key + -->
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"

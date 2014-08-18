@@ -314,6 +314,7 @@ public class JoeUartTerm extends Activity {
     TextView uartInfo;
     TextView contentFormatText;
     ScrollView scrollView;
+    boolean needScrollToBottom = false;
     TextView readText;
     EditText writeText;
     Spinner baudSpinner;
@@ -1430,6 +1431,8 @@ public class JoeUartTerm extends Activity {
                 // TODO Auto-generated catch block
                 //e.printStackTrace();
             }
+            //scrollView.fullScroll(ScrollView.FOCUS_DOWN); // Scroll direkt nach setText() geht offenbar nicht, deshalb im Thread.
+            needScrollToBottom = true;
         }
 
         int overLine = readText.getLineCount() - TEXT_MAX_LINE;
@@ -1450,8 +1453,6 @@ public class JoeUartTerm extends Activity {
                 readText.setText("");
             }
         }
-
-        scrollView.smoothScrollTo(0, readText.getHeight() + 30);
     }
 
     // for uart settings: buad rate, stop bit and etc. selection
@@ -2183,6 +2184,11 @@ public class JoeUartTerm extends Activity {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                }
+                if (needScrollToBottom) {
+                    // Scroll direkt nach setText() geht offenbar nicht, deshalb hier.
+                    needScrollToBottom = false;
+                    scrollView.fullScroll(ScrollView.FOCUS_DOWN);
                 }
 
                 if (bContentFormatHex) { // consume input data at hex content format
