@@ -134,7 +134,7 @@ public class LoaderCursorSupport extends FragmentActivity {
                                 }
                                 return true;
                             }
-                    
+
                 });
                 MenuItemCompat.setActionView(item, searchView);
             }

@@ -23,30 +23,30 @@ import com.ftdi.javad2xxdemo.services.BitBangModeIntentService;
 import com.ftdi.javad2xxdemo.services.BitBangModeService;
 
 public class MPSEFragment extends Fragment {
-	Context MPSEFragmentContext;
-	D2xxManager ftdid2xx;
-	FT_Device ftDevice = null;
-	int DevCount = -1;
+    Context MPSEFragmentContext;
+    D2xxManager ftdid2xx;
+    FT_Device ftDevice = null;
+    int DevCount = -1;
 
-	TextView ErrorInformation;
-	Button btnSetBigBangAsync;
-	Button btnSetBigBandService;
-	Button btnSetBigBandIntentService;
-	BitModeAsyncTask GPIO_Task;
-	mpseThread mpThread;
-	
-	Timer timer;
-	// Empty Constructor
-	public MPSEFragment()
-	{
-	}
+    TextView ErrorInformation;
+    Button btnSetBigBangAsync;
+    Button btnSetBigBandService;
+    Button btnSetBigBandIntentService;
+    BitModeAsyncTask GPIO_Task;
+    mpseThread mpThread;
 
-	/* Constructor */
-	public MPSEFragment(Context parentContext , D2xxManager ftdid2xxContext)
-	{
-		MPSEFragmentContext = parentContext;
-		ftdid2xx = ftdid2xxContext;
-	}
+    Timer timer;
+    // Empty Constructor
+    public MPSEFragment()
+    {
+    }
+
+    /* Constructor */
+    public MPSEFragment(Context parentContext , D2xxManager ftdid2xxContext)
+    {
+        MPSEFragmentContext = parentContext;
+        ftdid2xx = ftdid2xxContext;
+    }
 
     public int getShownIndex() {
         return getArguments().getInt("index", 12);
@@ -66,230 +66,230 @@ public class MPSEFragment extends Fragment {
 
         btnSetBigBangAsync = (Button)view.findViewById(R.id.bit_bang_async_mode);
         btnSetBigBandService = (Button)view.findViewById(R.id.bit_bang_service_mode);
-    	btnSetBigBandIntentService = (Button)view.findViewById(R.id.bit_bang_intent_service_mode);
+        btnSetBigBandIntentService = (Button)view.findViewById(R.id.bit_bang_intent_service_mode);
 
-    	btnSetBigBangAsync.setOnClickListener(new OnClickListener() {
+        btnSetBigBangAsync.setOnClickListener(new OnClickListener() {
             public void onClick(final View v) {
-				btnSetBigBangAsyncClick(v);
+                btnSetBigBangAsyncClick(v);
             }
         });
 
-    	btnSetBigBandService.setOnClickListener(new OnClickListener() {
+        btnSetBigBandService.setOnClickListener(new OnClickListener() {
             public void onClick(final View v) {
-				btnSetBigBandServiceClick(v);
+                btnSetBigBandServiceClick(v);
             }
         });
 
-    	btnSetBigBandIntentService.setOnClickListener(new OnClickListener() {
+        btnSetBigBandIntentService.setOnClickListener(new OnClickListener() {
             public void onClick(final View v) {
-				btnSetBigBandIntentServiceClick(v);
+                btnSetBigBandIntentServiceClick(v);
             }
         });
 
-    	return view;
+        return view;
     }
 
 
     @Override
-	public void onStart() {
-    	Log.e(">>@@","mpse onStart...");
-    	super.onStart();
-    	ConnectFunction();
+    public void onStart() {
+        Log.e(">>@@","mpse onStart...");
+        super.onStart();
+        ConnectFunction();
     }
 
 
-	public void ConnectFunction() {
-		int openIndex = 0;
+    public void ConnectFunction() {
+        int openIndex = 0;
 
-		if (DevCount > 0)
-			return;
+        if (DevCount > 0)
+            return;
 
-		DevCount = ftdid2xx.createDeviceInfoList(MPSEFragmentContext);
-		// Log.e(">>@@","devCount:"+ DevCount);
+        DevCount = ftdid2xx.createDeviceInfoList(MPSEFragmentContext);
+        // Log.e(">>@@","devCount:"+ DevCount);
 
-		if (DevCount > 0) {
-			ftDevice = ftdid2xx.openByIndex(MPSEFragmentContext, openIndex);
+        if (DevCount > 0) {
+            ftDevice = ftdid2xx.openByIndex(MPSEFragmentContext, openIndex);
 
-			if(ftDevice == null)
-			{
-				Toast.makeText(MPSEFragmentContext,"ftDev == null",Toast.LENGTH_LONG).show();
-				return;
-			}
-			
-			if (true == ftDevice.isOpen()) {
+            if(ftDevice == null)
+            {
+                Toast.makeText(MPSEFragmentContext,"ftDev == null",Toast.LENGTH_LONG).show();
+                return;
+            }
 
-				// Log.e(">>@@","devCount:"+ DevCount + " open OK");
-				Toast.makeText(MPSEFragmentContext,"devCount:" + DevCount + " open index:" + openIndex,Toast.LENGTH_SHORT).show();
-			} else {
-				// Log.e(">>@@","devCount:"+ DevCount + " open fail");
-				Toast.makeText(MPSEFragmentContext, "Need to get permission!",Toast.LENGTH_SHORT).show();
-			}
-		} else {
-			Log.e(">>@@", "DevCount <= 0");
-		}
-	}
+            if (true == ftDevice.isOpen()) {
 
-	@Override
-	public void onStop() {
-		Log.e(">>@@","mpse onStop...");
-		super.onStop();
-		
-		if(ftDevice != null && true == ftDevice.isOpen())
-		{
-			Log.e(">>@@","mpse onStop -  ftDevice.close()");
-			ftDevice.close();
-		}
-	}
+                // Log.e(">>@@","devCount:"+ DevCount + " open OK");
+                Toast.makeText(MPSEFragmentContext,"devCount:" + DevCount + " open index:" + openIndex,Toast.LENGTH_SHORT).show();
+            } else {
+                // Log.e(">>@@","devCount:"+ DevCount + " open fail");
+                Toast.makeText(MPSEFragmentContext, "Need to get permission!",Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Log.e(">>@@", "DevCount <= 0");
+        }
+    }
+
+    @Override
+    public void onStop() {
+        Log.e(">>@@","mpse onStop...");
+        super.onStop();
+
+        if(ftDevice != null && true == ftDevice.isOpen())
+        {
+            Log.e(">>@@","mpse onStop -  ftDevice.close()");
+            ftDevice.close();
+        }
+    }
 
     static int iStartTestSetEventFlag = 0;
     public void btnSetBigBangAsyncClick (View view)  {
-    	if(iStartTestSetEventFlag == 0 ) {
-    		mpThread = new mpseThread();
-    		mpThread.start();
-    		iStartTestSetEventFlag = 1;
-    		btnSetBigBangAsync.setText("Disable Test Break");
-    	}
-    	else {
-    		mpThread.interrupt();
-    		mpThread = null;
-    		iStartTestSetEventFlag = 0;
-    		btnSetBigBangAsync.setText("Enable Test Break");
-    	}
+        if(iStartTestSetEventFlag == 0 ) {
+            mpThread = new mpseThread();
+            mpThread.start();
+            iStartTestSetEventFlag = 1;
+            btnSetBigBangAsync.setText("Disable Test Break");
+        }
+        else {
+            mpThread.interrupt();
+            mpThread = null;
+            iStartTestSetEventFlag = 0;
+            btnSetBigBangAsync.setText("Enable Test Break");
+        }
     }
     public void btnSetBigBandServiceClick(View view) {
-    	Intent intent = new Intent(getActivity(),BitBangModeService.class);
-    	getActivity().startService(intent);
+        Intent intent = new Intent(getActivity(),BitBangModeService.class);
+        getActivity().startService(intent);
     }
 
     public void btnSetBigBandIntentServiceClick(View view) {
 
-    	Context ctx = MPSEFragment.this.getActivity();
-		Intent intent = new Intent(ctx,BitBangModeIntentService.class);
+        Context ctx = MPSEFragment.this.getActivity();
+        Intent intent = new Intent(ctx,BitBangModeIntentService.class);
 
-    	MPSEFragment.this.getActivity().startService(intent);
+        MPSEFragment.this.getActivity().startService(intent);
     }
 
     static int iReadEventFlag = 0;
 
-	private class mpseThread  extends Thread
-	{
-		@Override
-		public void run()
-		{
-			byte[] data1 = new byte [] {(byte)0xFF};
-	    	byte[] data2 = new byte [] {(byte)0x00};
-	    	
-    		// reset device setting
-    		ftDevice.setBitMode((byte)0xFF , D2xxManager.FT_BITMODE_RESET);
-			short BitModeValue = (short) (ftDevice.getBitMode() & 0x00ff); 
-			Log.i("FTDI-Debug","Get Modem Status 1 :" + Integer.toString(BitModeValue));
-			
-    		try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-    		// configure our port , Set to ASYNC BIT MODE
-    		ftDevice.setBitMode((byte)0xFF , D2xxManager.FT_BITMODE_ASYNC_BITBANG);
-			// configure Baud rate
-    		ftDevice.setBaudRate(9600);
-    		
-			BitModeValue = (short) (ftDevice.getBitMode() & 0x00ff); 
-			Log.i("FTDI-Debug","Get Modem Status 2: " + Integer.toString(BitModeValue));
-			
-			while(true) {
-				// synchronized (this) {
-				Log.i("Paris ------------- Read","Write  ------------------1 !!!!!");
-				ftDevice.write(data1, 1);
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				ftDevice.write(data2, 1);
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				//}
-			}
-		}
-	}
-	
-    class BitModeAsyncTask extends AsyncTask<Void, Void ,Void>{
-    	 D2xxManager d2xx;
-    	 Context AsyncTasContext;
-    	/* Constructor */
-    	public BitModeAsyncTask(Context parentContext,D2xxManager ftdid2xxContext)
-    	{
-    		d2xx = ftdid2xxContext;
-    		AsyncTasContext = parentContext;
-    	}
+    private class mpseThread  extends Thread
+    {
+        @Override
+        public void run()
+        {
+            byte[] data1 = new byte [] {(byte)0xFF};
+            byte[] data2 = new byte [] {(byte)0x00};
 
-    	 @Override
-    	 protected void onPreExecute() {
-    		 super.onPreExecute();
-    	 }
+            // reset device setting
+            ftDevice.setBitMode((byte)0xFF , D2xxManager.FT_BITMODE_RESET);
+            short BitModeValue = (short) (ftDevice.getBitMode() & 0x00ff);
+            Log.i("FTDI-Debug","Get Modem Status 1 :" + Integer.toString(BitModeValue));
 
-    	 protected Void onPostExecute() {
-    		 super.onPostExecute(null);
-			return null;
-    	 }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            // configure our port , Set to ASYNC BIT MODE
+            ftDevice.setBitMode((byte)0xFF , D2xxManager.FT_BITMODE_ASYNC_BITBANG);
+            // configure Baud rate
+            ftDevice.setBaudRate(9600);
 
-		@Override
-		protected Void doInBackground(Void... params) {
-			// TODO Auto-generated method stub
-			byte[] data1 = new byte [] {(byte)0xFF};
-	    	byte[] data2 = new byte [] {(byte)0x00};
-	    	try {
-	    		// devCount = d2xx.createDeviceInfoList(AsyncTasContext);
-	    		ErrorInformation = (TextView)getActivity().findViewById(R.id.ErrorInformation);
-	    		//if ( devCount > 0) {
+            BitModeValue = (short) (ftDevice.getBitMode() & 0x00ff);
+            Log.i("FTDI-Debug","Get Modem Status 2: " + Integer.toString(BitModeValue));
 
-		    		// reset device setting
-		    		ftDevice.setBitMode((byte)0xFF , D2xxManager.FT_BITMODE_RESET);
-					short BitModeValue = (short) (ftDevice.getBitMode() & 0x00ff); 
-					Log.i("FTDI-Debug","Get Modem Status 1 :" + Integer.toString(BitModeValue));
-					
-		    		Thread.sleep(1000);
-		    		// configure our port , Set to ASYNC BIT MODE
-		    		ftDevice.setBitMode((byte)0xFF , D2xxManager.FT_BITMODE_ASYNC_BITBANG);
-					// configure Baud rate
-		    		ftDevice.setBaudRate(9600);
-		    		
-					BitModeValue = (short) (ftDevice.getBitMode() & 0x00ff); 
-					Log.i("FTDI-Debug","Get Modem Status 2: " + Integer.toString(BitModeValue));
-					
-					while(true) {
-						synchronized (this) {
-						ftDevice.write(data1, 1);
-						Thread.sleep(1000);
-						ftDevice.write(data2, 1);
-						Thread.sleep(1000);
-						}
-					}
-
-	    		// }
-
-	    	} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return null;
-		}
+            while(true) {
+                // synchronized (this) {
+                Log.i("Paris ------------- Read","Write  ------------------1 !!!!!");
+                ftDevice.write(data1, 1);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                ftDevice.write(data2, 1);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                //}
+            }
+        }
     }
 
-	static boolean fTimer = false;
-	public class timerTask extends TimerTask
-	{
-		@Override
-		public void run()
-		{
-			 fTimer = true;
-		}
-	};
+    class BitModeAsyncTask extends AsyncTask<Void, Void ,Void>{
+         D2xxManager d2xx;
+         Context AsyncTasContext;
+        /* Constructor */
+        public BitModeAsyncTask(Context parentContext,D2xxManager ftdid2xxContext)
+        {
+            d2xx = ftdid2xxContext;
+            AsyncTasContext = parentContext;
+        }
+
+         @Override
+         protected void onPreExecute() {
+             super.onPreExecute();
+         }
+
+         protected Void onPostExecute() {
+             super.onPostExecute(null);
+            return null;
+         }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            // TODO Auto-generated method stub
+            byte[] data1 = new byte [] {(byte)0xFF};
+            byte[] data2 = new byte [] {(byte)0x00};
+            try {
+                // devCount = d2xx.createDeviceInfoList(AsyncTasContext);
+                ErrorInformation = (TextView)getActivity().findViewById(R.id.ErrorInformation);
+                //if ( devCount > 0) {
+
+                    // reset device setting
+                    ftDevice.setBitMode((byte)0xFF , D2xxManager.FT_BITMODE_RESET);
+                    short BitModeValue = (short) (ftDevice.getBitMode() & 0x00ff);
+                    Log.i("FTDI-Debug","Get Modem Status 1 :" + Integer.toString(BitModeValue));
+
+                    Thread.sleep(1000);
+                    // configure our port , Set to ASYNC BIT MODE
+                    ftDevice.setBitMode((byte)0xFF , D2xxManager.FT_BITMODE_ASYNC_BITBANG);
+                    // configure Baud rate
+                    ftDevice.setBaudRate(9600);
+
+                    BitModeValue = (short) (ftDevice.getBitMode() & 0x00ff);
+                    Log.i("FTDI-Debug","Get Modem Status 2: " + Integer.toString(BitModeValue));
+
+                    while(true) {
+                        synchronized (this) {
+                        ftDevice.write(data1, 1);
+                        Thread.sleep(1000);
+                        ftDevice.write(data2, 1);
+                        Thread.sleep(1000);
+                        }
+                    }
+
+                // }
+
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    static boolean fTimer = false;
+    public class timerTask extends TimerTask
+    {
+        @Override
+        public void run()
+        {
+             fTimer = true;
+        }
+    };
 }

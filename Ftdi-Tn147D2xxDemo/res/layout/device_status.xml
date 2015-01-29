@@ -23,14 +23,14 @@
             android:layout_height="35dip"
             android:text="ModemStatus : "
             android:textSize="20sp" />
-        
+
                 <TextView
             android:id="@+id/LineStatus"
             android:layout_width="wrap_content"
             android:layout_height="35dip"
             android:text="LineStatus : "
             android:textSize="20sp" />
-                    
+
         <TextView
             android:id="@+id/LatencyTimer"
             android:layout_width="wrap_content"
@@ -51,28 +51,28 @@
             android:layout_height="35dip"
             android:text="Set RESET BitMode : "
             android:textSize="20sp" />
-        
+
         <TextView
             android:id="@+id/BitMode2"
             android:layout_width="wrap_content"
             android:layout_height="35dip"
             android:text="Set ASYNC BITBANG BitMode : "
             android:textSize="20sp" />
-    
+
         <TextView
             android:id="@+id/BitMode3"
             android:layout_width="wrap_content"
             android:layout_height="35dip"
             android:text="Set MPSSE BitMode : "
             android:textSize="20sp" />
-        
+
         <TextView
             android:id="@+id/BitMode4"
             android:layout_width="wrap_content"
             android:layout_height="35dip"
             android:text="Set SYNC BITBANG BitMode : "
             android:textSize="20sp" />
-        
+
         <TextView
             android:id="@+id/BitMode5"
             android:layout_width="wrap_content"
@@ -86,14 +86,14 @@
             android:layout_height="35dip"
             android:text="Set FAST SERIAL BitMode : "
             android:textSize="20sp" />
-        
+
         <TextView
             android:id="@+id/BitMode7"
             android:layout_width="wrap_content"
             android:layout_height="35dip"
             android:text="Set CBUS BITBANG BitMode : "
             android:textSize="20sp" />
-        
+
         <TextView
             android:id="@+id/BitMode8"
             android:layout_width="wrap_content"
@@ -101,7 +101,7 @@
             android:text="Set SYNC FIFO BitMode : "
             android:textSize="20sp" />
 
-        
+
     <Button
         android:id="@+id/btn_start_set_char"
         android:layout_width="fill_parent"
@@ -109,7 +109,7 @@
         android:onClick="StartTestSetChar"
         android:text="Test Set Char"
         android:textSize="20sp" />
-    
+
     <Button
         android:id="@+id/btn_start_test_break"
         android:layout_width="fill_parent"
@@ -117,7 +117,7 @@
         android:onClick="StartTestBreak"
         android:text="Test Set Break"
         android:textSize="20sp" />
-        
+
     <LinearLayout
         android:id="@+id/lin3"
         android:layout_width="fill_parent"

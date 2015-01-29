@@ -39,7 +39,7 @@ public class SendResult extends Activity
      * describe what is to be displayed in the screen.
      */
     @Override
-	protected void onCreate(Bundle savedInstanceState)
+    protected void onCreate(Bundle savedInstanceState)
     {
         // Be sure to call the super class.
         super.onCreate(savedInstanceState);

@@ -463,7 +463,7 @@ public class LoaderCustomSupport extends FragmentActivity {
                                 }
                                 return true;
                             }
-                    
+
                 });
                 MenuItemCompat.setActionView(item, searchView);
             }

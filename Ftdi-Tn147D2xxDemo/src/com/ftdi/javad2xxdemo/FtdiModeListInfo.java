@@ -10,7 +10,7 @@ public class FtdiModeListInfo {
         "UART",
         "FileTransfer",
         "EEPROM",
-        "EEPROM-UserArea"        
+        "EEPROM-UserArea"
 //        "FT4232HTest",
 //        "FT2232HTest",
 //        "PinConfig",
@@ -27,7 +27,7 @@ public class FtdiModeListInfo {
         "UART Function",
         "File Transfer",
         "EEPROM Function",
-        "EEPROM-UserArea"        
+        "EEPROM-UserArea"
 //        "FT4232HTest Function",
 //        "FT2232HTest Function",
 //        "Pin Config Function",

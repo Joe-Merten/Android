@@ -118,7 +118,7 @@
             >
             <requestFocus />
         </EditText>
-        
+
         <Button android:id="@+id/WriteButton"
             android:layout_height="60dp"
             android:layout_width="60dp"

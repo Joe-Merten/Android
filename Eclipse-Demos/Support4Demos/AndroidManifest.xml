@@ -50,7 +50,7 @@
         <activity android:name=".app.SendResult"
                 android:theme="@style/ThemeDialogWhenLarge">
         </activity>
-        
+
         <!-- Fragment Support Samples -->
 
         <activity android:name=".app.FragmentAlertDialogSupport"
@@ -143,7 +143,7 @@
                 <category android:name="com.example.android.supportv4.SUPPORT4_SAMPLE_CODE" />
             </intent-filter>
         </activity>
-        
+
         <activity android:name=".app.FragmentRetainInstanceSupport"
                 android:label="@string/fragment_retain_instance_support">
             <intent-filter>
@@ -215,7 +215,7 @@
                 <category android:name="com.example.android.supportv4.SUPPORT4_SAMPLE_CODE" />
             </intent-filter>
         </activity>
-        
+
         <activity android:name=".app.LoaderCustomSupport"
                 android:label="@string/loader_custom_support">
             <intent-filter>

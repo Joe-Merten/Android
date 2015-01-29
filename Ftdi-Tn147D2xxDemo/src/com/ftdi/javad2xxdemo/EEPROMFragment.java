@@ -16,28 +16,28 @@ import com.ftdi.j2xx.FT_Device;
 import com.ftdi.j2xx.FT_EEPROM;
 
 public class EEPROMFragment extends Fragment {
-	Context EEPROMFragmentContext;
-	D2xxManager ftdid2xx;
-	FT_Device ftDevice = null;
+    Context EEPROMFragmentContext;
+    D2xxManager ftdid2xx;
+    FT_Device ftDevice = null;
 
-	EditText VendorIDText, ProductIDText, ProductDescriptionText, SerialNumberText;
-	EditText data1, data2, data3, data4;
+    EditText VendorIDText, ProductIDText, ProductDescriptionText, SerialNumberText;
+    EditText data1, data2, data3, data4;
 
-	Button btnSetEEPROMErase;
-	Button btnSetEEPROMRead;
-	Button btnSetEEPROMWrite;
+    Button btnSetEEPROMErase;
+    Button btnSetEEPROMRead;
+    Button btnSetEEPROMWrite;
 
-	// Empty Constructor
-	public EEPROMFragment()
-	{
-	}
+    // Empty Constructor
+    public EEPROMFragment()
+    {
+    }
 
-	/* Constructor */
-	public EEPROMFragment(Context parentContext , D2xxManager ftdid2xxContext)
-	{
-		EEPROMFragmentContext = parentContext;
-		ftdid2xx = ftdid2xxContext;
-	}
+    /* Constructor */
+    public EEPROMFragment(Context parentContext , D2xxManager ftdid2xxContext)
+    {
+        EEPROMFragmentContext = parentContext;
+        ftdid2xx = ftdid2xxContext;
+    }
 
     public int getShownIndex() {
         return getArguments().getInt("index", 7);
@@ -53,39 +53,39 @@ public class EEPROMFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.device_eeprom, container, false);
 
-        VendorIDText 			= (EditText)view.findViewById(R.id.VendorIDValue);
-        ProductIDText 			= (EditText)view.findViewById(R.id.ProductIDValue);
-        ProductDescriptionText 	= (EditText)view.findViewById(R.id.ProductDescriptionValue);
-        SerialNumberText 		= (EditText)view.findViewById(R.id.SerialNumberValue);
+        VendorIDText            = (EditText)view.findViewById(R.id.VendorIDValue);
+        ProductIDText           = (EditText)view.findViewById(R.id.ProductIDValue);
+        ProductDescriptionText  = (EditText)view.findViewById(R.id.ProductDescriptionValue);
+        SerialNumberText        = (EditText)view.findViewById(R.id.SerialNumberValue);
 
         data1 = (EditText)view.findViewById(R.id.dataVal1);
         data2 = (EditText)view.findViewById(R.id.dataVal2);
         data3 = (EditText)view.findViewById(R.id.dataVal3);
         data4 = (EditText)view.findViewById(R.id.dataVal4);
 
-    	btnSetEEPROMErase 	= (Button)view.findViewById(R.id.eeprom_erase_mode);
-    	btnSetEEPROMRead 	= (Button)view.findViewById(R.id.eeprom_read_mode);
-    	btnSetEEPROMWrite 	= (Button)view.findViewById(R.id.eeprom_write_mode);
+        btnSetEEPROMErase   = (Button)view.findViewById(R.id.eeprom_erase_mode);
+        btnSetEEPROMRead    = (Button)view.findViewById(R.id.eeprom_read_mode);
+        btnSetEEPROMWrite   = (Button)view.findViewById(R.id.eeprom_write_mode);
 
-    	btnSetEEPROMErase.setOnClickListener(new OnClickListener() {
+        btnSetEEPROMErase.setOnClickListener(new OnClickListener() {
             public void onClick(final View v) {
-				btnSetEEPROMEraseClick(v);
+                btnSetEEPROMEraseClick(v);
             }
         });
 
-    	btnSetEEPROMRead.setOnClickListener(new OnClickListener() {
+        btnSetEEPROMRead.setOnClickListener(new OnClickListener() {
             public void onClick(final View v) {
-				btnSetEEPROMReadClick(v);
+                btnSetEEPROMReadClick(v);
             }
         });
 
-    	btnSetEEPROMWrite.setOnClickListener(new OnClickListener() {
+        btnSetEEPROMWrite.setOnClickListener(new OnClickListener() {
             public void onClick(final View v) {
-				btnSetEEPROMWriteClick(v);
+                btnSetEEPROMWriteClick(v);
             }
         });
 
-    	return view;
+        return view;
     }
 
     @Override
@@ -95,143 +95,143 @@ public class EEPROMFragment extends Fragment {
     }
 
     @Override
-	public void onDestroy() {
-		super.onDestroy();
+    public void onDestroy() {
+        super.onDestroy();
     }
 
-	public void notifyUSBDeviceAttach()
-	{
-		ftdid2xx.createDeviceInfoList(EEPROMFragmentContext);
-	}
+    public void notifyUSBDeviceAttach()
+    {
+        ftdid2xx.createDeviceInfoList(EEPROMFragmentContext);
+    }
 
     public void btnSetEEPROMEraseClick(View view) {
-    	StartEEpromErase();
+        StartEEpromErase();
     }
 
     public void btnSetEEPROMReadClick(View view) {
-    	StartEEpromRead();
+        StartEEpromRead();
     }
 
     public void btnSetEEPROMWriteClick(View view) {
-    	StartEEpromWrite();
+        StartEEpromWrite();
     }
 
-	public void StartEEpromRead() {
-		VendorIDText.setText("");
-		ProductIDText.setText("");
-		ProductDescriptionText.setText("");
-		SerialNumberText.setText("");
+    public void StartEEpromRead() {
+        VendorIDText.setText("");
+        ProductIDText.setText("");
+        ProductDescriptionText.setText("");
+        SerialNumberText.setText("");
 
-		FT_EEPROM ft_Data = null;
-		if(ftdid2xx.createDeviceInfoList(EEPROMFragmentContext) <= 0)
-			return;
-		ftDevice = ftdid2xx.openByIndex(EEPROMFragmentContext, 0);
+        FT_EEPROM ft_Data = null;
+        if(ftdid2xx.createDeviceInfoList(EEPROMFragmentContext) <= 0)
+            return;
+        ftDevice = ftdid2xx.openByIndex(EEPROMFragmentContext, 0);
 
-		
-		ft_Data = ftDevice.eepromRead();
 
-		if (ft_Data == null) {
-			Toast.makeText(EEPROMFragmentContext, "Not supported device",
-					Toast.LENGTH_SHORT).show();
-		} else {
-			VendorIDText.setText("0x" + Integer.toHexString(ft_Data.VendorId));
-			ProductIDText.setText("0x" + Integer.toHexString(ft_Data.ProductId));
-			ProductDescriptionText.setText(ft_Data.Product);
-			SerialNumberText.setText(ft_Data.SerialNumber);
-		}
+        ft_Data = ftDevice.eepromRead();
 
-		data1.setText(""+ftDevice.eepromReadWord((short)58));
-		data2.setText(""+ftDevice.eepromReadWord((short)59));
-		data3.setText(""+ftDevice.eepromReadWord((short)60));
-		data4.setText(""+ftDevice.eepromReadWord((short)61));
+        if (ft_Data == null) {
+            Toast.makeText(EEPROMFragmentContext, "Not supported device",
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            VendorIDText.setText("0x" + Integer.toHexString(ft_Data.VendorId));
+            ProductIDText.setText("0x" + Integer.toHexString(ft_Data.ProductId));
+            ProductDescriptionText.setText(ft_Data.Product);
+            SerialNumberText.setText(ft_Data.SerialNumber);
+        }
 
-		ftDevice.close();
-	}
+        data1.setText(""+ftDevice.eepromReadWord((short)58));
+        data2.setText(""+ftDevice.eepromReadWord((short)59));
+        data3.setText(""+ftDevice.eepromReadWord((short)60));
+        data4.setText(""+ftDevice.eepromReadWord((short)61));
+
+        ftDevice.close();
+    }
 
     public void StartEEpromWrite() {
 
-    	FT_EEPROM ft_Data;
-		if(ftdid2xx.createDeviceInfoList(EEPROMFragmentContext) <= 0)
-			return;
-		ftDevice = ftdid2xx.openByIndex(EEPROMFragmentContext, 0);		
-		
-		ft_Data = ftDevice.eepromRead();
+        FT_EEPROM ft_Data;
+        if(ftdid2xx.createDeviceInfoList(EEPROMFragmentContext) <= 0)
+            return;
+        ftDevice = ftdid2xx.openByIndex(EEPROMFragmentContext, 0);
 
-		if (ft_Data == null) {
-			Toast.makeText(EEPROMFragmentContext, "Not supported device", Toast.LENGTH_SHORT).show();
-		} else {
-			if (ProductDescriptionText.length() != 0)
-				ft_Data.Product = ProductDescriptionText.getText().toString();
+        ft_Data = ftDevice.eepromRead();
 
-			if (SerialNumberText.length() != 0)
-				ft_Data.SerialNumber = SerialNumberText.getText().toString();
+        if (ft_Data == null) {
+            Toast.makeText(EEPROMFragmentContext, "Not supported device", Toast.LENGTH_SHORT).show();
+        } else {
+            if (ProductDescriptionText.length() != 0)
+                ft_Data.Product = ProductDescriptionText.getText().toString();
 
-		ftDevice.eepromWrite(ft_Data);
-		}
+            if (SerialNumberText.length() != 0)
+                ft_Data.SerialNumber = SerialNumberText.getText().toString();
+
+        ftDevice.eepromWrite(ft_Data);
+        }
 
 
-		short bdata1, bdata2, bdata3, bdata4;
+        short bdata1, bdata2, bdata3, bdata4;
 
-		if(data1.length() == 0x00){
-			bdata1 = 0;
-		}
-		else if( Integer.parseInt(data1.getText().toString()) > 65535){
-			bdata1 = (short)65535;
-		}
-		else{
-			bdata1 = (short)Integer.parseInt(data1.getText().toString());
-		}
+        if(data1.length() == 0x00){
+            bdata1 = 0;
+        }
+        else if( Integer.parseInt(data1.getText().toString()) > 65535){
+            bdata1 = (short)65535;
+        }
+        else{
+            bdata1 = (short)Integer.parseInt(data1.getText().toString());
+        }
 
-		if(data2.length() == 0x00){
-			bdata2 = 0;
-		}
-		else if( Integer.parseInt(data2.getText().toString()) > 65535){
-			bdata2 = (short)65535;
-		}
-		else{
-			bdata2 = (short)Integer.parseInt(data2.getText().toString());
-		}
+        if(data2.length() == 0x00){
+            bdata2 = 0;
+        }
+        else if( Integer.parseInt(data2.getText().toString()) > 65535){
+            bdata2 = (short)65535;
+        }
+        else{
+            bdata2 = (short)Integer.parseInt(data2.getText().toString());
+        }
 
-		if(data3.length() == 0x00){
-			bdata3 = 0;
-		}
-		else if( Integer.parseInt(data3.getText().toString()) > 65535){
-			bdata3 = (short)65535;
-		}		
-		else{
-			bdata3 = (short)Integer.parseInt(data3.getText().toString());
-		}
+        if(data3.length() == 0x00){
+            bdata3 = 0;
+        }
+        else if( Integer.parseInt(data3.getText().toString()) > 65535){
+            bdata3 = (short)65535;
+        }
+        else{
+            bdata3 = (short)Integer.parseInt(data3.getText().toString());
+        }
 
-		if(data4.length() == 0x00){
-			bdata4 = 0;
-		}
-		else if( Integer.parseInt(data4.getText().toString()) > 65535){
-			bdata4 = (short)65535;
-		}
-		else{
-			bdata4 = (short)Integer.parseInt(data4.getText().toString());
-		}
+        if(data4.length() == 0x00){
+            bdata4 = 0;
+        }
+        else if( Integer.parseInt(data4.getText().toString()) > 65535){
+            bdata4 = (short)65535;
+        }
+        else{
+            bdata4 = (short)Integer.parseInt(data4.getText().toString());
+        }
 
-		ftDevice.eepromWriteWord((short)58, bdata1);
-		ftDevice.eepromWriteWord((short)59, bdata2);
-		ftDevice.eepromWriteWord((short)60, bdata3);
-		ftDevice.eepromWriteWord((short)61, bdata4);
+        ftDevice.eepromWriteWord((short)58, bdata1);
+        ftDevice.eepromWriteWord((short)59, bdata2);
+        ftDevice.eepromWriteWord((short)60, bdata3);
+        ftDevice.eepromWriteWord((short)61, bdata4);
 
-		ftDevice.close();
+        ftDevice.close();
 
     }
 
     /**
      *  This function should not be call
-	 *  casually , so i market it first
-	 *  in this sample project.
-	 */
-	public void StartEEpromErase() {
-		
-		if(ftdid2xx.createDeviceInfoList(EEPROMFragmentContext) <= 0)
-			return;
-		ftDevice = ftdid2xx.openByIndex(EEPROMFragmentContext, 0);		
-		ftDevice.eepromErase();
-		ftDevice.close();
-	}
+     *  casually , so i market it first
+     *  in this sample project.
+     */
+    public void StartEEpromErase() {
+
+        if(ftdid2xx.createDeviceInfoList(EEPROMFragmentContext) <= 0)
+            return;
+        ftDevice = ftdid2xx.openByIndex(EEPROMFragmentContext, 0);
+        ftDevice.eepromErase();
+        ftDevice.close();
+    }
 }

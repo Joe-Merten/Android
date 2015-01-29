@@ -60,7 +60,7 @@
         android:onClick="ClickSetEvent"
         android:text="Enable Set Event"
         android:textSize="20sp" />
-    
+
 
             <TextView
             android:id="@+id/EventStatus"
@@ -68,7 +68,7 @@
             android:layout_height="35dip"
             android:text="EventStatus : "
             android:textSize="20sp" />
-            
+
     <LinearLayout
         android:id="@+id/lin3"
         android:layout_width="fill_parent"

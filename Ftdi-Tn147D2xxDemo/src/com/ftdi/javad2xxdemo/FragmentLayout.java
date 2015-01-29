@@ -30,39 +30,39 @@ import com.ftdi.j2xx.D2xxManager;
 
 
 public class FragmentLayout extends Activity {
-	public static D2xxManager ftD2xx = null;
-	public static int currect_index = 0;
-	public static int old_index = -1;
-	
-	private static Fragment currentFragment = null;
-	
+    public static D2xxManager ftD2xx = null;
+    public static int currect_index = 0;
+    public static int old_index = -1;
+
+    private static Fragment currentFragment = null;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
-    	try {
-    		ftD2xx = D2xxManager.getInstance(this);
-    	} catch (D2xxManager.D2xxException ex) {
-    		ex.printStackTrace();
-    	}
+        try {
+            ftD2xx = D2xxManager.getInstance(this);
+        } catch (D2xxManager.D2xxException ex) {
+            ex.printStackTrace();
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_layout);
         SetupD2xxLibrary();
-        
-		IntentFilter filter = new IntentFilter();
+
+        IntentFilter filter = new IntentFilter();
         filter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
         filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
         filter.setPriority(500);
-        this.registerReceiver(mUsbReceiver, filter);   
+        this.registerReceiver(mUsbReceiver, filter);
     }
 
     @Override
-	protected void onDestroy() {
-    	this.unregisterReceiver(mUsbReceiver);
-    	super.onDestroy();
-	}
+    protected void onDestroy() {
+        this.unregisterReceiver(mUsbReceiver);
+        super.onDestroy();
+    }
 
     public static class DetailsActivity extends Activity {
 
-    	Map<Integer, Fragment> act_map = new HashMap<Integer, Fragment>();
+        Map<Integer, Fragment> act_map = new HashMap<Integer, Fragment>();
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -81,82 +81,82 @@ public class FragmentLayout extends Activity {
                 Fragment f = act_map.get(currect_index);
                 if (f == null)
                 {
-                	switch (currect_index)
-                	{
-                		case 0:
-                			f = new DeviceInformationFragment(this , ftD2xx);
-                			break;
-                		case 1:
-                			f = new DeviceStatusFragment(this , ftD2xx);
-                			break;
-                		case 2:
-                			f = new DevicePIDVIDFragment(this , ftD2xx);
-                			break;
-                		case 3:
-                			f = new MiscFragment(this , ftD2xx);
-                			break;
-                		case 4:
-                			f = new OpenDeviceFragment(this , ftD2xx);
-                			break;
-                		case 5:
-                			f = new DeviceUARTFragment(this , ftD2xx);
-                			break;
-                   		case 6:
-                			f = new DeviceFileTransferFragment(this , ftD2xx);
-                			break;
-                   		case 7:
-                			f = new EEPROMFragment(this , ftD2xx);
-                			break;
-                   		case 8:
-                        	f = new EEPROMUserAreaFragment(this , ftD2xx);
-                			break;
-                   		case 9:
-                			f = new FT4232HTestFragment(this , ftD2xx);
-                			break;
-                   		case 10:
-                			f = new FT2232HTestFragment(this , ftD2xx);
-                			break;
-                		case 11:
-                			f = new RS232PinConfigFragment(this , ftD2xx);
-                			break;	
-                		case 12:
-                			f = new MPSEFragment(this , ftD2xx);
-                			break;
-                		case 13:
-                			f = new FtdiEventFragment(this , ftD2xx);
-                			break;  
-                		default:
-                			f = new DetailsFragment();
-                			break;
-                	}
+                    switch (currect_index)
+                    {
+                        case 0:
+                            f = new DeviceInformationFragment(this , ftD2xx);
+                            break;
+                        case 1:
+                            f = new DeviceStatusFragment(this , ftD2xx);
+                            break;
+                        case 2:
+                            f = new DevicePIDVIDFragment(this , ftD2xx);
+                            break;
+                        case 3:
+                            f = new MiscFragment(this , ftD2xx);
+                            break;
+                        case 4:
+                            f = new OpenDeviceFragment(this , ftD2xx);
+                            break;
+                        case 5:
+                            f = new DeviceUARTFragment(this , ftD2xx);
+                            break;
+                        case 6:
+                            f = new DeviceFileTransferFragment(this , ftD2xx);
+                            break;
+                        case 7:
+                            f = new EEPROMFragment(this , ftD2xx);
+                            break;
+                        case 8:
+                            f = new EEPROMUserAreaFragment(this , ftD2xx);
+                            break;
+                        case 9:
+                            f = new FT4232HTestFragment(this , ftD2xx);
+                            break;
+                        case 10:
+                            f = new FT2232HTestFragment(this , ftD2xx);
+                            break;
+                        case 11:
+                            f = new RS232PinConfigFragment(this , ftD2xx);
+                            break;
+                        case 12:
+                            f = new MPSEFragment(this , ftD2xx);
+                            break;
+                        case 13:
+                            f = new FtdiEventFragment(this , ftD2xx);
+                            break;
+                        default:
+                            f = new DetailsFragment();
+                            break;
+                    }
 
-                	act_map.put(currect_index, f);
-                	f.setArguments(getIntent().getExtras());
-                	getFragmentManager().beginTransaction().add(android.R.id.content, f).commit();
+                    act_map.put(currect_index, f);
+                    f.setArguments(getIntent().getExtras());
+                    getFragmentManager().beginTransaction().add(android.R.id.content, f).commit();
                 }
-                
+
                 currentFragment = f;
             }
         }
     }
 
     private void SetupD2xxLibrary () {
-    	/*
+        /*
         PackageManager pm = getPackageManager();
 
         for (ApplicationInfo app : pm.getInstalledApplications(0)) {
           Log.d("PackageList", "package: " + app.packageName + ", sourceDir: " + app.nativeLibraryDir);
           if (app.packageName.equals(R.string.app_name)) {
-        	  System.load(app.nativeLibraryDir + "/libj2xx-utils.so");
-        	  Log.i("ftd2xx-java","Get PATH of FTDI JIN Library");
-        	  break;
+              System.load(app.nativeLibraryDir + "/libj2xx-utils.so");
+              Log.i("ftd2xx-java","Get PATH of FTDI JIN Library");
+              break;
           }
         }
         */
-    	// Specify a non-default VID and PID combination to match if required
+        // Specify a non-default VID and PID combination to match if required
 
-    	if(!ftD2xx.setVIDPID(0x0403, 0xada1))
-    		Log.i("ftd2xx-java","setVIDPID Error");
+        if(!ftD2xx.setVIDPID(0x0403, 0xada1))
+            Log.i("ftd2xx-java","setVIDPID Error");
 
     }
 
@@ -174,11 +174,11 @@ public class FragmentLayout extends Activity {
         // Context TitlesFragmentContext = this.;
         Map<Integer, Fragment> map = new HashMap<Integer, Fragment>();
 
-    	// public void setTitlesFragment(Context parentContext)
-    	// {
-    	//	TitlesFragmentContext = parentContext;
-    		// ftD2xx = ftdid2xx;
-    	// }
+        // public void setTitlesFragment(Context parentContext)
+        // {
+        //  TitlesFragmentContext = parentContext;
+            // ftD2xx = ftdid2xx;
+        // }
 
         public TitlesFragment() {
 
@@ -233,67 +233,67 @@ public class FragmentLayout extends Activity {
             // Log.i("FragmentLayout","index = " + Integer.toString(index));
             // Log.i("FragmentLayout","mDualPaneIndex = " + Integer.toString(mDualPaneIndex));
             if (mDualPane) {
-            	// We can display everything in-place with fragments, so update
-            	// the list to highlight the selected item and show the data.
+                // We can display everything in-place with fragments, so update
+                // the list to highlight the selected item and show the data.
                 getListView().setItemChecked(index, true);
                 Fragment f = map.get(index);
                 if (f == null) {
-                	switch (index) {
-                	case 0:
-                		f = new DeviceInformationFragment(getActivity() , ftD2xx);
-                		break;
-                	case 1:
-                		f = new DeviceStatusFragment(getActivity() , ftD2xx);
-                		break;
-                	case 2:
-                		f = new DevicePIDVIDFragment(getActivity() , ftD2xx);
-                		break;
-                	case 3:
-                		f = new MiscFragment(getActivity() , ftD2xx);
-                		break;
-                	case 4:
-                		f = new OpenDeviceFragment(getActivity() , ftD2xx);
-                		break;
-            		case 5:
-            			f = new DeviceUARTFragment(getActivity() , ftD2xx);
-            			break;
-               		case 6:
-            			f = new DeviceFileTransferFragment(getActivity() , ftD2xx);
-            			break;
-               		case 7:
-            			f = new EEPROMFragment(getActivity() , ftD2xx);
-            			break;
-               		case 8:
-                    	f = new EEPROMUserAreaFragment(getActivity() , ftD2xx);
-            			break;
-               		case 9:
-            			f = new FT4232HTestFragment(getActivity() , ftD2xx);
-            			break;
-               		case 10:
-                    	f = new FT2232HTestFragment(getActivity() , ftD2xx);
-        			break;	
-                	case 11:
-                		f = new RS232PinConfigFragment(getActivity() , ftD2xx);
-                		break;
-                	case 12:
-                		f = new MPSEFragment(getActivity() , ftD2xx);
-                		break;
-            		case 13:
-            			f = new FtdiEventFragment(getActivity() , ftD2xx);
-            			break;  
-                	default:
-                		f = new DetailsFragment();
-                		break;
-                	}
-                	
-                	map.put(index, f);
-                	Bundle args = new Bundle();
-                	args.putInt("index", index);
-                	f.setArguments(args);
+                    switch (index) {
+                    case 0:
+                        f = new DeviceInformationFragment(getActivity() , ftD2xx);
+                        break;
+                    case 1:
+                        f = new DeviceStatusFragment(getActivity() , ftD2xx);
+                        break;
+                    case 2:
+                        f = new DevicePIDVIDFragment(getActivity() , ftD2xx);
+                        break;
+                    case 3:
+                        f = new MiscFragment(getActivity() , ftD2xx);
+                        break;
+                    case 4:
+                        f = new OpenDeviceFragment(getActivity() , ftD2xx);
+                        break;
+                    case 5:
+                        f = new DeviceUARTFragment(getActivity() , ftD2xx);
+                        break;
+                    case 6:
+                        f = new DeviceFileTransferFragment(getActivity() , ftD2xx);
+                        break;
+                    case 7:
+                        f = new EEPROMFragment(getActivity() , ftD2xx);
+                        break;
+                    case 8:
+                        f = new EEPROMUserAreaFragment(getActivity() , ftD2xx);
+                        break;
+                    case 9:
+                        f = new FT4232HTestFragment(getActivity() , ftD2xx);
+                        break;
+                    case 10:
+                        f = new FT2232HTestFragment(getActivity() , ftD2xx);
+                    break;
+                    case 11:
+                        f = new RS232PinConfigFragment(getActivity() , ftD2xx);
+                        break;
+                    case 12:
+                        f = new MPSEFragment(getActivity() , ftD2xx);
+                        break;
+                    case 13:
+                        f = new FtdiEventFragment(getActivity() , ftD2xx);
+                        break;
+                    default:
+                        f = new DetailsFragment();
+                        break;
+                    }
+
+                    map.put(index, f);
+                    Bundle args = new Bundle();
+                    args.putInt("index", index);
+                    f.setArguments(args);
                 }
-                
+
                 currentFragment = f;
-                
+
                 if ( currect_index != old_index ) {
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.replace(R.id.details, f);
@@ -319,7 +319,7 @@ public class FragmentLayout extends Activity {
      * item.
      */
     public static class DetailsFragment extends Fragment {
-    	/*
+        /*
         public static DetailsFragment newInstance(int index) {
             DetailsFragment f = new DetailsFragment();
             // Supply index input as an argument.
@@ -329,10 +329,10 @@ public class FragmentLayout extends Activity {
 
             return f;
         }
-		*/
-    	public DetailsFragment() {
+        */
+        public DetailsFragment() {
 
-    	}
+        }
 
         public int getShownIndex() {
             return getArguments().getInt("index", -1);
@@ -363,58 +363,58 @@ public class FragmentLayout extends Activity {
         }
     }
 
-	@Override
-	protected void onNewIntent(Intent intent)
-	{
-		String action = intent.getAction();
-		if(UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(action))		
-		{
-        	switch (currect_index) 
-        	{
-        	case 4:
-        		((OpenDeviceFragment)currentFragment).notifyUSBDeviceAttach(intent);
-        		break;
-    		case 5:
-    			((DeviceUARTFragment)currentFragment).notifyUSBDeviceAttach();
-    			break;
-       		case 7:
-       			((EEPROMFragment)currentFragment).notifyUSBDeviceAttach();    			
-    			break;
-       		case 8:
-       			((EEPROMUserAreaFragment)currentFragment).notifyUSBDeviceAttach();            	
-    			break;    			
-        	default:
-        		break;
-        	}
-		}
-	}
-    
-	/***********USB broadcast receiver*******************************************/
-    private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() 
-	{
-		@Override
-		public void onReceive(Context context, Intent intent) 
-		{
-			String TAG = "FragL";			
-			String action = intent.getAction();
-			if(UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action))
-			{
-				Log.i(TAG,"DETACHED...");
-				
-	            if (currentFragment != null)
-	            {
-	            	switch (currect_index) 
-	            	{
+    @Override
+    protected void onNewIntent(Intent intent)
+    {
+        String action = intent.getAction();
+        if(UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(action))
+        {
+            switch (currect_index)
+            {
+            case 4:
+                ((OpenDeviceFragment)currentFragment).notifyUSBDeviceAttach(intent);
+                break;
+            case 5:
+                ((DeviceUARTFragment)currentFragment).notifyUSBDeviceAttach();
+                break;
+            case 7:
+                ((EEPROMFragment)currentFragment).notifyUSBDeviceAttach();
+                break;
+            case 8:
+                ((EEPROMUserAreaFragment)currentFragment).notifyUSBDeviceAttach();
+                break;
+            default:
+                break;
+            }
+        }
+    }
 
-	        		case 5:
-	        			((DeviceUARTFragment)currentFragment).notifyUSBDeviceDetach();
-	        			break;
-	            	default:
-	            		//((DeviceInformationFragment)currentFragment).onStart();
-	            		break;
-	            	}
-	            }         	
-			}
-		}	
-	};
+    /***********USB broadcast receiver*******************************************/
+    private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver()
+    {
+        @Override
+        public void onReceive(Context context, Intent intent)
+        {
+            String TAG = "FragL";
+            String action = intent.getAction();
+            if(UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action))
+            {
+                Log.i(TAG,"DETACHED...");
+
+                if (currentFragment != null)
+                {
+                    switch (currect_index)
+                    {
+
+                    case 5:
+                        ((DeviceUARTFragment)currentFragment).notifyUSBDeviceDetach();
+                        break;
+                    default:
+                        //((DeviceInformationFragment)currentFragment).onStart();
+                        break;
+                    }
+                }
+            }
+        }
+    };
 }
